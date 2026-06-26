@@ -1860,7 +1860,7 @@
         <div class="chat-top">
           <div>
             <div class="conversation-title" id="conversationTitle">新问答</div>
-            <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、/ 或点击 +</div>
+            <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、#、/ 或点击 +</div>
           </div>
           <button class="panel-toggle" id="panelToggle" title="显示或隐藏右侧产物区" aria-label="显示或隐藏右侧产物区">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -2097,10 +2097,10 @@
             </div>
             <div class="plus-menu" id="plusMenu">
               <button class="menu-row" data-upload><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg>上传图片</button>
-              <button class="menu-row" data-reference><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>引用文档或表</button>
+              <button class="menu-row" data-reference><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>范围限定</button>
               <button class="menu-row plan-row" id="planToggle"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h5"/><path d="M4 17h5"/><path d="m14 6 2 2 4-4"/><path d="M14 17h6"/><circle cx="6.5" cy="12" r="1.5"/></svg>Plan mode<span class="switch"></span></button>
             </div>
-            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索文档/表/人工问答，输入 / 调用 Skill"></div>
+            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索文档/表/人工问答，输入 # 范围限定，输入 / 调用 Skill"></div>
             <div class="composer-bar">
               <div class="composer-left">
                 <button class="round-btn" id="plusBtn" aria-label="打开附件菜单">＋</button>
@@ -2654,6 +2654,11 @@
       closeArtifactMenu();
     }
 
+    function openScopePanel() {
+      closeOverlays();
+      scopePop.classList.add('open');
+    }
+
     plusBtn.addEventListener('click', event => {
       event.stopPropagation();
       plusMenu.classList.toggle('open');
@@ -2706,6 +2711,7 @@
     composerInput.addEventListener('input', () => {
       const text = composerInput.textContent.trim();
       if (text.endsWith('@')) openSuggest('@');
+      else if (text.endsWith('#')) openScopePanel();
       else if (text.endsWith('/')) openSuggest('/');
       else suggestPop.classList.remove('open');
     });
@@ -2731,10 +2737,7 @@
       setTaskMode(true);
       showToast('已模拟上传图片：截图参考');
     });
-    document.querySelector('[data-reference]').addEventListener('click', () => {
-      closeOverlays();
-      scopePop.classList.add('open');
-    });
+    document.querySelector('[data-reference]').addEventListener('click', openScopePanel);
     document.getElementById('scopeClose').addEventListener('click', closeOverlays);
     document.getElementById('humanHelpBtn').addEventListener('click', () => {
       closeOverlays();
