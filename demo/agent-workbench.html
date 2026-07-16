@@ -91,7 +91,10 @@
     .nav-title { height: 30px; display: flex; align-items: center; padding: 0 14px; font-weight: 600; }
     .nav-item {
       height: 38px;
+      width: 100%;
+      border: 0;
       border-radius: 6px;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -100,6 +103,7 @@
       font-size: 14px;
     }
     .nav-item.active { color: var(--primary); background: #fff; }
+    .nav-item[data-app-view] { cursor: pointer; }
     .nav-spacer { height: 10px; }
     .id-search {
       margin-top: auto;
@@ -799,6 +803,102 @@
     }
     .task-mode .messages { display: flex; }
     .task-mode .welcome { display: none; }
+    #messages.manual-qa-mode > :not(#manualQaStory) { display: none; }
+    #messages.planning-mode > :not(#planningStory) { display: none; }
+    .manual-qa-story {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .manual-qa-story[hidden] { display: none; }
+    .manual-qa-work-log {
+      border-left: 2px solid var(--line);
+      padding: 4px 0 4px 16px;
+      color: #595959;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .manual-qa-work-log strong { color: #262626; }
+    .manual-qa-answer {
+      color: #262626;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .manual-qa-answer p { margin: 0 0 10px; }
+    .planning-story {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .planning-story[hidden] { display: none; }
+    .planning-result {
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: #262626;
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+    .planning-result h3 { margin: 0 0 10px; font-size: 16px; }
+    .planning-result dl { margin: 0; }
+    .planning-result dl div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid var(--border); }
+    .planning-result dt { color: #8c8c8c; }
+    .planning-result dd { margin: 0; }
+    .similar-issue-card {
+      margin: 14px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .similar-issue-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--soft);
+      font-weight: 600;
+    }
+    .similar-issue-status {
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #fff7e6;
+      color: #d46b08;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .similar-issue-body { padding: 14px; }
+    .similar-issue-id { color: var(--primary); font-size: 13px; }
+    .similar-issue-title { margin-top: 5px; font-weight: 600; }
+    .similar-issue-actions,
+    .manual-qa-prompt-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .manual-qa-story button {
+      min-height: 32px;
+      padding: 4px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: #262626;
+    }
+    .manual-qa-story button:hover { border-color: var(--primary); color: var(--primary); }
+    .manual-qa-story button.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
     .bubble {
       max-width: 86%;
       border-radius: 10px;
@@ -1081,6 +1181,61 @@
     .composer-input:empty::before {
       content: attr(data-placeholder);
       color: #bfbfbf;
+    }
+    .launch-context {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--soft);
+      color: #595959;
+      font-size: 12px;
+    }
+    .launch-private {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+    .launch-private::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #52c41a;
+    }
+    .launch-token-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .context-token {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 3px 8px;
+      border: 1px solid #91caff;
+      border-radius: 6px;
+      background: var(--primary-bg);
+      color: #0958d9;
+      font-size: 12px;
+    }
+    .context-token:hover { background: #bae0ff; }
+    .context-token b { color: #8c8c8c; font-size: 14px; font-weight: 400; }
+    .launch-context-note { margin-top: 8px; line-height: 1.6; }
+    .planning-outcome-picker { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
+    .planning-outcome-picker button {
+      min-height: 28px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 5px;
+      background: #fff; color: #595959; font-size: 12px;
+    }
+    .planning-outcome-picker button.active { border-color: var(--primary); background: var(--primary-bg); color: #0958d9; }
+    .launch-welcome {
+      width: min(720px, 100%);
+      margin: auto;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: #595959;
+      line-height: 1.7;
+      text-align: center;
     }
     .composer-bar {
       height: 34px;
@@ -1527,6 +1682,20 @@
     }
     .artifact-title { font-size: 14px; font-weight: 600; }
     .artifact-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .artifact-pane-close {
+      display: none;
+      width: 36px;
+      height: 36px;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #595959;
+      font-size: 24px;
+      line-height: 1;
+    }
     .ant-btn {
       height: 30px;
       border: 1px solid var(--line);
@@ -1547,6 +1716,20 @@
       align-items: center;
       flex: none;
     }
+    .artifact-open-manual {
+      width: 36px;
+      height: 32px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #595959;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .artifact-open-manual:hover { background: #f0f0f0; color: #262626; }
+    .artifact-open-manual .icon { width: 18px; height: 18px; stroke-width: 2; }
     .artifact-menu-toggle {
       width: 36px;
       height: 32px;
@@ -1607,7 +1790,317 @@
       color: #d9d9d9;
       stroke-width: 1.9;
     }
-    .artifact-body { flex: 1; padding: 16px; overflow: auto; }
+    .artifact-body {
+      flex: 1;
+      min-height: 0;
+      padding: 16px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      container-type: inline-size;
+      container-name: artifact-body;
+    }
+    .manual-qa-form,
+    .manual-detail {
+      width: 100%;
+      min-height: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .manual-qa-form { padding: 20px; }
+    .manual-form-heading { margin-bottom: 20px; }
+    .manual-form-heading h2,
+    .manual-detail h2 { margin: 0; color: #262626; font-size: 18px; line-height: 1.5; }
+    .manual-form-heading p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+    .manual-form-grid,
+    .manual-detail-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .manual-form-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .manual-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .manual-field { min-width: 0; grid-column: span 3; }
+    .manual-field.third { grid-column: span 2; }
+    .manual-field.wide { grid-column: 1 / -1; }
+    .manual-field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #262626;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .manual-required { margin-right: 4px; color: #ff4d4f; }
+    .manual-field input,
+    .manual-field select,
+    .manual-field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .manual-field input,
+    .manual-field select { height: 34px; padding: 0 10px; }
+    .manual-field textarea { min-height: 96px; padding: 8px 10px; line-height: 1.6; resize: vertical; }
+    .manual-field input:focus,
+    .manual-field select:focus,
+    .manual-field textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-bg);
+    }
+    .manual-form-error {
+      min-height: 22px;
+      margin-top: 14px;
+      color: #cf1322;
+      font-size: 13px;
+      line-height: 22px;
+    }
+    .manual-form-footer,
+    .manual-detail-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .manual-demo-failure {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-right: auto;
+      color: #595959;
+      font-size: 13px;
+    }
+    .manual-demo-failure input { accent-color: var(--primary); }
+    .manual-form-footer button,
+    .manual-detail-actions button {
+      min-height: 32px;
+      padding: 4px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: #262626;
+    }
+    .manual-form-footer button[type="submit"],
+    .manual-detail-actions button[data-add-to-agent] {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+    .manual-detail-actions button:disabled {
+      border-color: #d9d9d9;
+      background: #f5f5f5;
+      color: #bfbfbf;
+      cursor: not-allowed;
+    }
+    .manual-permission-note { margin-right: auto; color: #8c8c8c; font-size: 12px; }
+
+    .manual-system {
+      display: none;
+      grid-column: 3 / -1;
+      grid-row: 1;
+      min-width: 0;
+      min-height: 0;
+      background: #fff;
+      grid-template-columns: 280px minmax(0, 1fr) 280px;
+      grid-template-rows: 92px minmax(0, 1fr);
+    }
+    .layout.manual-system-mode { grid-template-columns: var(--platform-width) var(--module-width) minmax(0, 1fr); }
+    .layout.manual-system-mode > .agent-sidebar,
+    .layout.manual-system-mode > .workspace,
+    .layout.manual-system-mode > .artifact { display: none; }
+    .layout.manual-system-mode > .manual-system { display: grid; }
+    .manual-system-filter {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .manual-system-filter label { color: #595959; font-size: 13px; }
+    .manual-system-filter input {
+      width: 210px; height: 34px; margin-left: 7px; padding: 0 10px;
+      border: 1px solid var(--line); border-radius: 5px; outline: 0;
+    }
+    .manual-system-filter button {
+      height: 34px; padding: 0 18px; border: 1px solid var(--primary);
+      border-radius: 5px; background: var(--primary); color: #fff;
+    }
+    .manual-issue-list { min-height: 0; overflow: auto; border-right: 1px solid var(--border); padding: 10px; background: #fafafa; }
+    .manual-issue-card {
+      width: 100%; min-height: 96px; margin-bottom: 8px; padding: 12px;
+      border: 1px solid #e5e5e5; border-radius: 4px; background: #fff;
+      color: #262626; text-align: left;
+    }
+    .manual-issue-card.active { border-color: #91caff; background: #e6f4ff; }
+    .manual-issue-card-top { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+    .manual-issue-card-title { margin: 10px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .manual-issue-card-meta { display: flex; justify-content: space-between; color: #8c8c8c; font-size: 12px; }
+    .manual-issue-card-meta span:last-child { color: #1677ff; }
+    .manual-system-detail { min-width: 0; min-height: 0; overflow: auto; padding: 24px 30px 40px; }
+    .manual-system-detail h1 { margin: 0 0 12px; font-size: 22px; line-height: 1.45; }
+    .manual-system-description { padding: 18px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); color: #595959; line-height: 1.8; }
+    .manual-system-description h2, .manual-system-replies h2 { margin: 0 0 12px; color: #262626; font-size: 15px; }
+    .manual-system-evidence { margin: 18px 0; padding: 18px; border-radius: 6px; background: #f7f8fa; color: #595959; line-height: 1.7; }
+    .manual-system-replies { padding-top: 18px; border-top: 1px solid var(--border); }
+    .manual-system-actions { display: flex; justify-content: flex-start; gap: 8px; margin-top: 18px; }
+    .manual-system-actions button {
+      min-height: 34px; padding: 4px 16px; border: 1px solid var(--line);
+      border-radius: 5px; background: #fff; color: #262626;
+    }
+    .manual-system-actions button[data-manual-module-add-agent] { border-color: var(--primary); color: var(--primary); }
+    .manual-system-properties { min-height: 0; overflow: auto; border-left: 1px solid var(--border); padding: 24px 20px; }
+    .manual-system-properties h2 { margin: 0 0 20px; font-size: 16px; }
+    .manual-system-properties dl { margin: 0; }
+    .manual-system-properties div { margin-bottom: 17px; }
+    .manual-system-properties dt { margin-bottom: 4px; color: #8c8c8c; font-size: 12px; }
+    .manual-system-properties dd { margin: 0; color: #262626; font-size: 13px; line-height: 1.5; }
+    .artifact-menu-item:disabled { color: #777; cursor: not-allowed; }
+    .artifact-menu-item:disabled:hover { background: transparent; }
+    @media (max-width: 640px) {
+      .layout:not(.manual-system-mode) { grid-template-columns: minmax(0, 1fr); }
+      .layout:not(.manual-system-mode) > .platform-nav,
+      .layout:not(.manual-system-mode) > .business-module,
+      .layout:not(.manual-system-mode) > .agent-sidebar { display: none; }
+      .layout:not(.manual-system-mode) > .workspace { grid-column: 1; }
+      .layout:not(.manual-system-mode) > .artifact:not(.open) { display: none; }
+      .layout:not(.manual-system-mode) > .artifact.open {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        width: 100vw;
+        height: 100vh;
+        transform: none;
+      }
+      .layout:not(.manual-system-mode) > .artifact.open .artifact-resizer { display: none; }
+      .artifact-pane-close { display: inline-flex; }
+      .artifact.open.no-tabs .artifact-head { display: flex; }
+      .planning-outcome-picker { flex-wrap: wrap; }
+      .planning-result dl div { grid-template-columns: 1fr; gap: 4px; }
+    }
+    @media (max-width: 900px) {
+      .manual-system { grid-template-columns: 220px minmax(0, 1fr); }
+      .manual-system-properties { display: none; }
+      .manual-system-filter { overflow-x: auto; }
+      .manual-system-filter label { flex: none; }
+    }
+    @media (max-width: 640px) {
+      .layout.manual-system-mode { grid-template-columns: minmax(104px, var(--platform-width)) minmax(0, 1fr); }
+      .manual-system {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 126px minmax(0, 1fr);
+      }
+      .manual-system-filter { gap: 8px; padding: 10px 12px; }
+      .manual-system-filter input { width: 150px; }
+      .manual-issue-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .manual-issue-card { flex: 0 0 210px; min-height: 96px; margin: 0; }
+      .manual-system-detail { overflow-y: auto; padding: 18px 16px 36px; }
+      .manual-system-detail h1 { font-size: 18px; }
+    }
+    .manual-form-footer button:disabled { cursor: wait; opacity: .65; }
+    .manual-detail { padding: 20px; }
+    .manual-detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .manual-detail-id { margin-bottom: 5px; color: var(--primary); font-size: 13px; font-weight: 600; }
+    .manual-status-pill {
+      flex: none;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #fff7e6;
+      color: #d46b08;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .manual-detail-section { padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .manual-detail-section h3 { margin: 0 0 8px; color: #262626; font-size: 14px; }
+    .manual-detail-section p { margin: 0; color: #595959; font-size: 13px; line-height: 1.7; }
+    .manual-detail-reply { border-bottom: 0; padding-bottom: 0; }
+    .manual-empty { color: var(--muted) !important; }
+    .manual-reply-editor { margin-top: 12px; }
+    .manual-reply-editor textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      outline: none;
+      font: inherit;
+      line-height: 1.6;
+    }
+    .manual-reply-editor textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-bg);
+    }
+    .reply-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+    .reply-actions button {
+      min-height: 32px;
+      padding: 4px 14px;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      background: var(--primary);
+      color: #fff;
+    }
+    .manual-submitted-reply button {
+      min-height: 32px;
+      margin-top: 10px;
+      padding: 4px 14px;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--primary);
+    }
+    .manual-detail-grid { padding: 18px 0; }
+    .manual-detail-property { min-width: 0; }
+    .manual-detail-property dt { margin-bottom: 4px; color: var(--muted); font-size: 12px; }
+    .manual-detail-property dd { margin: 0; overflow-wrap: anywhere; color: #262626; font-size: 13px; }
+    @media (max-width: 560px) {
+      .manual-form-grid,
+      .manual-detail-grid { grid-template-columns: 1fr; }
+      .manual-field,
+      .manual-field.third,
+      .manual-field.wide { grid-column: 1 / -1; }
+      .manual-qa-form,
+      .manual-detail { padding: 16px; }
+      .manual-form-footer,
+      .manual-detail-actions { align-items: stretch; flex-wrap: wrap; }
+      .manual-demo-failure { width: 100%; margin-bottom: 4px; }
+    }
+    @container artifact-body (max-width: 460px) {
+      .manual-form-grid,
+      .manual-detail-grid { grid-template-columns: 1fr; }
+      .manual-field,
+      .manual-field.third,
+      .manual-field.wide { grid-column: 1 / -1; }
+      .manual-qa-form,
+      .manual-detail { padding: 16px; }
+      .manual-form-footer,
+      .manual-detail-actions { align-items: stretch; flex-wrap: wrap; }
+      .manual-demo-failure { width: 100%; margin-bottom: 4px; }
+    }
     .paper {
       min-height: 100%;
       background: #fff;
@@ -1719,8 +2212,8 @@
         <div class="nav-item">业务总览</div>
         <div class="nav-item">工作台</div>
         <div class="nav-item">用户总览</div>
-        <div class="nav-item active">AI问答</div>
-        <div class="nav-item">人工问答</div>
+        <button class="nav-item active" type="button" data-app-view="agent" aria-current="page">AI问答</button>
+        <button class="nav-item" type="button" data-app-view="manual-qa">人工问答</button>
         <div class="nav-item">资源中心</div>
         <div class="nav-item">权限管理</div>
         <div class="nav-item">质检</div>
@@ -1839,6 +2332,7 @@
           <div class="history-list">
             <div class="history-row active" data-history-state="empty">新问答</div>
             <div class="history-row" data-history-state="artifact">港股股权激励处理方案</div>
+            <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0">国财A股组规则确认</div>
             <div class="history-row">质检日报生成</div>
             <div class="history-row">财务数据抽取</div>
             <div class="history-row">规划文档总结</div>
@@ -1930,6 +2424,29 @@
               </button>
             </footer>
           </div>
+          <section class="manual-qa-story" id="manualQaStory" hidden>
+            <div class="bubble user">请确认 LR1105 非经常性损益内部表加工规则。</div>
+            <div class="manual-qa-work-log" aria-label="资料检索过程">
+              <strong>已检索</strong> 规划文档、业务表、历史人工问答与规则资料。<br>
+              后台预填不影响当前回答：已提前识别团队、业务、品种、市场、涉及表和规则文档。
+            </div>
+            <div class="manual-qa-answer">
+              <p><strong>当前资料不足以支持确定结论。</strong></p>
+              <p>已有规则没有覆盖金额不等于一级科目时的处理方式，因此无法推断一级科目编码和其中项编码的加工规则。</p>
+              <article class="similar-issue-card">
+                <div class="similar-issue-head">
+                  <span>发现相似的处理中问题</span>
+                  <span class="similar-issue-status">待处理</span>
+                </div>
+                <div class="similar-issue-body">
+                  <div class="similar-issue-id">ADTD-3178</div>
+                  <div class="similar-issue-title">国财A股组规则确认</div>
+                </div>
+              </article>
+              <p>需要帮你开启人工问答吗？</p>
+            </div>
+          </section>
+          <section class="planning-story" id="planningStory" hidden aria-label="规划文档修改建议对话"></section>
         </section>
 
         <section class="settings-view" id="settingsView" aria-label="设置">
@@ -2096,12 +2613,13 @@
               <button class="menu-row" data-reference><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>范围限定</button>
               <button class="menu-row plan-row" id="planToggle"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h5"/><path d="M4 17h5"/><path d="m14 6 2 2 4-4"/><path d="M14 17h6"/><circle cx="6.5" cy="12" r="1.5"/></svg>Plan mode<span class="switch"></span></button>
             </div>
+            <div class="launch-context" id="launchContext" hidden aria-label="已带入的上下文"></div>
             <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索文档/表/人工问答，输入 # 范围限定，输入 / 调用 Skill"></div>
             <div class="composer-bar">
               <div class="composer-left">
                 <button class="round-btn" id="plusBtn" aria-label="打开附件菜单">＋</button>
-                <button class="human-btn" id="humanHelpBtn" aria-label="转人工问答" title="AI无法满足需求时转人工问答">
-                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M4 12v4a2 2 0 0 0 2 2h2v-6H6a2 2 0 0 0-2 2"/><path d="M20 12v4a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2"/><path d="M8 20h4"/></svg>
+                <button class="human-btn" id="manualQaBtn" type="button" aria-label="创建人工问答">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13v4a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2Zm16 0v4a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z"/></svg>
                 </button>
                 <div class="model-switch">
                   <button class="model-toggle" id="modelToggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="切换模型">
@@ -2141,9 +2659,10 @@
 
       <aside class="artifact" id="artifact">
         <div class="panel-resizer artifact-resizer" id="artifactResizeHandle" data-resizer="artifact" role="separator" aria-label="调整问答主界面和右侧文件显示界面宽度" aria-orientation="vertical" tabindex="0"></div>
-        <div class="tabs" id="tabs">
-          <div class="tab active" data-tab="report"><span>文</span><span>股权激励报告</span><button class="tab-close" aria-label="关闭报告">×</button></div>
-          <div class="tab" data-tab="table"><span>表</span><span>字段映射表</span><button class="tab-close" aria-label="关闭表格">×</button></div>
+        <div class="tabs" id="tabs" role="tablist">
+          <div class="tab active" data-tab="report" role="tab" tabindex="0" aria-selected="true"><span>文</span><span>股权激励报告</span><button class="tab-close" aria-label="关闭报告">×</button></div>
+          <div class="tab" data-tab="table" role="tab" tabindex="-1" aria-selected="false"><span>表</span><span>字段映射表</span><button class="tab-close" aria-label="关闭表格">×</button></div>
+          <div class="tab" data-tab="manualQa" style="display:none" role="tab" tabindex="-1" aria-selected="false"><span>问</span><span>创建问题</span><button class="tab-close" aria-label="关闭创建问题">×</button></div>
           <button class="round-btn" id="reopenBtn" title="重新打开已关闭产物">＋</button>
         </div>
         <div class="artifact-head">
@@ -2152,6 +2671,9 @@
             <div class="artifact-meta" id="artifactMeta">未保存 · v3 · 当前活动窗口</div>
           </div>
           <div class="artifact-actions">
+            <button class="artifact-open-manual" id="openManualBtn" type="button" aria-label="在人工问答中打开" title="在人工问答中打开" hidden>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
+            </button>
             <button class="artifact-menu-toggle" id="artifactMenuToggle" type="button" aria-label="打开产物操作菜单" aria-expanded="false" aria-controls="artifactMenu" title="更多操作">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
             </button>
@@ -2170,6 +2692,7 @@
               </button>
             </div>
           </div>
+          <button class="artifact-pane-close" id="artifactPaneClose" type="button" aria-label="关闭产物窗口">×</button>
         </div>
         <div class="artifact-body" id="artifactBody"></div>
         <div class="artifact-empty">
@@ -2179,6 +2702,18 @@
           </div>
         </div>
       </aside>
+
+      <section class="manual-system" id="manualSystem" aria-label="人工问答系统">
+        <div class="manual-system-filter">
+          <label>ID：<input type="text" placeholder="请输入"></label>
+          <label>业务：<input type="text" placeholder="业务 ID 或业务名称"></label>
+          <label>查找：<input type="search" placeholder="输入关键字"></label>
+          <button type="button">查询</button>
+        </div>
+        <aside class="manual-issue-list" id="manualIssueList" aria-label="人工问答列表"></aside>
+        <article class="manual-system-detail" id="manualSystemDetail"></article>
+        <aside class="manual-system-properties" id="manualSystemProperties"></aside>
+      </section>
     </div>
   </div>
 
@@ -2210,9 +2745,15 @@
     const artifactBody = document.getElementById('artifactBody');
     const artifactTitle = document.getElementById('artifactTitle');
     const artifactMeta = document.getElementById('artifactMeta');
+    const messages = document.getElementById('messages');
+    const manualSystem = document.getElementById('manualSystem');
+    const planningStory = document.getElementById('planningStory');
+    const sendBtn = document.getElementById('sendBtn');
     const agentSidebarToggle = document.getElementById('agentSidebarToggle');
     const composerInput = document.getElementById('composerInput');
+    const launchContext = document.getElementById('launchContext');
     const plusBtn = document.getElementById('plusBtn');
+    const manualQaBtn = document.getElementById('manualQaBtn');
     const plusMenu = document.getElementById('plusMenu');
     const suggestPop = document.getElementById('suggestPop');
     const suggestHead = document.getElementById('suggestHead');
@@ -2235,16 +2776,37 @@
     const settingsPanels = document.querySelectorAll('[data-settings-panel]');
     const addSkillBtn = document.getElementById('addSkillBtn');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
+    const openManualBtn = document.getElementById('openManualBtn');
     const artifactMenu = document.getElementById('artifactMenu');
+    const artifactPaneClose = document.getElementById('artifactPaneClose');
+    const manualIssueList = document.getElementById('manualIssueList');
+    const manualSystemDetail = document.getElementById('manualSystemDetail');
+    const manualSystemProperties = document.getElementById('manualSystemProperties');
 
     let taskMode = false;
     let artifactVisible = false;
     let agentSidebarCollapsed = false;
     let planMode = false;
     let activeTab = 'report';
+    let manualQaPrefill = null;
+    let manualQaDraft = null;
+    let manualQaView = 'form';
+    let manualQaError = '';
+    let manualQaSubmitToken = 0;
+    let manualQaPromptPending = false;
+    let planningLaunchMode = false;
+    let planningOutcome = 'update';
+    let planningContext = null;
+    const manualIssues = Object.freeze([
+      Object.freeze({ id: 'ADTD-3194', type: '常规', shortTitle: 'STK288 公告披露大宗交易变动日期确认', title: 'STK288 公告披露大宗交易变动日期确认', table: 'STK288', code: '603019', team: '股票分部-交易组', business: '大宗交易变动', market: '中国', category: '股票', description: '请确认公告披露的大宗交易变动日期应采用公告日还是交易日。', ruleDoc: 'STK288 大宗交易录入规则.docx', targetDoc: 'STK288 大宗交易规划文档' }),
+      Object.freeze({ id: 'ADTD-3191', type: '常规', shortTitle: '质检组规则确认：国籍为中国，股东性质披露为境外自然人', title: '质检组规则确认：国籍为中国，股东性质披露为境外自然人，标准股东性质该如何维护？', table: 'STK032', code: '003007', team: '股票分部-股东组', business: '股东持股情况及一致行动人', market: '中国', category: '股票、三板', description: '年报披露股东性质为境外自然人，国籍为中国国籍。请确认标准股东性质如何维护，以及港澳台永久居民身份是否影响判定。', ruleDoc: 'STK032 股东明细表录入规则.docx', targetDoc: 'STK032 股东明细表规划文档' }),
+      Object.freeze({ id: 'ADTD-3190', type: '常规', shortTitle: 'A股交易组规则确认：STK658 进展维护', title: 'A股交易组规则确认：STK658 进展维护', table: 'STK658', code: '600519', team: '股票分部-交易组', business: '交易进展维护', market: '中国', category: '股票', description: '请确认进展状态发生变化后，历史记录是否需要同步回补。', ruleDoc: 'STK658 进展维护规则.docx', targetDoc: 'STK658 交易进展规划文档' })
+    ]);
+    let selectedManualIssueId = 'ADTD-3191';
     const tabs = {
       report: { open: true, title: '港股股权激励披露口径规划文档', meta: '未保存 · v3 · 当前活动窗口' },
-      table: { open: true, title: '字段映射表', meta: '未保存 · v1 · 当前活动窗口' }
+      table: { open: true, title: '字段映射表', meta: '未保存 · v1 · 当前活动窗口' },
+      manualQa: { open: false, available: false, title: '创建问题', meta: '人工问答 · 未提交' }
     };
 
     const suggestions = {
@@ -2331,13 +2893,26 @@
 
     function runArtifactAction(action) {
       closeArtifactMenu();
-      if (action === 'download') {
+      if (action === 'open-manual') {
+        setApplicationView('manual-qa');
+      } else if (activeTab === 'manualQa') {
+        return;
+      } else if (action === 'download') {
         showToast('已模拟导出产物');
       } else if (action === 'copy') {
         copyArtifactContent();
       } else if (action === 'render') {
         showToast('已模拟渲染产物');
       }
+    }
+
+    function updateArtifactActions() {
+      const isAgentFile = activeTab === 'report' || activeTab === 'table';
+      artifactMenu.querySelectorAll('[data-artifact-action="download"], [data-artifact-action="copy"], [data-artifact-action="render"]').forEach(item => {
+        item.disabled = !isAgentFile;
+        item.setAttribute('aria-disabled', String(!isAgentFile));
+      });
+      openManualBtn.hidden = activeTab !== 'manualQa';
     }
 
     function setModel(option) {
@@ -2476,20 +3051,25 @@
       conversationMeta.textContent = '';
     }
 
-    function setTaskMode(on) {
+    function resolveConversationTitle(on, currentTitle, preserveTitle) {
+      if (!on) return '新问答';
+      return preserveTitle ? currentTitle : '港股股权激励处理方案';
+    }
+
+    function setTaskMode(on, preserveTitle = false) {
       taskMode = on;
       workspace.classList.remove('settings-mode');
       settingsBtn.classList.remove('active');
       workspace.classList.toggle('task-mode', on);
-      conversationTitle.textContent = on ? '港股股权激励处理方案' : '新问答';
+      conversationTitle.textContent = resolveConversationTitle(on, conversationTitle.textContent, preserveTitle);
       conversationMeta.textContent = '';
     }
 
-    function setArtifactVisible(on) {
+    function setArtifactVisible(on, preserveTitle = false) {
       artifactVisible = on;
       layout.classList.toggle('with-artifact', on);
       artifact.classList.toggle('open', on);
-      if (on) setTaskMode(true);
+      if (on) setTaskMode(true, preserveTitle);
     }
 
     function setAgentSidebarCollapsed(on) {
@@ -2526,19 +3106,572 @@
       }
     });
 
+    function snapshotManualQaPrefill(prefill) {
+      return Object.freeze({
+        title: '',
+        team: '',
+        business: '',
+        issueType: '常规',
+        reporter: '',
+        handler: '',
+        category: '',
+        market: '',
+        tables: '',
+        ruleDocs: '',
+        cc: '',
+        description: '',
+        ...prefill
+      });
+    }
+
+    function prepareManualQaPrefill() {
+      manualQaPrefill = Object.freeze({
+        title: '国财A股组规则确认：LR1105 非经常性损益内部表加工规则',
+        team: '财务分部-财务组-A股',
+        business: '非经常性损益明细-A股',
+        issueType: '常规',
+        reporter: 'yaochenkai@myhexin.com',
+        handler: 'tangyahui@myhexin.com',
+        category: '股票',
+        market: '中国 > 中国大陆',
+        tables: 'LR1105、STK1196',
+        ruleDocs: 'STK1196/LR1105 非经常性损益录入规则',
+        cc: '非经常性损益明细-A股',
+        description: '请确认金额不等于一级科目时，一级科目编码和其中项编码的加工规则。'
+      });
+    }
+
+    function isManualQaConfirmation(text) {
+      const normalized = String(text || '').trim().replace(/^[，。！？、,.!?；;：:\s]+|[，。！？、,.!?；;：:\s]+$/g, '');
+      return ['需要', '好的', '好', '可以', '帮我创建', '开启人工问答'].includes(normalized);
+    }
+
+    function resolveManualQaSendAction(promptPending, isConfirmation) {
+      if (!promptPending) return 'generate-artifact';
+      return isConfirmation ? 'open-manual-qa' : 'story-explanation';
+    }
+
+    function openManualQa(source) {
+      if (manualQaDraft && manualQaView === 'form') {
+        tabs.manualQa.available = true;
+        tabs.manualQa.open = true;
+        activeTab = 'manualQa';
+        setArtifactVisible(true, true);
+        renderArtifact();
+        return;
+      }
+      manualQaDraft = snapshotManualQaPrefill(manualQaPrefill);
+      manualQaView = 'form';
+      manualQaError = '';
+      tabs.manualQa.available = true;
+      tabs.manualQa.open = true;
+      tabs.manualQa.title = '创建问题';
+      tabs.manualQa.meta = source === 'model' ? '人工问答 · 已应用后台预填' : '人工问答 · 手动创建';
+      activeTab = 'manualQa';
+      setArtifactVisible(true, true);
+      renderArtifact();
+    }
+
+    const artifactRenderers = { report: reportHtml, table: tableHtml, manualQa: manualQaHtml };
+
     function renderArtifact() {
       const openTabs = Object.entries(tabs).filter(([, value]) => value.open);
       artifact.classList.toggle('no-tabs', openTabs.length === 0);
+      if (openTabs.length > 0 && (!tabs[activeTab] || !tabs[activeTab].open)) activeTab = openTabs[0][0];
       document.querySelectorAll('.tab').forEach(tab => {
         const key = tab.dataset.tab;
+        const isActive = key === activeTab && tabs[key].open;
         tab.style.display = tabs[key].open ? 'flex' : 'none';
-        tab.classList.toggle('active', key === activeTab && tabs[key].open);
+        tab.querySelector('span:nth-of-type(2)').textContent = tabs[key].title;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
       });
       if (openTabs.length === 0) return;
-      if (!tabs[activeTab] || !tabs[activeTab].open) activeTab = openTabs[0][0];
       artifactTitle.textContent = tabs[activeTab].title;
       artifactMeta.textContent = tabs[activeTab].meta;
-      artifactBody.innerHTML = activeTab === 'report' ? reportHtml() : tableHtml();
+      artifactBody.innerHTML = artifactRenderers[activeTab]();
+      updateArtifactActions();
+    }
+
+    function manualQaHtml() {
+      return manualQaView === 'detail' ? manualQaDetailHtml() : manualQaFormHtml();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function fieldValue(draft, name) {
+      return escapeHtml(draft && draft[name]);
+    }
+
+    function manualQaFormHtml() {
+      const draft = manualQaDraft || snapshotManualQaPrefill(null);
+      const issueType = draft.issueType || '常规';
+      return `
+        <form class="manual-qa-form" id="manualQaForm" novalidate>
+          <div class="manual-form-heading">
+            <h2>创建人工问答</h2>
+            <p>演示表单仅模拟提交结果，不会写入真实系统。</p>
+          </div>
+          <div class="manual-form-grid">
+            <div class="manual-field wide">
+              <label for="manualQa-title"><span class="manual-required" aria-hidden="true">*</span>标题</label>
+              <input id="manualQa-title" name="title" maxlength="60" value="${fieldValue(draft, 'title')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field third">
+              <label for="manualQa-team"><span class="manual-required" aria-hidden="true">*</span>团队</label>
+              <input id="manualQa-team" name="team" value="${fieldValue(draft, 'team')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field third">
+              <label for="manualQa-business"><span class="manual-required" aria-hidden="true">*</span>业务</label>
+              <input id="manualQa-business" name="business" value="${fieldValue(draft, 'business')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field third">
+              <label for="manualQa-issueType"><span class="manual-required" aria-hidden="true">*</span>问题类型</label>
+              <select id="manualQa-issueType" name="issueType" required>
+                <option value="常规"${issueType === '常规' ? ' selected' : ''}>常规</option>
+                <option value="涉及质检"${issueType === '涉及质检' ? ' selected' : ''}>涉及质检</option>
+              </select>
+            </div>
+            <div class="manual-field">
+              <label for="manualQa-reporter"><span class="manual-required" aria-hidden="true">*</span>报告人</label>
+              <input id="manualQa-reporter" name="reporter" value="${fieldValue(draft, 'reporter')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field">
+              <label for="manualQa-handler"><span class="manual-required" aria-hidden="true">*</span>经办人</label>
+              <input id="manualQa-handler" name="handler" value="${fieldValue(draft, 'handler')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field">
+              <label for="manualQa-category"><span class="manual-required" aria-hidden="true">*</span>品种</label>
+              <input id="manualQa-category" name="category" value="${fieldValue(draft, 'category')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field">
+              <label for="manualQa-market"><span class="manual-required" aria-hidden="true">*</span>市场</label>
+              <input id="manualQa-market" name="market" value="${fieldValue(draft, 'market')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field wide">
+              <label for="manualQa-tables"><span class="manual-required" aria-hidden="true">*</span>涉及表</label>
+              <input id="manualQa-tables" name="tables" value="${fieldValue(draft, 'tables')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field wide">
+              <label for="manualQa-ruleDocs"><span class="manual-required" aria-hidden="true">*</span>规则文档</label>
+              <input id="manualQa-ruleDocs" name="ruleDocs" value="${fieldValue(draft, 'ruleDocs')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field wide">
+              <label for="manualQa-cc"><span class="manual-required" aria-hidden="true">*</span>抄送</label>
+              <input id="manualQa-cc" name="cc" value="${fieldValue(draft, 'cc')}" autocomplete="off" required>
+            </div>
+            <div class="manual-field wide">
+              <label for="manualQa-description"><span class="manual-required" aria-hidden="true">*</span>描述</label>
+              <textarea id="manualQa-description" name="description" required>${fieldValue(draft, 'description')}</textarea>
+            </div>
+          </div>
+          <div class="manual-form-error" role="alert">${escapeHtml(manualQaError)}</div>
+          <div class="manual-form-footer">
+            <label class="manual-demo-failure"><input type="checkbox" name="demoFailure"${draft.demoFailure ? ' checked' : ''}>Demo：模拟一次提交失败</label>
+            <button type="button" data-manual-form-action="cancel">取消</button>
+            <button type="submit">确认</button>
+          </div>
+        </form>`;
+    }
+
+    function validateManualQaDraft(draft) {
+      const required = ['title', 'team', 'business', 'issueType', 'reporter', 'handler', 'category', 'market', 'tables', 'ruleDocs', 'cc', 'description'];
+      return required.filter(name => !String(draft && draft[name] || '').trim());
+    }
+
+    function formDraft(form) {
+      const data = new FormData(form);
+      return {
+        title: data.get('title') || '',
+        team: data.get('team') || '',
+        business: data.get('business') || '',
+        issueType: data.get('issueType') || '常规',
+        reporter: data.get('reporter') || '',
+        handler: data.get('handler') || '',
+        category: data.get('category') || '',
+        market: data.get('market') || '',
+        tables: data.get('tables') || '',
+        ruleDocs: data.get('ruleDocs') || '',
+        cc: data.get('cc') || '',
+        description: data.get('description') || '',
+        demoFailure: data.has('demoFailure')
+      };
+    }
+
+    function updateManualQaDraftField(draft, name, value) {
+      return { ...(draft || {}), [name]: value };
+    }
+
+    function syncManualQaDraftControl(control) {
+      if (!control || !control.name || !control.closest('#manualQaForm')) return;
+      const value = control.type === 'checkbox' ? control.checked : control.value;
+      manualQaDraft = updateManualQaDraftField(manualQaDraft, control.name, value);
+    }
+
+    function invalidateManualQaSubmit() {
+      manualQaSubmitToken += 1;
+    }
+
+    function canCompleteManualQaSubmit(submitToken, currentToken, view, isOpen) {
+      return submitToken === currentToken && view === 'form' && isOpen;
+    }
+
+    function submitManualQa(form) {
+      const submittedDraft = formDraft(form);
+      manualQaDraft = submittedDraft;
+      const missing = validateManualQaDraft(manualQaDraft);
+      if (missing.length) {
+        manualQaError = `请补充 ${missing.length} 项必填内容，已保留全部填写内容`;
+        renderArtifact();
+        const invalidControl = artifactBody.querySelector(`[name="${missing[0]}"]`);
+        invalidControl?.setAttribute('aria-invalid', 'true');
+        invalidControl?.focus();
+        return;
+      }
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = '提交中…';
+      manualQaError = '';
+      const submitToken = ++manualQaSubmitToken;
+      setTimeout(() => {
+        if (!canCompleteManualQaSubmit(submitToken, manualQaSubmitToken, manualQaView, tabs.manualQa.open)) return;
+        if (submittedDraft.demoFailure) {
+          manualQaError = '提交失败，已保留全部填写内容';
+          renderArtifact();
+          return;
+        }
+        manualQaView = 'detail';
+        tabs.manualQa.title = 'ADTD-3179｜国财A股组规则确认';
+        tabs.manualQa.meta = '待处理 · 人工问答详情';
+        renderArtifact();
+      }, 500);
+    }
+
+    function directReplyEditorHtml() {
+      return `
+        <div class="manual-reply-editor">
+          <label class="manual-field" for="formalReplyInput">正式回复</label>
+          <textarea id="formalReplyInput" rows="7" placeholder="输入正式回复，也可返回 Agent 通过 @人工问答 获取辅助"></textarea>
+          <div class="reply-actions">
+            <button type="button" data-submit-formal-reply>提交正式回复</button>
+          </div>
+        </div>`;
+    }
+
+    function submittedReplyHtml(reply) {
+      return `
+        <div class="manual-submitted-reply" role="status">
+          <strong>回复已提交</strong>
+          <p>${escapeHtml(reply)}</p>
+          <button type="button" data-generate-planning-suggestion>生成规划文档修改建议</button>
+        </div>`;
+    }
+
+    function planningLaunchUrl(href, contextKey) {
+      const url = new URL(href);
+      url.search = '';
+      url.hash = '';
+      url.searchParams.set('launch', 'planning');
+      url.searchParams.set('contextKey', contextKey);
+      return url.toString();
+    }
+
+    function planningContextForIssue(issue, formalReply) {
+      return Object.freeze({
+        manualQaId: issue.id,
+        manualQaTitle: issue.title,
+        formalReply,
+        targetDoc: issue.targetDoc,
+        table: issue.table,
+        evidence: `${issue.id} 正式回复；规则文档 ${issue.ruleDoc}`
+      });
+    }
+
+    function planningPromptForContext(context) {
+      return `请基于 @人工问答 ${context.manualQaId}（${context.manualQaTitle}）的正式回复，评估是否需要修改目标规划文档：${context.targetDoc}。如需修改，请给出目标文档、修改类型、目标章节、修改原因、影响字段与范围、建议文案、依据和风险；如无需修改，请分别说明结论、原因、核验依据和后续建议。`;
+    }
+
+    function resetThenRestorePlanningContext(reset, resolvedContext) {
+      reset();
+      return resolvedContext;
+    }
+
+    function getPlanningStorage(owner) {
+      try {
+        return owner.localStorage;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function isValidPlanningContextKey(contextKey) {
+      return typeof contextKey === 'string' && /^planning-context:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(contextKey);
+    }
+
+    function createPlanningContextKey(cryptoOwner) {
+      let uuid = '';
+      try {
+        if (typeof cryptoOwner?.randomUUID === 'function') {
+          uuid = cryptoOwner.randomUUID();
+        } else if (typeof cryptoOwner?.getRandomValues === 'function') {
+          const bytes = cryptoOwner.getRandomValues(new Uint8Array(16));
+          bytes[6] = (bytes[6] & 0x0f) | 0x40;
+          bytes[8] = (bytes[8] & 0x3f) | 0x80;
+          const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+          uuid = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+        }
+      } catch (error) {
+        return null;
+      }
+      const contextKey = `planning-context:${uuid}`;
+      return isValidPlanningContextKey(contextKey) ? contextKey : null;
+    }
+
+    function storePlanningLaunchContext(storage, contextKey, context, now) {
+      if (!isValidPlanningContextKey(contextKey)) return { ok: false, error: 'invalid-key' };
+      const fields = ['manualQaId', 'manualQaTitle', 'formalReply', 'targetDoc', 'table', 'evidence'];
+      if (!context || fields.some(field => typeof context[field] !== 'string' || !context[field])) {
+        return { ok: false, error: 'invalid' };
+      }
+      try {
+        storage.setItem(contextKey, JSON.stringify({ createdAt: now, context }));
+        return { ok: true };
+      } catch (error) {
+        return { ok: false, error: 'storage' };
+      }
+    }
+
+    function consumePlanningLaunchContext(storage, contextKey, now) {
+      if (!contextKey) return { ok: false, error: 'missing' };
+      if (!isValidPlanningContextKey(contextKey)) return { ok: false, error: 'invalid-key' };
+      let raw;
+      try {
+        raw = storage.getItem(contextKey);
+        if (raw !== null) storage.removeItem(contextKey);
+      } catch (error) {
+        return { ok: false, error: 'storage' };
+      }
+      if (raw === null) return { ok: false, error: 'missing' };
+      let envelope;
+      try {
+        envelope = JSON.parse(raw);
+      } catch (error) {
+        return { ok: false, error: 'malformed' };
+      }
+      const fields = ['manualQaId', 'manualQaTitle', 'formalReply', 'targetDoc', 'table', 'evidence'];
+      if (!envelope || !Number.isFinite(envelope.createdAt) || !envelope.context || fields.some(field => typeof envelope.context[field] !== 'string' || !envelope.context[field])) {
+        return { ok: false, error: 'invalid' };
+      }
+      if (now - envelope.createdAt > 5 * 60_000 || envelope.createdAt - now > 60_000) {
+        return { ok: false, error: 'stale' };
+      }
+      return { ok: true, context: envelope.context };
+    }
+
+    function openPlanningWindow(openWindow, url, cleanup) {
+      let popup = null;
+      try {
+        popup = openWindow(url, '_blank');
+      } catch (error) {
+        cleanup();
+        return false;
+      }
+      if (!popup) {
+        cleanup();
+        return false;
+      }
+      try { popup.opener = null; } catch (error) { /* Same-origin launch does not depend on opener. */ }
+      return true;
+    }
+
+    function removePlanningLaunchContext(storage, contextKey) {
+      try { storage.removeItem(contextKey); } catch (error) { /* Best-effort cleanup only. */ }
+    }
+
+    function openPlanningSuggestionAgent(issue, reply) {
+      const context = planningContextForIssue(issue, reply);
+      const contextKey = createPlanningContextKey(window.crypto);
+      const storage = getPlanningStorage(window);
+      const stored = storePlanningLaunchContext(storage, contextKey, context, Date.now());
+      if (!stored.ok) {
+        showToast('无法准备规划评估上下文，请重试');
+        return;
+      }
+      const opened = openPlanningWindow(
+        window.open.bind(window),
+        planningLaunchUrl(window.location.href, contextKey),
+        () => removePlanningLaunchContext(storage, contextKey)
+      );
+      if (!opened) showToast('新 Agent 弹窗未打开，请允许浏览器弹窗后重试');
+      if (opened) setTimeout(() => removePlanningLaunchContext(storage, contextKey), 5 * 60_000);
+    }
+
+    function planningLaunchContextHtml(context) {
+      return `
+        <div class="launch-private">已带入人工问答和正式回复；仅在对话中给出建议</div>
+        <div class="launch-token-row">
+          <span class="context-token">@人工问答 ${escapeHtml(context.manualQaId)}｜${escapeHtml(context.manualQaTitle)}</span>
+          <span class="context-token">目标规划文档：${escapeHtml(context.targetDoc)}</span>
+        </div>
+        <div class="launch-context-note">正式回复：${escapeHtml(context.formalReply)}</div>
+        <div class="planning-outcome-picker" aria-label="Demo 结果">
+          <span>Demo 结果</span>
+          <button type="button" data-planning-outcome="no-update" aria-pressed="false">无需更新</button>
+          <button type="button" class="active" data-planning-outcome="update" aria-pressed="true">生成修改建议</button>
+        </div>`;
+    }
+
+    function planningResultHtml(outcome, text, context) {
+      if (outcome === 'no-update') {
+        return `
+          <div class="bubble user">${escapeHtml(text)}</div>
+          <article class="planning-result" role="status" aria-live="polite">
+            <h3>无需更新</h3>
+            <dl>
+              <div><dt>结论</dt><dd>${escapeHtml(context.targetDoc)} 无需更新。</dd></div>
+              <div><dt>原因</dt><dd>${escapeHtml(context.manualQaTitle)} 的正式回复是对现有规则适用边界的个案确认，未引入新字段、新范围或规则冲突。</dd></div>
+              <div><dt>核验依据</dt><dd>${escapeHtml(context.evidence)}</dd></div>
+              <div><dt>后续建议</dt><dd>保留本次人工问答作为个案依据，规则口径变化时再重新评估。</dd></div>
+            </dl>
+          </article>`;
+      }
+      return `
+        <div class="bubble user">${escapeHtml(text)}</div>
+        <article class="planning-result" role="status" aria-live="polite">
+          <h3>建议更新规划文档</h3>
+          <dl>
+            <div><dt>目标文档</dt><dd>${escapeHtml(context.targetDoc)}</dd></div>
+            <div><dt>修改类型</dt><dd>规则口径补充</dd></div>
+            <div><dt>目标章节</dt><dd>数据加工规则 · 例外口径</dd></div>
+            <div><dt>修改原因</dt><dd>${escapeHtml(context.manualQaTitle)} 的正式回复补充了现有文档未明确的维护口径。</dd></div>
+            <div><dt>影响字段与范围</dt><dd>${escapeHtml(context.table)} 相关字段与同类存量样本。</dd></div>
+            <div><dt>建议文案</dt><dd>补充人工确认口径：${escapeHtml(context.formalReply)}</dd></div>
+            <div><dt>依据</dt><dd>${escapeHtml(context.evidence)}</dd></div>
+            <div><dt>风险</dt><dd>需确认历史数据是否回溯，并核对港澳台证件类型映射。</dd></div>
+          </dl>
+        </article>`;
+    }
+
+    function submitPlanningEvaluation(text) {
+      if (!text.trim()) {
+        showToast('请先确认或编辑评估提示词');
+        composerInput.focus();
+        return;
+      }
+      planningStory.innerHTML = planningResultHtml(planningOutcome, text, planningContext);
+      planningStory.hidden = false;
+      composerInput.textContent = '';
+      showToast('已在 Agent 对话中生成建议');
+    }
+
+    function selectManualIssue(issues, currentId, nextId) {
+      return issues.some(issue => issue.id === nextId) ? nextId : currentId;
+    }
+
+    function renderManualIssueList() {
+      manualIssueList.innerHTML = manualIssues.map(issue => `
+        <button class="manual-issue-card${issue.id === selectedManualIssueId ? ' active' : ''}" type="button" data-manual-issue-id="${issue.id}" aria-pressed="${issue.id === selectedManualIssueId}">
+          <div class="manual-issue-card-top"><span>${issue.id}</span><span>${issue.type}</span></div>
+          <div class="manual-issue-card-title">${issue.shortTitle}</div>
+          <div class="manual-issue-card-meta"><span>${issue.table}</span><span>待处理</span></div>
+        </button>`).join('');
+    }
+
+    function renderManualIssueDetail() {
+      const issue = manualIssues.find(item => item.id === selectedManualIssueId) || manualIssues[0];
+      manualSystemDetail.innerHTML = `
+        <h1>${issue.title}</h1>
+        <div class="manual-system-description">
+          <h2>描述</h2>
+          <p>股票代码：${issue.code}</p>
+          <p>${issue.description}</p>
+        </div>
+        <div class="manual-system-evidence"><strong>问题材料预览</strong><br>已附问题截图与 ${issue.ruleDoc}，用于模拟现有人工问答材料区。</div>
+        <section class="manual-system-replies">
+          <h2>回复</h2>
+          <div id="manualModuleReplyArea"><p class="manual-empty">暂无数据</p></div>
+          <div class="manual-system-actions">
+            <button type="button" data-manual-module-add-reply>添加回复</button>
+            <button type="button" data-manual-module-add-agent>添加至 Agent</button>
+          </div>
+        </section>`;
+      manualSystemProperties.innerHTML = `
+        <h2>属性</h2><dl>
+          <div><dt>ID</dt><dd>${issue.id}</dd></div>
+          <div><dt>团队</dt><dd>${issue.team}</dd></div>
+          <div><dt>业务</dt><dd>${issue.business}</dd></div>
+          <div><dt>市场</dt><dd>${issue.market}</dd></div>
+          <div><dt>品种</dt><dd>${issue.category}</dd></div>
+          <div><dt>状态</dt><dd>待处理</dd></div>
+          <div><dt>涉及表</dt><dd>${issue.table}</dd></div>
+          <div><dt>规则文档</dt><dd>${issue.ruleDoc}</dd></div>
+          <div><dt>报告人</dt><dd>liurui5@myhexin.com</dd></div>
+          <div><dt>经办人</dt><dd>chenhuq@myhexin.com</dd></div>
+        </dl>`;
+    }
+
+    function setApplicationView(view) {
+      layout.classList.toggle('manual-system-mode', view === 'manual-qa');
+      document.querySelectorAll('[data-app-view]').forEach(item => {
+        item.classList.toggle('active', item.dataset.appView === view);
+        if (item.dataset.appView === view) item.setAttribute('aria-current', 'page');
+        else item.removeAttribute('aria-current');
+      });
+      closeOverlays();
+    }
+
+    function handoffManualQaToAgent() {
+      setApplicationView('agent');
+      loadEmptyConversation();
+      composerInput.textContent = '@人工问答';
+      composerInput.focus();
+    }
+
+    function manualQaDetailHtml() {
+      const draft = manualQaDraft || snapshotManualQaPrefill(null);
+      return `
+        <section class="manual-detail" aria-label="人工问答详情嵌入视图">
+          <header class="manual-detail-header">
+            <div>
+              <div class="manual-detail-id">ADTD-3179</div>
+              <h2>国财A股组规则确认</h2>
+            </div>
+            <span class="manual-status-pill">待处理</span>
+          </header>
+          <div class="manual-detail-section">
+            <h3>问题描述</h3>
+            <p>${fieldValue(draft, 'description')}</p>
+          </div>
+          <div class="manual-detail-section">
+            <h3>附件</h3>
+            <p class="manual-empty">暂无附件</p>
+          </div>
+          <dl class="manual-detail-grid">
+            <div class="manual-detail-property"><dt>团队</dt><dd>${fieldValue(draft, 'team')}</dd></div>
+            <div class="manual-detail-property"><dt>业务</dt><dd>${fieldValue(draft, 'business')}</dd></div>
+            <div class="manual-detail-property"><dt>市场</dt><dd>${fieldValue(draft, 'market')}</dd></div>
+            <div class="manual-detail-property"><dt>品种</dt><dd>${fieldValue(draft, 'category')}</dd></div>
+            <div class="manual-detail-property"><dt>涉及表</dt><dd>${fieldValue(draft, 'tables')}</dd></div>
+            <div class="manual-detail-property"><dt>规则文档</dt><dd>${fieldValue(draft, 'ruleDocs')}</dd></div>
+          </dl>
+          <div class="manual-detail-section manual-detail-reply">
+            <h3>回复</h3>
+            <div id="replyArea"><p class="manual-empty">暂无回复</p></div>
+            <div class="manual-detail-actions">
+              <span class="manual-permission-note">当前角色无回复权限</span>
+              <button type="button" data-add-reply disabled aria-disabled="true">添加回复</button>
+              <button type="button" data-add-to-agent disabled aria-disabled="true">添加至 Agent</button>
+            </div>
+          </div>
+        </section>`;
     }
 
     function reportHtml() {
@@ -2686,11 +3819,54 @@
       artifactMenuToggle.classList.toggle('open', open);
       artifactMenuToggle.setAttribute('aria-expanded', String(open));
     });
+    openManualBtn.addEventListener('click', () => runArtifactAction('open-manual'));
 
     artifactMenu.addEventListener('click', event => {
       const item = event.target.closest('[data-artifact-action]');
-      if (!item) return;
+      if (!item || item.disabled) return;
       runArtifactAction(item.dataset.artifactAction);
+    });
+
+    document.querySelectorAll('[data-app-view]').forEach(item => {
+      item.addEventListener('click', () => setApplicationView(item.dataset.appView));
+    });
+
+    manualSystem.addEventListener('click', event => {
+      const issueCard = event.target.closest('[data-manual-issue-id]');
+      if (issueCard) {
+        selectedManualIssueId = selectManualIssue(manualIssues, selectedManualIssueId, issueCard.dataset.manualIssueId);
+        renderManualIssueList();
+        renderManualIssueDetail();
+        return;
+      }
+      if (event.target.closest('[data-manual-module-add-reply]')) {
+        const replyArea = manualSystem.querySelector('#manualModuleReplyArea');
+        replyArea.innerHTML = directReplyEditorHtml();
+        replyArea.querySelector('#formalReplyInput')?.focus();
+        return;
+      }
+      if (event.target.closest('[data-submit-formal-reply]')) {
+        const input = manualSystem.querySelector('#formalReplyInput');
+        const reply = input?.value.trim() || '';
+        if (!reply) {
+          showToast('请先输入回复内容');
+          input?.focus();
+          return;
+        }
+        const replyArea = manualSystem.querySelector('#manualModuleReplyArea');
+        replyArea.innerHTML = submittedReplyHtml(reply);
+        showToast('回复已提交');
+        return;
+      }
+      if (event.target.closest('[data-generate-planning-suggestion]')) {
+        const issue = manualIssues.find(item => item.id === selectedManualIssueId) || manualIssues[0];
+        const reply = manualSystem.querySelector('.manual-submitted-reply p')?.textContent.trim() || '';
+        openPlanningSuggestionAgent(issue, reply);
+        return;
+      }
+      if (event.target.closest('[data-manual-module-add-agent]')) {
+        handoffManualQaToAgent();
+      }
     });
 
     settingsTabs.forEach(tab => tab.addEventListener('click', () => {
@@ -2710,6 +3886,22 @@
       else if (text.endsWith('#')) openScopePanel();
       else if (text.endsWith('/')) openSuggest('/');
       else suggestPop.classList.remove('open');
+    });
+
+    composerInput.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' || event.shiftKey) return;
+      event.preventDefault();
+      sendBtn.click();
+    });
+
+    launchContext.addEventListener('click', event => {
+      const choice = event.target.closest('[data-planning-outcome]');
+      if (!choice) return;
+      planningOutcome = choice.dataset.planningOutcome;
+      launchContext.querySelectorAll('[data-planning-outcome]').forEach(button => {
+        button.classList.toggle('active', button === choice);
+        button.setAttribute('aria-pressed', String(button === choice));
+      });
     });
 
     document.addEventListener('keydown', event => {
@@ -2734,13 +3926,60 @@
       showToast('已模拟上传图片：截图参考');
     });
     document.querySelector('[data-reference]').addEventListener('click', openScopePanel);
+    manualQaBtn.addEventListener('click', () => {
+      if (manualQaPromptPending) {
+        prepareManualQaPrefill();
+      } else {
+        manualQaPrefill = snapshotManualQaPrefill({ description: composerInput.textContent.trim() });
+      }
+      openManualQa('composer');
+    });
     document.getElementById('scopeClose').addEventListener('click', closeOverlays);
-    document.getElementById('humanHelpBtn').addEventListener('click', () => {
-      closeOverlays();
-      showToast('已触发人工问答，将当前问题转交人工处理');
+    artifactBody.addEventListener('submit', event => {
+      if (!event.target.matches('#manualQaForm')) return;
+      event.preventDefault();
+      submitManualQa(event.target);
     });
 
-    document.getElementById('sendBtn').addEventListener('click', () => {
+    artifactBody.addEventListener('input', event => {
+      syncManualQaDraftControl(event.target);
+    });
+
+    artifactBody.addEventListener('change', event => {
+      syncManualQaDraftControl(event.target);
+    });
+
+    artifactBody.addEventListener('click', event => {
+      const action = event.target.closest('[data-manual-form-action]');
+      if (!action) return;
+      const data = action.dataset;
+      if (data.manualFormAction !== 'cancel') return;
+      invalidateManualQaSubmit();
+      tabs.manualQa.open = false;
+      const next = Object.keys(tabs).find(key => tabs[key].open);
+      activeTab = next || activeTab;
+      renderArtifact();
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const text = composerInput.textContent.trim();
+      if (planningLaunchMode) {
+        submitPlanningEvaluation(text);
+        return;
+      }
+      const sendAction = resolveManualQaSendAction(manualQaPromptPending, isManualQaConfirmation(text));
+      if (manualQaPromptPending && isManualQaConfirmation(text)) {
+        composerInput.textContent = '';
+        openManualQa('model');
+        return;
+      }
+      if (sendAction === 'story-explanation') {
+        composerInput.textContent = '';
+        setArtifactVisible(false);
+        conversationTitle.textContent = '国财A股组规则确认';
+        showToast('当前资料仍不足，请回复“需要”开启人工问答');
+        return;
+      }
       setTaskMode(true);
       setArtifactVisible(true);
       renderArtifact();
@@ -2752,7 +3991,104 @@
       row.classList.add('active');
     }
 
+    function initializePlanningLaunch() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('launch') !== 'planning') return false;
+      const consumed = consumePlanningLaunchContext(getPlanningStorage(window), params.get('contextKey'), Date.now());
+      if (!consumed.ok) {
+        loadEmptyConversation();
+        showPlanningLaunchError(consumed.error);
+        return false;
+      }
+      const resolvedContext = consumed.context;
+      planningContext = resetThenRestorePlanningContext(loadEmptyConversation, resolvedContext);
+      planningLaunchMode = true;
+      planningOutcome = 'update';
+      setTaskMode(true, true);
+      setArtifactVisible(false);
+      messages.classList.add('planning-mode');
+      planningStory.hidden = false;
+      planningStory.innerHTML = '<div class="launch-welcome">已准备规划文档评估上下文。你可以先编辑下方提示词，再点击发送。</div>';
+      launchContext.hidden = false;
+      launchContext.innerHTML = planningLaunchContextHtml(planningContext);
+      composerInput.textContent = planningPromptForContext(planningContext);
+      conversationTitle.textContent = '规划文档修改建议';
+      conversationMeta.textContent = '草稿已准备 · 等待用户发送';
+      composerInput.focus();
+      return true;
+    }
+
+    function showPlanningLaunchError(error) {
+      const messagesByError = {
+        missing: '未找到规划评估上下文，该链接可能已使用。',
+        'invalid-key': '规划评估链接无效，请从人工问答重新发起。',
+        stale: '规划评估上下文已过期，请从人工问答重新发起。',
+        malformed: '规划评估上下文已损坏，请重新发起。',
+        invalid: '规划评估上下文不完整，请重新发起。',
+        storage: '浏览器无法读取规划评估上下文，请检查存储权限。'
+      };
+      setTaskMode(true, true);
+      setArtifactVisible(false);
+      messages.classList.add('planning-mode');
+      planningStory.hidden = false;
+      planningStory.innerHTML = `<div class="launch-welcome" role="alert">${messagesByError[error] || messagesByError.invalid}</div>`;
+      conversationTitle.textContent = '无法打开规划文档修改建议';
+      conversationMeta.textContent = '上下文加载失败';
+      composerInput.textContent = '';
+    }
+
+    function clearManualQaStory() {
+      messages.classList.remove('manual-qa-mode');
+      document.getElementById('manualQaStory').hidden = true;
+    }
+
+    function clearPlanningStory() {
+      planningLaunchMode = false;
+      planningContext = null;
+      messages.classList.remove('planning-mode');
+      planningStory.hidden = true;
+      planningStory.innerHTML = '';
+      launchContext.hidden = true;
+      launchContext.innerHTML = '';
+    }
+
+    function createManualQaConversationState() {
+      return Object.freeze({
+        prefill: null,
+        draft: null,
+        view: 'form',
+        promptPending: false,
+        open: false,
+        available: false,
+        title: '创建问题',
+        meta: '人工问答 · 未提交'
+      });
+    }
+
+    function resetManualQaDraft() {
+      invalidateManualQaSubmit();
+      const state = createManualQaConversationState();
+      manualQaPrefill = state.prefill;
+      manualQaDraft = state.draft;
+      manualQaPromptPending = state.promptPending;
+      manualQaView = state.view;
+      manualQaError = '';
+      tabs.manualQa.open = state.open;
+      tabs.manualQa.available = state.available;
+      tabs.manualQa.title = state.title;
+      tabs.manualQa.meta = state.meta;
+    }
+
+    function resetConversationModes(clearManual, clearPlanning, resetDraft) {
+      clearManual();
+      clearPlanning();
+      resetDraft();
+    }
+
     function loadEmptyConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      tabs.report.open = false;
+      tabs.table.open = false;
       setTaskMode(false);
       setArtifactVisible(false);
       planMode = false;
@@ -2762,9 +4098,28 @@
     }
 
     function loadArtifactConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      tabs.report.open = true;
+      tabs.table.open = true;
+      activeTab = 'report';
       setTaskMode(true);
       setArtifactVisible(true);
       renderArtifact();
+    }
+
+    function loadManualQaConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      setTaskMode(true);
+      setArtifactVisible(false);
+      tabs.report.open = false;
+      tabs.table.open = false;
+      prepareManualQaPrefill();
+      manualQaPromptPending = true;
+      messages.classList.add('manual-qa-mode');
+      document.getElementById('manualQaStory').hidden = false;
+      conversationTitle.textContent = '国财A股组规则确认';
+      conversationMeta.textContent = '当前资料不足 · 可开启人工问答';
+      closeOverlays();
     }
 
     document.querySelectorAll('.history-row').forEach(row => row.addEventListener('click', () => {
@@ -2774,10 +4129,19 @@
         loadEmptyConversation();
       } else if (state === 'artifact') {
         loadArtifactConversation();
+      } else if (state === 'manual-qa') {
+        loadManualQaConversation();
       } else {
         closeOverlays();
       }
     }));
+
+    const manualQaHistoryRow = document.querySelector('[data-history-state="manual-qa"]');
+    manualQaHistoryRow.addEventListener('keydown', event => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      manualQaHistoryRow.click();
+    });
 
     document.getElementById('newChat').addEventListener('click', () => {
       const emptyRow = document.querySelector('[data-history-state="empty"]');
@@ -2791,6 +4155,8 @@
       if (artifactVisible) renderArtifact();
     });
 
+    artifactPaneClose.addEventListener('click', () => setArtifactVisible(false));
+
     agentSidebarToggle.addEventListener('click', event => {
       event.stopPropagation();
       setAgentSidebarCollapsed(!agentSidebarCollapsed);
@@ -2800,6 +4166,7 @@
       const close = event.target.closest('.tab-close');
       const tab = event.target.closest('.tab');
       if (close && tab) {
+        if (tab.dataset.tab === 'manualQa') invalidateManualQaSubmit();
         tabs[tab.dataset.tab].open = false;
         if (activeTab === tab.dataset.tab) {
           const next = Object.keys(tabs).find(key => tabs[key].open);
@@ -2831,7 +4198,7 @@
     });
 
     document.getElementById('reopenBtn').addEventListener('click', () => {
-      const closed = Object.keys(tabs).find(key => !tabs[key].open);
+      const closed = Object.keys(tabs).find(key => !tabs[key].open && tabs[key].available !== false);
       if (closed) {
         tabs[closed].open = true;
         activeTab = closed;
@@ -2848,7 +4215,10 @@
       if (!event.target.closest('.composer')) closeOverlays();
     });
 
+    renderManualIssueList();
+    renderManualIssueDetail();
     renderArtifact();
+    initializePlanningLaunch();
   </script>
 </body>
 </html>
