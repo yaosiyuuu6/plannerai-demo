@@ -342,19 +342,147 @@
     }
     .history-list { padding: 0 8px 12px; overflow: auto; flex: 1; }
     .history-row {
+      position: relative;
       height: 38px;
       border-radius: 9px;
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 28px;
       align-items: center;
-      padding: 0 10px;
+      gap: 4px;
+      padding: 0 5px 0 10px;
       font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       color: #262626;
       margin-bottom: 3px;
+      cursor: pointer;
     }
     .history-row.active { background: var(--primary-bg); color: #0958d9; font-weight: 500; }
+    .history-pin-indicator {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      width: 13px;
+      height: 13px;
+      color: #597ef7;
+      display: none;
+      transform: translateY(-50%);
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+    }
+    .history-row.pinned .history-pin-indicator { display: block; }
+    .history-row.pinned .history-title { padding-left: 18px; }
+    .history-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .history-title:focus-visible {
+      border-radius: 4px;
+      outline: 2px solid rgba(22, 119, 255, .35);
+      outline-offset: 2px;
+    }
+    .history-more {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #8c8c8c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease, background .16s ease, color .16s ease;
+    }
+    .history-more .icon { width: 16px; height: 16px; }
+    .history-row:hover .history-more,
+    .history-row:focus-within .history-more,
+    .history-row.menu-open .history-more {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .history-more:hover,
+    .history-more[aria-expanded="true"] {
+      background: #e6e6e6;
+      color: #262626;
+    }
+    .history-rename-input {
+      width: 100%;
+      height: 28px;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      outline: 2px solid rgba(22, 119, 255, .12);
+      padding: 0 7px;
+      color: #262626;
+      background: #fff;
+      font: inherit;
+    }
+    .history-context-menu {
+      position: fixed;
+      z-index: 180;
+      width: 128px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.16);
+      display: none;
+    }
+    .history-context-menu.open { display: block; }
+    .history-menu-item {
+      width: 100%;
+      height: 36px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #262626;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 9px;
+      font-size: 13px;
+      text-align: left;
+    }
+    .history-menu-item:hover { background: #f5f5f5; }
+    .history-menu-item[data-history-action="pin"] { color: #0958d9; }
+    .history-menu-item.danger { color: #cf1322; }
+    .history-menu-item .icon { width: 15px; height: 15px; }
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.28);
+    }
+    .confirm-overlay.open { display: flex; }
+    .confirm-dialog {
+      width: min(400px, 100%);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 18px 52px rgba(0,0,0,.24);
+      padding: 20px;
+    }
+    .confirm-dialog h3 { margin: 0 0 8px; font-size: 17px; }
+    .confirm-dialog p { margin: 0; color: #595959; font-size: 14px; line-height: 1.6; }
+    .confirm-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+    .confirm-actions button {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: #262626;
+      padding: 0 14px;
+    }
+    .confirm-actions .danger {
+      border-color: #ff4d4f;
+      background: #ff4d4f;
+      color: #fff;
+    }
     .settings {
       border-top: 1px solid var(--border);
       padding: 10px 14px 14px;
@@ -805,6 +933,7 @@
     .task-mode .welcome { display: none; }
     #messages.manual-qa-mode > :not(#manualQaStory) { display: none; }
     #messages.planning-mode > :not(#planningStory) { display: none; }
+    #messages.daily-report-mode > :not(#dailyReportStory) { display: none; }
     .manual-qa-story {
       width: min(100%, 880px);
       margin: 0 auto;
@@ -1067,6 +1196,171 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .daily-report-story {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .daily-report-story[hidden] { display: none; }
+    .daily-run-log {
+      margin: 0;
+      padding: 0;
+      color: #595959;
+      font-size: 13px;
+    }
+    .daily-live-run {
+      margin: 0;
+      padding: 0;
+      color: #595959;
+      font-size: 13px;
+    }
+    .daily-run-head {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      color: #595959;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .daily-run-head::-webkit-details-marker,
+    .daily-live-head::-webkit-details-marker,
+    .daily-action-head::-webkit-details-marker { display: none; }
+    .daily-run-head:focus-visible,
+    .daily-live-head:focus-visible,
+    .daily-action-head:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .daily-run-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .daily-live-head {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      color: #595959;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .daily-live-spinner {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      animation: daily-live-spin .9s linear infinite;
+    }
+    .daily-action-icon {
+      width: 17px;
+      height: 17px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .daily-chevron {
+      width: 8px;
+      height: 8px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(-45deg);
+      transition: transform .18s ease;
+      flex: none;
+    }
+    .daily-run-log[open] > .daily-run-head .daily-chevron,
+    .daily-live-run[open] > .daily-live-head .daily-chevron,
+    .daily-action-group[open] > .daily-action-head .daily-chevron {
+      transform: rotate(45deg);
+    }
+    .daily-run-body {
+      display: grid;
+      gap: 14px;
+      padding: 14px 0 2px;
+    }
+    .daily-stage-status {
+      margin: 0;
+      color: #262626;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.65;
+    }
+    .daily-action-group {
+      margin: 0;
+      color: #595959;
+    }
+    .daily-action-head {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      line-height: 1.6;
+    }
+    .daily-action-list {
+      display: grid;
+      gap: 4px;
+      padding: 2px 0;
+    }
+    .daily-action-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      color: #595959;
+      line-height: 1.65;
+    }
+    .daily-action-row span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .daily-running-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+    .daily-report-result {
+      color: #262626;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .daily-report-result h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    .daily-report-result p { margin: 0 0 8px; }
+    .daily-report-result ul {
+      margin: 4px 0 0;
+      padding-left: 20px;
+    }
+    .daily-report-result li + li { margin-top: 4px; }
+    @keyframes daily-live-spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .daily-chevron { transition: none; }
+      .daily-live-spinner { animation: none; }
     }
     .answer-text { margin: 0; }
     .citation {
@@ -1484,13 +1778,78 @@
       border-color: var(--line);
       box-shadow: 0 10px 28px rgba(0,0,0,.12);
     }
-    .mention-pop .suggest-head {
-      height: 38px;
-      border-bottom: 0;
-      color: #8c8c8c;
+    .mention-shell { display: none; }
+    .mention-pop .mention-shell { display: block; }
+    .mention-pop .skill-shell { display: none; }
+    .mention-tabs {
+      height: 48px;
+      display: flex;
+      align-items: stretch;
+      gap: 26px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mention-tab {
+      position: relative;
+      border: 0;
+      background: transparent;
+      color: #262626;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 1px;
       font-size: 14px;
-      font-weight: 600;
-      padding: 0 16px;
+    }
+    .mention-tab .icon {
+      width: 16px;
+      height: 16px;
+      color: currentColor;
+    }
+    .mention-tab.active { color: var(--primary); }
+    .mention-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: var(--primary);
+    }
+    .mention-search-wrap {
+      position: relative;
+      margin: 10px 12px 8px;
+    }
+    .mention-search-wrap .icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      color: #8c8c8c;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .mention-search {
+      width: 100%;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      outline: 0;
+      padding: 0 10px 0 32px;
+      color: #262626;
+      background: #fff;
+      font-size: 13px;
+    }
+    .mention-search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(22,119,255,.12);
+    }
+    .mention-results {
+      min-height: 170px;
+      max-height: 264px;
+      overflow-y: auto;
+      padding: 2px 0 8px;
     }
     .mention-pop .suggest-row {
       height: 48px;
@@ -1508,19 +1867,7 @@
       grid-template-columns: 40px minmax(0,1fr);
       gap: 10px;
     }
-    .qa-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: #5146f0;
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0;
-    }
+    .mention-pop .qa-row > .icon { width: 18px; height: 18px; margin-left: 3px; }
     .qa-content { min-width: 0; }
     .qa-meta {
       display: flex;
@@ -1534,6 +1881,93 @@
       font-weight: 600;
       white-space: nowrap;
     }
+    .mention-empty {
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #bfbfbf;
+      font-size: 13px;
+    }
+    .mention-empty .icon { width: 36px; height: 36px; color: #d9d9d9; }
+    .mention-footer {
+      min-height: 38px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 6px 12px;
+      color: #8c8c8c;
+      font-size: 11px;
+    }
+    .mention-shortcuts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mention-shortcuts span { display: inline-flex; align-items: center; gap: 4px; }
+    .mention-shortcuts kbd {
+      min-width: 22px;
+      height: 20px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      background: #fafafa;
+      color: #8c8c8c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      font: inherit;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .composer-reference {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 4px;
+      color: #0958d9;
+      background: transparent;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      padding: 1px 2px;
+      cursor: default;
+      transition: background .16s ease;
+    }
+    .composer-reference .icon,
+    .inline-reference .icon {
+      width: 14px;
+      height: 14px;
+      color: currentColor;
+      stroke-width: 1.8;
+    }
+    .composer-reference:hover,
+    .composer-reference.selected { background: #e6f4ff; }
+    .composer-url {
+      border-radius: 3px;
+      color: #0958d9;
+      background: transparent;
+      padding: 1px 0;
+      cursor: default;
+    }
+    .composer-url:hover { text-decoration: underline; }
+    .inline-reference {
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: #0958d9;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 2px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .inline-reference:hover { background: #e6f4ff; }
+    .inline-url {
+      color: #0958d9;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+    .inline-url:hover { text-decoration: underline; }
     .qa-tag {
       height: 20px;
       border-radius: 5px;
@@ -2329,19 +2763,19 @@
           </div>
 
           <div class="history-head"><span>历史记录</span><span>12</span></div>
-          <div class="history-list">
-            <div class="history-row active" data-history-state="empty">新问答</div>
-            <div class="history-row" data-history-state="artifact">港股股权激励处理方案</div>
-            <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0">国财A股组规则确认</div>
-            <div class="history-row">质检日报生成</div>
-            <div class="history-row">财务数据抽取</div>
-            <div class="history-row">规划文档总结</div>
-            <div class="history-row">业务流程优化建议</div>
-            <div class="history-row">AI在招聘中的需求</div>
-            <div class="history-row">界面信息层次优化</div>
-            <div class="history-row">权限检索规则讨论</div>
-            <div class="history-row">人物背景设计优化</div>
-            <div class="history-row">删除核心分岔代码</div>
+          <div class="history-list" id="historyList">
+            <div class="history-row active" data-history-state="empty" role="button" tabindex="0"><span class="history-title">新问答</span><button class="history-more" type="button" aria-label="新问答的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0"><span class="history-title">国财A股组规则确认</span><button class="history-more" type="button" aria-label="国财A股组规则确认的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="daily-report" role="button" tabindex="0"><span class="history-title">质检日报生成</span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">规划文档总结</span><button class="history-more" type="button" aria-label="规划文档总结的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">业务流程优化建议</span><button class="history-more" type="button" aria-label="业务流程优化建议的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">AI在招聘中的需求</span><button class="history-more" type="button" aria-label="AI在招聘中的需求的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">界面信息层次优化</span><button class="history-more" type="button" aria-label="界面信息层次优化的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">权限检索规则讨论</span><button class="history-more" type="button" aria-label="权限检索规则讨论的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">人物背景设计优化</span><button class="history-more" type="button" aria-label="人物背景设计优化的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" role="button" tabindex="0"><span class="history-title">删除核心分岔代码</span><button class="history-more" type="button" aria-label="删除核心分岔代码的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
           </div>
         </div>
         <button class="agent-sidebar-toggle" id="agentSidebarToggle" aria-label="收起历史侧栏" title="收起历史侧栏">
@@ -2424,6 +2858,160 @@
               </button>
             </footer>
           </div>
+          <section class="daily-report-story" id="dailyReportStory" hidden aria-label="质检日报生成对话">
+            <div class="bubble user">
+              生成今天的质检日报，重点汇总规则缺口、口径冲突和需要人工确认的事项。
+            </div>
+
+            <details class="daily-run-log">
+              <summary class="daily-run-head">
+                <span class="daily-run-label">
+                  <span>已完成 · 1分22秒</span>
+                </span>
+                <span class="daily-chevron" aria-hidden="true"></span>
+              </summary>
+
+              <div class="daily-run-body">
+                <p class="daily-stage-status">已完成今日质检范围确认，正在汇总任务明细、规则资料和历史人工结论。</p>
+
+                <details class="daily-action-group">
+                  <summary class="daily-action-head">
+                    <span>查阅了 4 项资料</span>
+                    <span class="daily-chevron" aria-hidden="true"></span>
+                  </summary>
+                  <div class="daily-action-list">
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+                      <span>读取今日质检任务明细</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+                      <span>读取当前生效的质检规则</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                      <span>搜索相关历史人工问答</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+                      <span>读取待确认事项处理记录</span>
+                    </div>
+                  </div>
+                </details>
+
+                <p class="daily-stage-status">发现 STK032 的股东性质口径存在新旧规则冲突。日报采用最新生效规则，并将受影响的 4 条任务标记为待人工确认。</p>
+
+                <details class="daily-action-group">
+                  <summary class="daily-action-head">
+                    <span>执行了 3 项分析</span>
+                    <span class="daily-chevron" aria-hidden="true"></span>
+                  </summary>
+                  <div class="daily-action-list">
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg>
+                      <span>分析通过、异常和待人工确认数量</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg>
+                      <span>分析规则缺口、口径冲突和数据异常分类</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+                      <span>检查规则缺口和口径冲突</span>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="daily-action-group">
+                  <summary class="daily-action-head">
+                    <span>生成并检查了 1 份日报</span>
+                    <span class="daily-chevron" aria-hidden="true"></span>
+                  </summary>
+                  <div class="daily-action-list">
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                      <span>写入《2026-07-27 质检日报》</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+                      <span>检查统计数量、规则版本和任务引用一致性</span>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </details>
+
+            <div class="bubble ai daily-report-result">
+              <h3>质检日报已生成</h3>
+              <p>今日共完成 128 条任务质检：121 条通过，3 条异常，4 条待人工确认。</p>
+              <ul>
+                <li><strong>规则缺口：</strong>发现 2 项，集中在特殊身份和历史数据回补场景。</li>
+                <li><strong>口径冲突：</strong>发现 1 项，STK032 新旧规则对股东性质的判定不同；日报采用最新生效规则。</li>
+                <li><strong>待人工确认：</strong>4 条受冲突口径影响的任务已单独标记，未直接给出确定结论。</li>
+              </ul>
+            </div>
+
+            <div class="bubble user">
+              再按业务组拆分异常任务，并补充近 7 日的质检趋势。
+            </div>
+
+            <details class="daily-live-run" open aria-label="正在生成质检趋势分析" aria-live="polite">
+              <summary class="daily-live-head">
+                <span class="daily-run-label">
+                  <svg class="daily-live-spinner" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3.2-6.9"/></svg>
+                  <span>处理中 · 38秒</span>
+                </span>
+                <span class="daily-chevron" aria-hidden="true"></span>
+              </summary>
+
+              <div class="daily-run-body">
+                <p class="daily-stage-status">已完成异常任务的业务组归类，正在结合近 7 日质检记录分析变化趋势。</p>
+
+                <details class="daily-action-group">
+                  <summary class="daily-action-head">
+                    <span>查阅了 3 项资料</span>
+                    <span class="daily-chevron" aria-hidden="true"></span>
+                  </summary>
+                  <div class="daily-action-list">
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+                      <span>读取近 7 日质检任务明细</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+                      <span>读取业务组与任务归属关系</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                      <span>搜索异常任务的历史处理记录</span>
+                    </div>
+                  </div>
+                </details>
+
+                <p class="daily-stage-status">初步发现财务组的异常数量连续 3 日上升，主要集中在历史数据回补场景；该结论仍在核验。</p>
+
+                <details class="daily-action-group" open>
+                  <summary class="daily-action-head">
+                    <span class="daily-running-action">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg>
+                      <span>正在分析近 7 日质检趋势</span>
+                    </span>
+                    <span class="daily-chevron" aria-hidden="true"></span>
+                  </summary>
+                  <div class="daily-action-list">
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg>
+                      <span>分析各业务组异常任务数量</span>
+                    </div>
+                    <div class="daily-action-row">
+                      <svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19V3"/></svg>
+                      <span>分析异常类型的每日变化</span>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </details>
+          </section>
           <section class="manual-qa-story" id="manualQaStory" hidden>
             <div class="bubble user">请确认 LR1105 非经常性损益内部表加工规则。</div>
             <div class="manual-qa-work-log" aria-label="资料检索过程">
@@ -2585,8 +3173,40 @@
         <div class="composer-wrap">
           <div class="composer" id="composer">
             <div class="suggest-pop" id="suggestPop">
-              <div class="suggest-head" id="suggestHead"></div>
-              <div id="suggestRows"></div>
+              <div class="mention-shell" id="mentionShell">
+                <div class="mention-tabs" role="tablist" aria-label="引用类型">
+                  <button class="mention-tab active" type="button" role="tab" aria-selected="true" data-mention-type="doc">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                    规则文档
+                  </button>
+                  <button class="mention-tab" type="button" role="tab" aria-selected="false" data-mention-type="table">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>
+                    涉及表
+                  </button>
+                  <button class="mention-tab" type="button" role="tab" aria-selected="false" data-mention-type="qa">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="M22 8v10a2 2 0 0 1-2 2H10"/></svg>
+                    人工问答
+                  </button>
+                </div>
+                <div class="mention-search-wrap">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                  <input class="mention-search" id="mentionSearch" type="search" placeholder="搜索规则文档…" autocomplete="off" aria-label="搜索规则文档">
+                </div>
+                <div class="mention-results" id="mentionRows" role="listbox" aria-label="规则文档搜索结果"></div>
+                <div class="mention-footer">
+                  <div class="mention-shortcuts">
+                    <span><kbd>↑↓</kbd>切换</span>
+                    <span><kbd>Tab</kbd>切换类型</span>
+                    <span><kbd>Enter</kbd>选择</span>
+                    <span><kbd>Esc</kbd>关闭</span>
+                  </div>
+                  <span>默认最多展示 20 条数据</span>
+                </div>
+              </div>
+              <div class="skill-shell" id="skillShell">
+                <div class="suggest-head" id="suggestHead"></div>
+                <div id="suggestRows"></div>
+              </div>
             </div>
             <div class="scope-pop" id="scopePop">
               <div class="scope-head">
@@ -2736,6 +3356,32 @@
     </div>
   </div>
 
+  <div class="history-context-menu" id="historyContextMenu" role="menu" aria-hidden="true">
+    <button class="history-menu-item" type="button" role="menuitem" data-history-action="pin">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>
+      <span data-history-pin-label>置顶</span>
+    </button>
+    <button class="history-menu-item" type="button" role="menuitem" data-history-action="rename">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+      改名
+    </button>
+    <button class="history-menu-item danger" type="button" role="menuitem" data-history-action="delete">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 15H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>
+      删除
+    </button>
+  </div>
+
+  <div class="confirm-overlay" id="deleteHistoryConfirm" role="dialog" aria-modal="true" aria-labelledby="deleteHistoryTitle" aria-hidden="true">
+    <div class="confirm-dialog">
+      <h3 id="deleteHistoryTitle">删除此问答？</h3>
+      <p>“<span id="deleteHistoryName"></span>”将从历史记录中移除，此操作无法撤销。</p>
+      <div class="confirm-actions">
+        <button type="button" data-delete-cancel>取消</button>
+        <button class="danger" type="button" data-delete-confirm>删除</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -2748,6 +3394,7 @@
     const messages = document.getElementById('messages');
     const manualSystem = document.getElementById('manualSystem');
     const planningStory = document.getElementById('planningStory');
+    const dailyReportStory = document.getElementById('dailyReportStory');
     const sendBtn = document.getElementById('sendBtn');
     const agentSidebarToggle = document.getElementById('agentSidebarToggle');
     const composerInput = document.getElementById('composerInput');
@@ -2758,6 +3405,9 @@
     const suggestPop = document.getElementById('suggestPop');
     const suggestHead = document.getElementById('suggestHead');
     const suggestRows = document.getElementById('suggestRows');
+    const mentionSearch = document.getElementById('mentionSearch');
+    const mentionRows = document.getElementById('mentionRows');
+    const mentionTabs = document.querySelectorAll('[data-mention-type]');
     const scopePop = document.getElementById('scopePop');
     const planToggle = document.getElementById('planToggle');
     const conversationTitle = document.getElementById('conversationTitle');
@@ -2782,6 +3432,10 @@
     const manualIssueList = document.getElementById('manualIssueList');
     const manualSystemDetail = document.getElementById('manualSystemDetail');
     const manualSystemProperties = document.getElementById('manualSystemProperties');
+    const historyList = document.getElementById('historyList');
+    const historyContextMenu = document.getElementById('historyContextMenu');
+    const deleteHistoryConfirm = document.getElementById('deleteHistoryConfirm');
+    const deleteHistoryName = document.getElementById('deleteHistoryName');
 
     let taskMode = false;
     let artifactVisible = false;
@@ -2797,6 +3451,20 @@
     let planningLaunchMode = false;
     let planningOutcome = 'update';
     let planningContext = null;
+    let activeMentionType = 'doc';
+    let activeMentionIndex = 0;
+    let mentionTriggerRange = null;
+    let historyMenuRow = null;
+    let pendingDeleteHistoryRow = null;
+    historyList.querySelectorAll('.history-row').forEach((row, index) => {
+      row.dataset.historyOrder = String(index);
+      row.insertAdjacentHTML('afterbegin', '<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>');
+      row.removeAttribute('role');
+      row.removeAttribute('tabindex');
+      const title = row.querySelector('.history-title');
+      title?.setAttribute('role', 'button');
+      if (title) title.tabIndex = 0;
+    });
     const manualIssues = Object.freeze([
       Object.freeze({ id: 'ADTD-3194', type: '常规', shortTitle: 'STK288 公告披露大宗交易变动日期确认', title: 'STK288 公告披露大宗交易变动日期确认', table: 'STK288', code: '603019', team: '股票分部-交易组', business: '大宗交易变动', market: '中国', category: '股票', description: '请确认公告披露的大宗交易变动日期应采用公告日还是交易日。', ruleDoc: 'STK288 大宗交易录入规则.docx', targetDoc: 'STK288 大宗交易规划文档' }),
       Object.freeze({ id: 'ADTD-3191', type: '常规', shortTitle: '质检组规则确认：国籍为中国，股东性质披露为境外自然人', title: '质检组规则确认：国籍为中国，股东性质披露为境外自然人，标准股东性质该如何维护？', table: 'STK032', code: '003007', team: '股票分部-股东组', business: '股东持股情况及一致行动人', market: '中国', category: '股票、三板', description: '年报披露股东性质为境外自然人，国籍为中国国籍。请确认标准股东性质如何维护，以及港澳台永久居民身份是否影响判定。', ruleDoc: 'STK032 股东明细表录入规则.docx', targetDoc: 'STK032 股东明细表规划文档' }),
@@ -2811,9 +3479,11 @@
 
     const suggestions = {
       '@': [
-        ['doc', '港股股权激励处理方案', '规划文档，覆盖披露要求和竞品对比', 'Personal'],
-        ['table', '港股激励数据字段映射表', '字段、口径和来源映射', '财务分部'],
-        ['doc', '竞品披露口径对比', 'Wind 与公告字段差异', '海外分部'],
+        ['doc', 'STK032 股东明细表录入规则', '股东性质、国籍及标准口径', '股票分部'],
+        ['doc', '港股股权激励披露规则', '授予对象、行权安排和披露要求', '海外分部'],
+        ['doc', 'LR1105 非经常性损益录入规则', '一级科目与其中项加工口径', '财务分部'],
+        ['table', 'STK032 股东明细表', '股东属性、国籍与持股信息', '股票分部'],
+        ['table', '港股激励数据字段映射表', '字段、口径和来源映射', '海外分部'],
         ['qa', 'ADTD-2706', ['中国大陆', '三板', 'STK217'], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认']
       ],
       '/': [
@@ -2825,10 +3495,10 @@
     };
 
     const icons = {
-      doc: '<svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>',
-      table: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M3 10h18"/><path d="M9 5v14"/></svg>',
-      qa: '<span class="qa-icon" aria-hidden="true">QA</span>',
-      skill: '<svg class="icon" viewBox="0 0 24 24"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>'
+      doc: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+      table: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>',
+      qa: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="M22 8v10a2 2 0 0 1-2 2H10"/></svg>',
+      skill: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>'
     };
 
     function showToast(message) {
@@ -3205,6 +3875,59 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function linkifyText(value) {
+      const text = String(value ?? '');
+      const urlPattern = /https?:\/\/[^\s<>"']+/g;
+      let result = '';
+      let cursor = 0;
+      for (const match of text.matchAll(urlPattern)) {
+        result += escapeHtml(text.slice(cursor, match.index));
+        let url = match[0];
+        const trailing = url.match(/[),.;!?，。！？）》】]+$/)?.[0] || '';
+        if (trailing) url = url.slice(0, -trailing.length);
+        const safeUrl = escapeHtml(url);
+        result += `<a class="inline-url" href="${safeUrl}" target="_blank" rel="noreferrer">${safeUrl}</a>${escapeHtml(trailing)}`;
+        cursor = match.index + match[0].length;
+      }
+      return result + escapeHtml(text.slice(cursor));
+    }
+
+    function renderComposerNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) return linkifyText(node.textContent);
+      if (node.nodeType !== Node.ELEMENT_NODE) return '';
+      if (node.classList.contains('composer-reference')) {
+        const type = escapeHtml(node.dataset.refType || '');
+        const rawValue = node.dataset.refValue || node.textContent;
+        const value = escapeHtml(rawValue);
+        const label = escapeHtml(referenceDisplayText(node.dataset.refType, rawValue));
+        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}">${icons[node.dataset.refType] || ''}<span>${label}</span></button>`;
+      }
+      if (node.classList.contains('composer-url')) {
+        const url = escapeHtml(node.dataset.url || node.textContent);
+        return `<a class="inline-url" href="${url}" target="_blank" rel="noreferrer">${escapeHtml(node.textContent)}</a>`;
+      }
+      if (node.tagName === 'BR') return '<br>';
+      const content = [...node.childNodes].map(renderComposerNode).join('');
+      return ['DIV', 'P'].includes(node.tagName) ? `${content}<br>` : content;
+    }
+
+    function renderComposerContent() {
+      return [...composerInput.childNodes].map(renderComposerNode).join('').replace(/(?:<br>)+$/, '');
+    }
+
+    function appendComposerMessage() {
+      const html = renderComposerContent();
+      if (!html) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble user';
+      bubble.innerHTML = html;
+      const story = document.getElementById('manualQaStory');
+      messages.insertBefore(bubble, story);
+      requestAnimationFrame(() => {
+        messages.scrollTop = messages.scrollHeight;
+      });
     }
 
     function fieldValue(draft, name) {
@@ -3719,45 +4442,133 @@
         </div>`;
     }
 
+    const mentionTypeLabels = Object.freeze({
+      doc: '规则文档',
+      table: '涉及表',
+      qa: '人工问答'
+    });
+
+    function saveMentionTriggerRange() {
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      if (composerInput.contains(range.startContainer)) mentionTriggerRange = range.cloneRange();
+    }
+
+    function setMentionType(type, focusSearch = true) {
+      if (!mentionTypeLabels[type]) return;
+      activeMentionType = type;
+      activeMentionIndex = 0;
+      mentionTabs.forEach(tab => {
+        const active = tab.dataset.mentionType === type;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+      const label = mentionTypeLabels[type];
+      mentionSearch.value = '';
+      mentionSearch.placeholder = `搜索${label}…`;
+      mentionSearch.setAttribute('aria-label', `搜索${label}`);
+      mentionRows.setAttribute('aria-label', `${label}搜索结果`);
+      renderMentionResults();
+      if (focusSearch) requestAnimationFrame(() => mentionSearch.focus());
+    }
+
+    function filteredMentionItems() {
+      const query = mentionSearch.value.trim().toLowerCase();
+      return suggestions['@'].filter(item => {
+        if (item[0] !== activeMentionType) return false;
+        return !query || item.flat(2).join(' ').toLowerCase().includes(query);
+      }).slice(0, 20);
+    }
+
+    function renderMentionResults() {
+      const items = filteredMentionItems();
+      activeMentionIndex = Math.min(activeMentionIndex, Math.max(items.length - 1, 0));
+      if (!items.length) {
+        mentionRows.innerHTML = `<div class="mention-empty">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v12H4z"/><path d="M7 7V5h10v2"/><path d="M9 12h6"/></svg>
+          <span>没有匹配的${mentionTypeLabels[activeMentionType]}</span>
+        </div>`;
+        return;
+      }
+      mentionRows.innerHTML = items.map((item, index) => {
+        const [type, value, meta, space] = item;
+        if (type === 'qa') {
+          const tags = meta.map(tag => `<span class="qa-tag">${escapeHtml(tag)}</span>`).join('');
+          return `<div class="suggest-row qa-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
+            ${icons[type]}
+            <div class="qa-content">
+              <div class="qa-meta"><span class="qa-id">${escapeHtml(value)}</span>${tags}</div>
+              <div class="qa-title">${escapeHtml(space)}</div>
+            </div>
+          </div>`;
+        }
+        return `<div class="suggest-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
+          ${icons[type]}
+          <div class="suggest-title"><strong>${escapeHtml(value)}</strong></div>
+          <div class="suggest-space">${escapeHtml(space)}</div>
+        </div>`;
+      }).join('');
+      mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
+    }
+
+    function referenceDisplayText(type, value) {
+      return type === 'qa' ? `人工问答 ${value}` : value;
+    }
+
+    function createComposerReference(type, value) {
+      const reference = document.createElement('span');
+      reference.className = 'composer-reference';
+      reference.contentEditable = 'false';
+      reference.dataset.refType = type;
+      reference.dataset.refValue = value;
+      reference.innerHTML = icons[type] || '';
+      const label = document.createElement('span');
+      label.textContent = referenceDisplayText(type, value);
+      reference.append(label);
+      return reference;
+    }
+
+    function insertMentionReference(type, value, trigger = '@') {
+      const range = mentionTriggerRange?.cloneRange();
+      composerInput.focus();
+      if (!range) {
+        const reference = createComposerReference(type, value);
+        composerInput.append(reference, document.createTextNode('\u00a0'));
+      } else {
+        if (range.startContainer.nodeType === Node.TEXT_NODE && range.startOffset > 0) {
+          const text = range.startContainer.textContent;
+          if (text[range.startOffset - 1] === trigger) range.setStart(range.startContainer, range.startOffset - 1);
+        }
+        range.deleteContents();
+        const reference = createComposerReference(type, value);
+        const spacer = document.createTextNode('\u00a0');
+        range.insertNode(spacer);
+        range.insertNode(reference);
+        range.setStartAfter(spacer);
+        range.collapse(true);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      mentionTriggerRange = null;
+      closeOverlays();
+      setTaskMode(true);
+    }
+
+    function selectActiveMention() {
+      const items = filteredMentionItems();
+      const item = items[activeMentionIndex];
+      if (!item) return;
+      insertMentionReference(item[0], item[1]);
+    }
+
     function openSuggest(kind) {
       suggestPop.classList.toggle('mention-pop', kind === '@');
       suggestPop.classList.toggle('skill-pop', kind === '/');
+      saveMentionTriggerRange();
       if (kind === '@') {
-        const planningDocs = suggestions['@'].filter(item => item[0] === 'doc');
-        const tables = suggestions['@'].filter(item => item[0] === 'table');
-        const manualQa = suggestions['@'].filter(item => item[0] === 'qa');
-        suggestHead.innerHTML = '规划文档';
-        suggestRows.innerHTML = [
-          ...planningDocs.map((item, idx) => {
-            const [type, title, , space] = item;
-            return `<div class="suggest-row ${idx === 0 ? 'active' : ''}" data-suggestion="${title}">
-              ${icons[type]}
-              <div class="suggest-title"><strong>${title}</strong></div>
-              <div class="suggest-space">${space}</div>
-            </div>`;
-          }),
-          '<div class="suggest-head" style="height:38px;padding:0 16px;color:#8c8c8c;font-size:14px;font-weight:600;">涉及表</div>',
-          ...tables.map(item => {
-            const [type, title, , space] = item;
-            return `<div class="suggest-row" data-suggestion="${title}">
-              ${icons[type]}
-              <div class="suggest-title"><strong>${title}</strong></div>
-              <div class="suggest-space">${space}</div>
-            </div>`;
-          }),
-          '<div class="suggest-head" style="height:38px;padding:0 16px;color:#8c8c8c;font-size:14px;font-weight:600;">人工问答</div>',
-          ...manualQa.map(item => {
-            const [type, id, tags, title] = item;
-            const tagHtml = tags.map(tag => `<span class="qa-tag">${tag}</span>`).join('');
-            return `<div class="suggest-row qa-row" data-suggestion="${id}">
-              ${icons[type]}
-              <div class="qa-content">
-                <div class="qa-meta"><span class="qa-id">${id}</span>${tagHtml}</div>
-                <div class="qa-title">${title}</div>
-              </div>
-            </div>`;
-          })
-        ].join('');
+        setMentionType(activeMentionType);
       } else {
         suggestHead.innerHTML = '<strong style="color:#595959">Skills</strong><span style="margin-left:auto">内置 · 已按权限过滤</span>';
         suggestRows.innerHTML = suggestions[kind].map((item, idx) => {
@@ -3778,9 +4589,135 @@
       suggestPop.classList.remove('open');
       plusMenu.classList.remove('open');
       scopePop.classList.remove('open');
+      closeHistoryContextMenu();
       closeChatSearch();
       closeModelMenu();
       closeArtifactMenu();
+    }
+
+    function closeHistoryContextMenu() {
+      if (historyMenuRow) {
+        historyMenuRow.classList.remove('menu-open');
+        const button = historyMenuRow.querySelector('.history-more');
+        button?.setAttribute('aria-expanded', 'false');
+      }
+      historyMenuRow = null;
+      historyContextMenu.classList.remove('open');
+      historyContextMenu.setAttribute('aria-hidden', 'true');
+    }
+
+    function openHistoryContextMenu(row, button) {
+      const wasOpen = historyMenuRow === row && historyContextMenu.classList.contains('open');
+      closeOverlays();
+      if (wasOpen) return;
+      historyMenuRow = row;
+      row.classList.add('menu-open');
+      button.setAttribute('aria-expanded', 'true');
+      const pinned = row.classList.contains('pinned');
+      const pinLabel = historyContextMenu.querySelector('[data-history-pin-label]');
+      pinLabel.textContent = pinned ? '取消置顶' : '置顶';
+      historyContextMenu.classList.add('open');
+      historyContextMenu.setAttribute('aria-hidden', 'false');
+      const rect = button.getBoundingClientRect();
+      const menuWidth = 128;
+      const menuHeight = 126;
+      const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8));
+      const top = rect.bottom + menuHeight + 8 > window.innerHeight
+        ? Math.max(8, rect.top - menuHeight - 4)
+        : rect.bottom + 4;
+      historyContextMenu.style.left = `${left}px`;
+      historyContextMenu.style.top = `${top}px`;
+      requestAnimationFrame(() => historyContextMenu.querySelector('[role="menuitem"]')?.focus());
+    }
+
+    function updateHistoryCount() {
+      const count = historyList.querySelectorAll('.history-row').length;
+      document.querySelector('.history-head span:last-child').textContent = String(count);
+    }
+
+    function sortHistoryRows() {
+      const rows = [...historyList.querySelectorAll('.history-row')];
+      rows.sort((a, b) => {
+        const aPinned = a.classList.contains('pinned');
+        const bPinned = b.classList.contains('pinned');
+        if (aPinned !== bPinned) return aPinned ? -1 : 1;
+        if (aPinned) return Number(b.dataset.pinnedAt || 0) - Number(a.dataset.pinnedAt || 0);
+        return Number(a.dataset.historyOrder || 0) - Number(b.dataset.historyOrder || 0);
+      });
+      rows.forEach(item => historyList.append(item));
+    }
+
+    function toggleHistoryPinned(row) {
+      const willPin = !row.classList.contains('pinned');
+      closeHistoryContextMenu();
+      row.classList.toggle('pinned', willPin);
+      row.dataset.pinned = String(willPin);
+      if (willPin) row.dataset.pinnedAt = String(Date.now());
+      else delete row.dataset.pinnedAt;
+      sortHistoryRows();
+      const title = row.querySelector('.history-title')?.textContent.trim() || '该问答';
+      showToast(willPin ? `已置顶“${title}”` : `已取消置顶“${title}”`);
+      requestAnimationFrame(() => row.querySelector('.history-more')?.focus());
+    }
+
+    function startHistoryRename(row) {
+      closeHistoryContextMenu();
+      const title = row.querySelector('.history-title');
+      if (!title) return;
+      const original = title.textContent.trim();
+      const input = document.createElement('input');
+      input.className = 'history-rename-input';
+      input.value = original;
+      input.setAttribute('aria-label', '修改问答名称');
+      title.hidden = true;
+      row.insertBefore(input, row.querySelector('.history-more'));
+      let finished = false;
+      const finish = save => {
+        if (finished) return;
+        finished = true;
+        const next = input.value.trim();
+        if (save && next) {
+          title.textContent = next;
+          const button = row.querySelector('.history-more');
+          button.setAttribute('aria-label', `${next}的更多操作`);
+          if (row.classList.contains('active')) conversationTitle.textContent = next;
+          showToast('名称已更新');
+        }
+        title.hidden = false;
+        input.remove();
+        title.focus();
+      };
+      input.addEventListener('click', event => event.stopPropagation());
+      input.addEventListener('keydown', event => {
+        event.stopPropagation();
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          finish(true);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          finish(false);
+        }
+      });
+      input.addEventListener('blur', () => finish(true));
+      requestAnimationFrame(() => {
+        input.focus();
+        input.select();
+      });
+    }
+
+    function openDeleteHistoryConfirm(row) {
+      closeHistoryContextMenu();
+      pendingDeleteHistoryRow = row;
+      deleteHistoryName.textContent = row.querySelector('.history-title')?.textContent.trim() || '该问答';
+      deleteHistoryConfirm.classList.add('open');
+      deleteHistoryConfirm.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => deleteHistoryConfirm.querySelector('[data-delete-cancel]')?.focus());
+    }
+
+    function closeDeleteHistoryConfirm() {
+      pendingDeleteHistoryRow = null;
+      deleteHistoryConfirm.classList.remove('open');
+      deleteHistoryConfirm.setAttribute('aria-hidden', 'true');
     }
 
     function openScopePanel() {
@@ -3880,7 +4817,39 @@
       showToast(planMode ? '已切换到 Plan mode' : '已退出 Plan mode');
     });
 
+    function promoteTrailingComposerUrl() {
+      const selection = window.getSelection();
+      if (!selection?.isCollapsed || !selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      const textNode = range.startContainer;
+      if (textNode.nodeType !== Node.TEXT_NODE || !composerInput.contains(textNode)) return;
+      if (textNode.parentElement?.closest('.composer-reference, .composer-url')) return;
+      const beforeCaret = textNode.textContent.slice(0, range.startOffset);
+      const match = beforeCaret.match(/(?:^|\s)(https?:\/\/[^\s]+)\s$/);
+      if (!match) return;
+      const url = match[1];
+      const urlStart = range.startOffset - url.length - 1;
+      const before = textNode.textContent.slice(0, urlStart);
+      const after = textNode.textContent.slice(range.startOffset - 1);
+      const fragment = document.createDocumentFragment();
+      if (before) fragment.append(document.createTextNode(before));
+      const urlNode = document.createElement('span');
+      urlNode.className = 'composer-url';
+      urlNode.contentEditable = 'false';
+      urlNode.dataset.url = url;
+      urlNode.textContent = url;
+      const afterNode = document.createTextNode(after);
+      fragment.append(urlNode, afterNode);
+      textNode.replaceWith(fragment);
+      const nextRange = document.createRange();
+      nextRange.setStart(afterNode, 1);
+      nextRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(nextRange);
+    }
+
     composerInput.addEventListener('input', () => {
+      promoteTrailingComposerUrl();
       const text = composerInput.textContent.trim();
       if (text.endsWith('@')) openSuggest('@');
       else if (text.endsWith('#')) openScopePanel();
@@ -3889,9 +4858,105 @@
     });
 
     composerInput.addEventListener('keydown', event => {
+      if (event.key === 'Backspace') {
+        const selection = window.getSelection();
+        if (selection?.isCollapsed && selection.rangeCount) {
+          const range = selection.getRangeAt(0);
+          let previous = null;
+          if (range.startContainer === composerInput) {
+            previous = composerInput.childNodes[range.startOffset - 1];
+          } else if (range.startContainer.nodeType === Node.TEXT_NODE && range.startOffset === 0) {
+            previous = range.startContainer.previousSibling;
+          }
+          if (previous?.classList?.contains('composer-reference') || previous?.classList?.contains('composer-url')) {
+            event.preventDefault();
+            previous.remove();
+            return;
+          }
+        }
+      }
       if (event.key !== 'Enter' || event.shiftKey) return;
       event.preventDefault();
       sendBtn.click();
+    });
+
+    composerInput.addEventListener('click', event => {
+      const reference = event.target.closest('.composer-reference');
+      composerInput.querySelectorAll('.composer-reference.selected').forEach(item => item.classList.remove('selected'));
+      if (reference) reference.classList.add('selected');
+    });
+
+    mentionTabs.forEach(tab => tab.addEventListener('click', () => {
+      setMentionType(tab.dataset.mentionType);
+    }));
+
+    mentionSearch.addEventListener('input', () => {
+      activeMentionIndex = 0;
+      renderMentionResults();
+    });
+
+    mentionSearch.addEventListener('keydown', event => {
+      const items = filteredMentionItems();
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (!items.length) return;
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        activeMentionIndex = (activeMentionIndex + direction + items.length) % items.length;
+        renderMentionResults();
+      } else if (event.key === 'Tab') {
+        event.preventDefault();
+        event.stopPropagation();
+        const types = Object.keys(mentionTypeLabels);
+        const current = types.indexOf(activeMentionType);
+        const direction = event.shiftKey ? -1 : 1;
+        setMentionType(types[(current + direction + types.length) % types.length]);
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        selectActiveMention();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closeOverlays();
+        composerInput.focus();
+      }
+    });
+
+    mentionRows.addEventListener('mousemove', event => {
+      const row = event.target.closest('[data-mention-index]');
+      if (!row) return;
+      const index = Number(row.dataset.mentionIndex);
+      if (index === activeMentionIndex) return;
+      activeMentionIndex = index;
+      renderMentionResults();
+    });
+
+    mentionRows.addEventListener('click', event => {
+      const row = event.target.closest('[data-mention-index]');
+      if (!row) return;
+      activeMentionIndex = Number(row.dataset.mentionIndex);
+      selectActiveMention();
+    });
+
+    messages.addEventListener('click', event => {
+      const reference = event.target.closest('.inline-reference');
+      if (!reference) return;
+      const type = reference.dataset.refType;
+      if (type === 'qa') {
+        setApplicationView('manual-qa');
+        showToast(`已打开人工问答 ${reference.dataset.refValue}`);
+        return;
+      }
+      if (type === 'skill') {
+        showToast(`已选用 Skill：${reference.dataset.refValue}`);
+        return;
+      }
+      setApplicationView('agent');
+      tabs.report.open = true;
+      tabs.table.open = true;
+      activeTab = type === 'table' ? 'table' : 'report';
+      setArtifactVisible(true, true);
+      renderArtifact();
+      showToast(`已打开引用：${reference.dataset.refValue}`);
     });
 
     launchContext.addEventListener('click', event => {
@@ -3909,15 +4974,16 @@
         event.preventDefault();
         planToggle.click();
       }
-      if (event.key === 'Escape') closeOverlays();
+      if (event.key === 'Escape') {
+        if (deleteHistoryConfirm.classList.contains('open')) closeDeleteHistoryConfirm();
+        else closeOverlays();
+      }
     });
 
     suggestRows.addEventListener('click', event => {
       const row = event.target.closest('.suggest-row');
       if (!row) return;
-      composerInput.textContent = composerInput.textContent.replace(/[@/]$/, '') + row.dataset.suggestion + ' ';
-      closeOverlays();
-      setTaskMode(true);
+      insertMentionReference('skill', row.dataset.suggestion, '/');
     });
 
     document.querySelector('[data-upload]').addEventListener('click', () => {
@@ -3980,6 +5046,13 @@
         showToast('当前资料仍不足，请回复“需要”开启人工问答');
         return;
       }
+      if (!text) {
+        showToast('请输入内容');
+        composerInput.focus();
+        return;
+      }
+      appendComposerMessage();
+      composerInput.innerHTML = '';
       setTaskMode(true);
       setArtifactVisible(true);
       renderArtifact();
@@ -4052,6 +5125,11 @@
       launchContext.innerHTML = '';
     }
 
+    function clearDailyReportStory() {
+      messages.classList.remove('daily-report-mode');
+      dailyReportStory.hidden = true;
+    }
+
     function createManualQaConversationState() {
       return Object.freeze({
         prefill: null,
@@ -4087,6 +5165,7 @@
 
     function loadEmptyConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
       tabs.report.open = false;
       tabs.table.open = false;
       setTaskMode(false);
@@ -4099,6 +5178,7 @@
 
     function loadArtifactConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
       tabs.report.open = true;
       tabs.table.open = true;
       activeTab = 'report';
@@ -4109,6 +5189,7 @@
 
     function loadManualQaConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
       setTaskMode(true);
       setArtifactVisible(false);
       tabs.report.open = false;
@@ -4122,7 +5203,24 @@
       closeOverlays();
     }
 
-    document.querySelectorAll('.history-row').forEach(row => row.addEventListener('click', () => {
+    function loadDailyReportConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
+      setTaskMode(true);
+      setArtifactVisible(false);
+      tabs.report.open = false;
+      tabs.table.open = false;
+      messages.classList.add('daily-report-mode');
+      dailyReportStory.hidden = false;
+      conversationTitle.textContent = '质检日报生成';
+      conversationMeta.textContent = '处理中 · 正在生成趋势分析';
+      closeOverlays();
+      requestAnimationFrame(() => {
+        messages.scrollTop = messages.scrollHeight;
+      });
+    }
+
+    function openHistoryRow(row) {
       activateHistoryRow(row);
       const state = row.dataset.historyState;
       if (state === 'empty') {
@@ -4131,16 +5229,66 @@
         loadArtifactConversation();
       } else if (state === 'manual-qa') {
         loadManualQaConversation();
+      } else if (state === 'daily-report') {
+        loadDailyReportConversation();
       } else {
+        conversationTitle.textContent = row.querySelector('.history-title')?.textContent.trim() || '问答';
         closeOverlays();
       }
-    }));
+    }
 
-    const manualQaHistoryRow = document.querySelector('[data-history-state="manual-qa"]');
-    manualQaHistoryRow.addEventListener('keydown', event => {
+    historyList.addEventListener('click', event => {
+      const row = event.target.closest('.history-row');
+      if (!row) return;
+      const more = event.target.closest('.history-more');
+      if (more) {
+        event.stopPropagation();
+        openHistoryContextMenu(row, more);
+        return;
+      }
+      if (event.target.closest('.history-rename-input')) return;
+      openHistoryRow(row);
+    });
+
+    historyList.addEventListener('keydown', event => {
+      const row = event.target.closest('.history-row');
+      if (!row || event.target.closest('button, input')) return;
       if (!['Enter', ' '].includes(event.key)) return;
       event.preventDefault();
-      manualQaHistoryRow.click();
+      openHistoryRow(row);
+    });
+
+    historyContextMenu.addEventListener('click', event => {
+      const action = event.target.closest('[data-history-action]')?.dataset.historyAction;
+      const row = historyMenuRow;
+      if (!action || !row) return;
+      event.stopPropagation();
+      if (action === 'pin') {
+        toggleHistoryPinned(row);
+        return;
+      }
+      if (action === 'rename') startHistoryRename(row);
+      if (action === 'delete') openDeleteHistoryConfirm(row);
+    });
+
+    deleteHistoryConfirm.addEventListener('click', event => {
+      if (event.target === deleteHistoryConfirm || event.target.closest('[data-delete-cancel]')) {
+        closeDeleteHistoryConfirm();
+        return;
+      }
+      if (!event.target.closest('[data-delete-confirm]') || !pendingDeleteHistoryRow) return;
+      const row = pendingDeleteHistoryRow;
+      const wasActive = row.classList.contains('active');
+      const deletedName = row.querySelector('.history-title')?.textContent.trim() || '问答';
+      closeDeleteHistoryConfirm();
+      row.remove();
+      updateHistoryCount();
+      if (wasActive) {
+        const next = historyList.querySelector('[data-history-state="empty"]') || historyList.querySelector('.history-row');
+        if (next) openHistoryRow(next);
+        else loadEmptyConversation();
+      }
+      showToast(`已删除“${deletedName}”`);
     });
 
     document.getElementById('newChat').addEventListener('click', () => {

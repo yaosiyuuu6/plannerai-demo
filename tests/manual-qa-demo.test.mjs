@@ -299,7 +299,7 @@ test('manual Q&A composer shortcut reuses the pending-session prefill', () => {
 });
 
 test('manual Q&A story has a dedicated history state and isolated conversation lifecycle', () => {
-  assert.match(html, /<div class="history-row" data-history-state="manual-qa"[^>]*>国财A股组规则确认<\/div>/);
+  assert.match(html, /<div class="history-row" data-history-state="manual-qa"[^>]*>[\s\S]*?<span class="history-title">国财A股组规则确认<\/span>[\s\S]*?<\/div>/);
   assert.match(html, /function loadManualQaConversation\(\)/);
   assert.match(html, /state === 'manual-qa'[\s\S]*?loadManualQaConversation\(\)/);
   assert.match(html, /function clearManualQaStory\(\)/);
@@ -367,9 +367,18 @@ test('pending manual Q&A sends use fixed story-safe actions instead of artifact 
 test('manual Q&A history entry supports keyboard activation', () => {
   assert.match(
     html,
-    /<div class="history-row" data-history-state="manual-qa" role="button" tabindex="0">国财A股组规则确认<\/div>/
+    /<div class="history-row" data-history-state="manual-qa" role="button" tabindex="0">[\s\S]*?<span class="history-title">国财A股组规则确认<\/span>[\s\S]*?<\/div>/
   );
-  assert.match(html, /manualQaHistoryRow\.addEventListener\('keydown',[\s\S]*?\['Enter', ' '\]\.includes\(event\.key\)[\s\S]*?manualQaHistoryRow\.click\(\)/);
+  assert.match(html, /historyList\.addEventListener\('keydown',[\s\S]*?\['Enter', ' '\]\.includes\(event\.key\)[\s\S]*?openHistoryRow\(row\)/);
+});
+
+test('daily report history demonstrates completed and running records', () => {
+  assert.match(html, /data-history-state="daily-report"[\s\S]*?<span class="history-title">质检日报生成<\/span>/);
+  assert.match(html, /<section class="daily-report-story" id="dailyReportStory" hidden/);
+  assert.match(html, /<details class="daily-run-log"[\s\S]*?<span>已完成 · 1分22秒<\/span>/);
+  assert.match(html, /<details class="daily-live-run" open[\s\S]*?<span>处理中 · 38秒<\/span>/);
+  assert.match(html, /function loadDailyReportConversation\(\)/);
+  assert.match(html, /state === 'daily-report'[\s\S]*?loadDailyReportConversation\(\)/);
 });
 
 test('entry detail shows disabled reply and Agent actions because entry role lacks permission', () => {
