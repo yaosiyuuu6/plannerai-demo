@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - codex/manual-qa-composer-polish
   workflow_dispatch:
 
 permissions:
