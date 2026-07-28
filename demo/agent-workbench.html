@@ -834,8 +834,20 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 var(--conversation-gutter);
+      position: relative;
+      z-index: 6;
     }
     .task-mode .chat-top { display: flex; }
+    .layout.agent-collapsed .chat-top::before {
+      content: "";
+      position: absolute;
+      left: calc(-1 * var(--agent-width));
+      bottom: -1px;
+      width: var(--agent-width);
+      height: 1px;
+      background: var(--border);
+      pointer-events: none;
+    }
     .chat-top-content {
       width: min(100%, var(--conversation-width));
       min-width: 0;
@@ -1457,6 +1469,9 @@
     .ref svg { width: 16px; height: 16px; stroke-width: 1.8; }
 
     .composer-wrap { padding: 14px 20px 18px; background: #fff; }
+    .task-mode .composer-wrap {
+      padding-inline: var(--conversation-gutter);
+    }
     .workspace:not(.task-mode) .composer-wrap {
       width: 100%;
       margin-bottom: auto;
@@ -1481,7 +1496,10 @@
     .workspace:not(.task-mode) .composer {
       width: min(860px, 100%);
     }
-    .task-mode .composer { width: 100%; min-width: 0; }
+    .task-mode .composer {
+      width: min(100%, var(--conversation-width));
+      min-width: 0;
+    }
     .composer-input {
       min-height: 28px;
       outline: none;
