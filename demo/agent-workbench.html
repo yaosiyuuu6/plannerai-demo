@@ -57,7 +57,73 @@
       font-size: 14px;
       font-weight: 400;
     }
-    .user { display: flex; align-items: center; gap: 7px; color: #262626; font-size: 14px; }
+    .user { position: relative; display: flex; align-items: center; gap: 7px; color: #262626; font-size: 14px; }
+    .identity-switcher { position: relative; margin-right: 4px; }
+    .identity-toggle {
+      height: 34px;
+      min-width: 88px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: #262626;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .identity-toggle:hover,
+    .identity-toggle[aria-expanded="true"] {
+      border-color: #91caff;
+      color: #0958d9;
+      background: #f7fbff;
+    }
+    .identity-toggle:focus-visible,
+    .identity-option:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .35);
+      outline-offset: 2px;
+    }
+    .identity-caret { color: #8c8c8c; font-size: 11px; transition: transform .16s ease; }
+    .identity-toggle[aria-expanded="true"] .identity-caret { transform: rotate(180deg); }
+    .identity-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: 150px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.12);
+      padding: 6px;
+      display: none;
+      z-index: 120;
+    }
+    .identity-menu.open { display: block; animation: identityMenuIn .16s ease-out; }
+    .identity-option {
+      width: 100%;
+      min-height: 38px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #262626;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 16px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 9px;
+      text-align: left;
+      font-size: 13px;
+    }
+    .identity-option:hover,
+    .identity-option.active { background: var(--primary-bg); color: #0958d9; }
+    .identity-check { width: 15px; height: 15px; opacity: 0; }
+    .identity-option.active .identity-check { opacity: 1; }
+    @keyframes identityMenuIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .layout {
       --artifact-width: 0px;
@@ -1896,6 +1962,47 @@
     .mention-pop .suggest-title strong { color: #262626; font-weight: 500; }
     .mention-pop .suggest-space { color: #8c8c8c; }
     .mention-pop .icon { width: 16px; height: 16px; color: var(--primary); }
+    .knowledge-group + .knowledge-group { margin-top: 4px; }
+    .knowledge-group-head {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 16px 3px;
+      color: #595959;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .knowledge-group-head .icon {
+      width: 15px;
+      height: 15px;
+      color: #597ef7;
+    }
+    .mention-pop .knowledge-row {
+      height: 62px;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 8px;
+      padding: 6px 16px 6px 28px;
+    }
+    .knowledge-copy { min-width: 0; align-self: center; }
+    .knowledge-title {
+      color: #262626;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .knowledge-path {
+      margin-top: 3px;
+      color: #8c8c8c;
+      font-size: 12px;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .mention-pop .qa-row {
       height: 64px;
       grid-template-columns: 40px minmax(0,1fr);
@@ -2045,53 +2152,6 @@
       height: 15px;
     }
 
-    .scope-pop {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: calc(100% + 1px);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 10px 28px rgba(0,0,0,.12);
-      display: none;
-      z-index: 45;
-      overflow: hidden;
-      transform-origin: bottom center;
-    }
-    .scope-pop.open { display: block; animation: panelSlideUp .16s ease-out; }
-    .scope-head {
-      height: 46px;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 14px;
-      color: #262626;
-    }
-    .scope-close {
-      border: 0;
-      background: transparent;
-      font-size: 22px;
-      color: #262626;
-      line-height: 1;
-    }
-    .scope-body { padding: 16px; }
-    .scope-field { margin-bottom: 18px; }
-    .scope-label { font-size: 14px; color: #262626; margin-bottom: 8px; }
-    .scope-select {
-      height: 32px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 10px;
-      color: #bfbfbf;
-      font-size: 14px;
-      background: #fff;
-    }
     @keyframes panelSlideUp {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -2435,6 +2495,12 @@
     .artifact-menu-item:disabled { color: #777; cursor: not-allowed; }
     .artifact-menu-item:disabled:hover { background: transparent; }
     @media (max-width: 640px) {
+      .topbar { padding: 0 10px; }
+      .brand { gap: 0; }
+      .brand > span { display: none; }
+      .user > .icon,
+      .user-name { display: none; }
+      .identity-switcher { margin-right: 0; }
       .layout:not(.manual-system-mode) { grid-template-columns: minmax(0, 1fr); }
       .layout:not(.manual-system-mode) > .platform-nav,
       .layout:not(.manual-system-mode) > .business-module,
@@ -2667,8 +2733,24 @@
         </span>
       </div>
       <div class="user">
+        <div class="identity-switcher">
+          <button class="identity-toggle" id="identityToggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span id="currentIdentity">规划</span>
+            <span class="identity-caret" aria-hidden="true">⌄</span>
+          </button>
+          <div class="identity-menu" id="identityMenu" role="listbox" aria-label="选择身份">
+            <button class="identity-option active" type="button" role="option" aria-selected="true" data-identity="planning">
+              <span>规划</span>
+              <svg class="identity-check icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+            </button>
+            <button class="identity-option" type="button" role="option" aria-selected="false" data-identity="entry-quality">
+              <span>录入/质检</span>
+              <svg class="identity-check icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+            </button>
+          </div>
+        </div>
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
-        姚晨恺
+        <span class="user-name">姚晨恺</span>
       </div>
     </header>
 
@@ -2822,7 +2904,7 @@
         <div class="chat-top">
           <div class="chat-top-content">
             <div class="conversation-title" id="conversationTitle">新问答</div>
-            <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、#、/ 或点击 +</div>
+            <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、/ 或点击 +</div>
           </div>
           <button class="panel-toggle" id="panelToggle" title="显示或隐藏右侧产物区" aria-label="显示或隐藏右侧产物区">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -3210,8 +3292,8 @@
               <div class="mention-shell" id="mentionShell">
                 <div class="mention-tabs" role="tablist" aria-label="引用类型">
                   <button class="mention-tab active" type="button" role="tab" aria-selected="true" data-mention-type="doc">
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-                    规则文档
+                    <span id="primaryMentionIcon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l-2 7H1Z"/><path d="M14 3h6l3 7h-7Z"/><path d="M12 14h7l2 7h-7Z"/></svg></span>
+                    <span id="primaryMentionLabel">知识库</span>
                   </button>
                   <button class="mention-tab" type="button" role="tab" aria-selected="false" data-mention-type="table">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>
@@ -3224,9 +3306,9 @@
                 </div>
                 <div class="mention-search-wrap">
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
-                  <input class="mention-search" id="mentionSearch" type="search" placeholder="搜索规则文档…" autocomplete="off" aria-label="搜索规则文档">
+                  <input class="mention-search" id="mentionSearch" type="search" placeholder="搜索知识库…" autocomplete="off" aria-label="搜索知识库">
                 </div>
-                <div class="mention-results" id="mentionRows" role="listbox" aria-label="规则文档搜索结果"></div>
+                <div class="mention-results" id="mentionRows" role="listbox" aria-label="知识库搜索结果"></div>
                 <div class="mention-footer">
                   <div class="mention-shortcuts">
                     <span><kbd>↑↓</kbd>切换</span>
@@ -3242,33 +3324,12 @@
                 <div id="suggestRows"></div>
               </div>
             </div>
-            <div class="scope-pop" id="scopePop">
-              <div class="scope-head">
-                <span>范围限定</span>
-                <button class="scope-close" id="scopeClose" aria-label="关闭范围限定">×</button>
-              </div>
-              <div class="scope-body">
-                <div class="scope-field">
-                  <div class="scope-label">业务</div>
-                  <div class="scope-select"><span>业务ID 或 业务名称</span><span>⌄</span></div>
-                </div>
-                <div class="scope-field">
-                  <div class="scope-label">规则文档</div>
-                  <div class="scope-select"><span>规则文档</span><span>⌄</span></div>
-                </div>
-                <div class="scope-field">
-                  <div class="scope-label">涉及表</div>
-                  <div class="scope-select"><span>涉及表</span><span>⌄</span></div>
-                </div>
-              </div>
-            </div>
             <div class="plus-menu" id="plusMenu">
               <button class="menu-row" data-upload><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg>上传图片</button>
-              <button class="menu-row" data-reference><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>范围限定</button>
               <button class="menu-row plan-row" id="planToggle"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h5"/><path d="M4 17h5"/><path d="m14 6 2 2 4-4"/><path d="M14 17h6"/><circle cx="6.5" cy="12" r="1.5"/></svg>Plan mode<span class="switch"></span></button>
             </div>
             <div class="launch-context" id="launchContext" hidden aria-label="已带入的上下文"></div>
-            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索文档/表/人工问答，输入 # 范围限定，输入 / 调用 Skill"></div>
+            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill"></div>
             <div class="composer-bar">
               <div class="composer-left">
                 <button class="round-btn" id="plusBtn" aria-label="打开附件菜单">＋</button>
@@ -3442,7 +3503,6 @@
     const mentionSearch = document.getElementById('mentionSearch');
     const mentionRows = document.getElementById('mentionRows');
     const mentionTabs = document.querySelectorAll('[data-mention-type]');
-    const scopePop = document.getElementById('scopePop');
     const planToggle = document.getElementById('planToggle');
     const conversationTitle = document.getElementById('conversationTitle');
     const conversationMeta = document.getElementById('conversationMeta');
@@ -3455,6 +3515,11 @@
     const modelToggle = document.getElementById('modelToggle');
     const modelMenu = document.getElementById('modelMenu');
     const currentModel = document.getElementById('currentModel');
+    const identityToggle = document.getElementById('identityToggle');
+    const identityMenu = document.getElementById('identityMenu');
+    const currentIdentityLabel = document.getElementById('currentIdentity');
+    const primaryMentionIcon = document.getElementById('primaryMentionIcon');
+    const primaryMentionLabel = document.getElementById('primaryMentionLabel');
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsTabs = document.querySelectorAll('[data-settings-tab]');
     const settingsPanels = document.querySelectorAll('[data-settings-panel]');
@@ -3485,6 +3550,7 @@
     let planningLaunchMode = false;
     let planningOutcome = 'update';
     let planningContext = null;
+    let currentIdentity = 'planning';
     let activeMentionType = 'doc';
     let activeMentionIndex = 0;
     let mentionTriggerRange = null;
@@ -3528,8 +3594,20 @@
       ]
     };
 
+    const knowledgeDocuments = Object.freeze([
+      Object.freeze({ type: 'doc', id: 'kb-hk-001', title: '港股股权激励披露规则', knowledgeBase: '港股知识库', path: '01-规则文档 / 股权激励' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-002', title: '港股补购研究分享', knowledgeBase: '港股知识库', path: '00-分享资料 / 港股研究' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-003', title: '港股业务数据源链接统计', knowledgeBase: '港股知识库', path: '00-分享资料 / 数据源' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-004', title: '港股股权激励处理方案', knowledgeBase: '港股知识库', path: '02-规划方案 / 股权激励' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-005', title: '大模型表结构设计流程测试', knowledgeBase: '港股知识库', path: '05-产品比对 / 操作手册' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-001', title: '海外股票公司行动规划方案', knowledgeBase: '海外股票', path: '02-规划方案 / 公司行动' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-002', title: '海外市场业务流程说明', knowledgeBase: '海外股票', path: '03-业务总结 / 市场流程' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-003', title: '海外证券数据源操作手册', knowledgeBase: '海外股票', path: '05-产品比对 / 操作手册' })
+    ]);
+
     const icons = {
       doc: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+      knowledge: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l-2 7H1Z"/><path d="M14 3h6l3 7h-7Z"/><path d="M12 14h7l2 7h-7Z"/></svg>',
       table: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>',
       qa: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="M22 8v10a2 2 0 0 1-2 2H10"/></svg>',
       skill: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>'
@@ -3572,6 +3650,48 @@
       modelMenu.classList.remove('open');
       modelToggle.classList.remove('open');
       modelToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeIdentityMenu() {
+      identityMenu.classList.remove('open');
+      identityToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function updateIdentityUi() {
+      const planning = currentIdentity === 'planning';
+      currentIdentityLabel.textContent = planning ? '规划' : '录入/质检';
+      identityToggle.setAttribute('aria-label', `切换身份，当前为${planning ? '规划' : '录入/质检'}`);
+      identityMenu.querySelectorAll('.identity-option').forEach(option => {
+        const active = option.dataset.identity === currentIdentity;
+        option.classList.toggle('active', active);
+        option.setAttribute('aria-selected', String(active));
+      });
+      primaryMentionLabel.textContent = planning ? '知识库' : '规则文档';
+      primaryMentionIcon.innerHTML = planning ? icons.knowledge : icons.doc;
+      composerInput.dataset.placeholder = planning
+        ? 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill'
+        : 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索规则文档/表/人工问答，输入 / 调用 Skill';
+      setMentionType('doc', false);
+    }
+
+    function setIdentity(identity) {
+      if (!['planning', 'entry-quality'].includes(identity) || identity === currentIdentity) {
+        closeIdentityMenu();
+        identityToggle.focus();
+        return;
+      }
+      currentIdentity = identity;
+      activeMentionType = 'doc';
+      activeMentionIndex = 0;
+      mentionTriggerRange = null;
+      const emptyRow = historyList.querySelector('[data-history-state="empty"]');
+      if (emptyRow) activateHistoryRow(emptyRow);
+      setApplicationView('agent');
+      loadEmptyConversation();
+      updateIdentityUi();
+      closeIdentityMenu();
+      identityToggle.focus();
+      showToast(`已切换为${identity === 'planning' ? '规划' : '录入/质检'}身份`);
     }
 
     function closeArtifactMenu() {
@@ -3936,7 +4056,11 @@
         const rawValue = node.dataset.refValue || node.textContent;
         const value = escapeHtml(rawValue);
         const label = escapeHtml(referenceDisplayText(node.dataset.refType, rawValue));
-        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}">${icons[node.dataset.refType] || ''}<span>${label}</span></button>`;
+        const refId = escapeHtml(node.dataset.refId || '');
+        const knowledgeBase = escapeHtml(node.dataset.refKnowledgeBase || '');
+        const path = escapeHtml(node.dataset.refPath || '');
+        const icon = knowledgeBase ? icons.knowledge : (icons[node.dataset.refType] || '');
+        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}"${refId ? ` data-ref-id="${refId}"` : ''}${knowledgeBase ? ` data-ref-knowledge-base="${knowledgeBase}"` : ''}${path ? ` data-ref-path="${path}"` : ''}>${icon}<span>${label}</span></button>`;
       }
       if (node.classList.contains('composer-url')) {
         const url = escapeHtml(node.dataset.url || node.textContent);
@@ -4476,11 +4600,12 @@
         </div>`;
     }
 
-    const mentionTypeLabels = Object.freeze({
-      doc: '规则文档',
-      table: '涉及表',
-      qa: '人工问答'
-    });
+    const mentionTypes = Object.freeze(['doc', 'table', 'qa']);
+
+    function mentionTypeLabel(type) {
+      if (type === 'doc') return currentIdentity === 'planning' ? '知识库' : '规则文档';
+      return type === 'table' ? '涉及表' : '人工问答';
+    }
 
     function saveMentionTriggerRange() {
       const selection = window.getSelection();
@@ -4490,7 +4615,7 @@
     }
 
     function setMentionType(type, focusSearch = true) {
-      if (!mentionTypeLabels[type]) return;
+      if (!mentionTypes.includes(type)) return;
       activeMentionType = type;
       activeMentionIndex = 0;
       mentionTabs.forEach(tab => {
@@ -4498,7 +4623,7 @@
         tab.classList.toggle('active', active);
         tab.setAttribute('aria-selected', String(active));
       });
-      const label = mentionTypeLabels[type];
+      const label = mentionTypeLabel(type);
       mentionSearch.value = '';
       mentionSearch.placeholder = `搜索${label}…`;
       mentionSearch.setAttribute('aria-label', `搜索${label}`);
@@ -4509,10 +4634,36 @@
 
     function filteredMentionItems() {
       const query = mentionSearch.value.trim().toLowerCase();
+      if (activeMentionType === 'doc' && currentIdentity === 'planning') {
+        return knowledgeDocuments.filter(item => {
+          const searchable = `${item.title} ${item.knowledgeBase} ${item.path}`.toLowerCase();
+          return !query || searchable.includes(query);
+        }).slice(0, 20);
+      }
       return suggestions['@'].filter(item => {
         if (item[0] !== activeMentionType) return false;
         return !query || item.flat(2).join(' ').toLowerCase().includes(query);
       }).slice(0, 20);
+    }
+
+    function renderKnowledgeResults(items) {
+      const groups = new Map();
+      items.forEach((item, index) => {
+        if (!groups.has(item.knowledgeBase)) groups.set(item.knowledgeBase, []);
+        groups.get(item.knowledgeBase).push({ item, index });
+      });
+      return [...groups.entries()].map(([knowledgeBase, documents]) => `
+        <section class="knowledge-group" aria-label="${escapeHtml(knowledgeBase)}">
+          <div class="knowledge-group-head">${icons.knowledge}<span>${escapeHtml(knowledgeBase)}</span></div>
+          ${documents.map(({ item, index }) => `
+            <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
+              ${icons.knowledge}
+              <div class="knowledge-copy">
+                <div class="knowledge-title">${escapeHtml(item.title)}</div>
+                <div class="knowledge-path" title="${escapeHtml(item.path)}">${escapeHtml(item.path)}</div>
+              </div>
+            </div>`).join('')}
+        </section>`).join('');
     }
 
     function renderMentionResults() {
@@ -4521,8 +4672,13 @@
       if (!items.length) {
         mentionRows.innerHTML = `<div class="mention-empty">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v12H4z"/><path d="M7 7V5h10v2"/><path d="M9 12h6"/></svg>
-          <span>没有匹配的${mentionTypeLabels[activeMentionType]}</span>
+          <span>没有匹配的${mentionTypeLabel(activeMentionType)}</span>
         </div>`;
+        return;
+      }
+      if (activeMentionType === 'doc' && currentIdentity === 'planning') {
+        mentionRows.innerHTML = renderKnowledgeResults(items);
+        mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
         return;
       }
       mentionRows.innerHTML = items.map((item, index) => {
@@ -4550,24 +4706,27 @@
       return type === 'qa' ? `人工问答 ${value}` : value;
     }
 
-    function createComposerReference(type, value) {
+    function createComposerReference(type, value, metadata = null) {
       const reference = document.createElement('span');
       reference.className = 'composer-reference';
       reference.contentEditable = 'false';
       reference.dataset.refType = type;
       reference.dataset.refValue = value;
-      reference.innerHTML = icons[type] || '';
+      if (metadata?.id) reference.dataset.refId = metadata.id;
+      if (metadata?.knowledgeBase) reference.dataset.refKnowledgeBase = metadata.knowledgeBase;
+      if (metadata?.path) reference.dataset.refPath = metadata.path;
+      reference.innerHTML = metadata?.knowledgeBase ? icons.knowledge : (icons[type] || '');
       const label = document.createElement('span');
       label.textContent = referenceDisplayText(type, value);
       reference.append(label);
       return reference;
     }
 
-    function insertMentionReference(type, value, trigger = '@') {
+    function insertMentionReference(type, value, trigger = '@', metadata = null) {
       const range = mentionTriggerRange?.cloneRange();
       composerInput.focus();
       if (!range) {
-        const reference = createComposerReference(type, value);
+        const reference = createComposerReference(type, value, metadata);
         composerInput.append(reference, document.createTextNode('\u00a0'));
       } else {
         if (range.startContainer.nodeType === Node.TEXT_NODE && range.startOffset > 0) {
@@ -4575,7 +4734,7 @@
           if (text[range.startOffset - 1] === trigger) range.setStart(range.startContainer, range.startOffset - 1);
         }
         range.deleteContents();
-        const reference = createComposerReference(type, value);
+        const reference = createComposerReference(type, value, metadata);
         const spacer = document.createTextNode('\u00a0');
         range.insertNode(spacer);
         range.insertNode(reference);
@@ -4594,6 +4753,10 @@
       const items = filteredMentionItems();
       const item = items[activeMentionIndex];
       if (!item) return;
+      if (item.type === 'doc' && item.knowledgeBase) {
+        insertMentionReference('doc', item.title, '@', item);
+        return;
+      }
       insertMentionReference(item[0], item[1]);
     }
 
@@ -4616,17 +4779,16 @@
       }
       suggestPop.classList.add('open');
       plusMenu.classList.remove('open');
-      scopePop.classList.remove('open');
     }
 
     function closeOverlays() {
       suggestPop.classList.remove('open');
       plusMenu.classList.remove('open');
-      scopePop.classList.remove('open');
       closeHistoryContextMenu();
       closeChatSearch();
       closeModelMenu();
       closeArtifactMenu();
+      closeIdentityMenu();
     }
 
     function closeHistoryContextMenu() {
@@ -4754,17 +4916,57 @@
       deleteHistoryConfirm.setAttribute('aria-hidden', 'true');
     }
 
-    function openScopePanel() {
-      closeOverlays();
-      scopePop.classList.add('open');
-    }
-
     plusBtn.addEventListener('click', event => {
       event.stopPropagation();
       plusMenu.classList.toggle('open');
       suggestPop.classList.remove('open');
-      scopePop.classList.remove('open');
       closeModelMenu();
+      closeIdentityMenu();
+    });
+
+    identityToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = !identityMenu.classList.contains('open');
+      closeOverlays();
+      identityMenu.classList.toggle('open', open);
+      identityToggle.setAttribute('aria-expanded', String(open));
+      if (open) requestAnimationFrame(() => identityMenu.querySelector('.identity-option.active')?.focus());
+    });
+
+    identityToggle.addEventListener('keydown', event => {
+      if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+      event.preventDefault();
+      closeOverlays();
+      identityMenu.classList.add('open');
+      identityToggle.setAttribute('aria-expanded', 'true');
+      const options = [...identityMenu.querySelectorAll('.identity-option')];
+      const target = event.key === 'ArrowDown' ? options[0] : options[options.length - 1];
+      target?.focus();
+    });
+
+    identityMenu.addEventListener('click', event => {
+      const option = event.target.closest('.identity-option');
+      if (option) setIdentity(option.dataset.identity);
+    });
+
+    identityMenu.addEventListener('keydown', event => {
+      const options = [...identityMenu.querySelectorAll('.identity-option')];
+      const current = options.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        options[(current + direction + options.length) % options.length]?.focus();
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        options[event.key === 'Home' ? 0 : options.length - 1]?.focus();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (current >= 0) setIdentity(options[current].dataset.identity);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeIdentityMenu();
+        identityToggle.focus();
+      }
     });
 
     modelToggle.addEventListener('click', event => {
@@ -4886,7 +5088,6 @@
       promoteTrailingComposerUrl();
       const text = composerInput.textContent.trim();
       if (text.endsWith('@')) openSuggest('@');
-      else if (text.endsWith('#')) openScopePanel();
       else if (text.endsWith('/')) openSuggest('/');
       else suggestPop.classList.remove('open');
     });
@@ -4940,7 +5141,7 @@
       } else if (event.key === 'Tab') {
         event.preventDefault();
         event.stopPropagation();
-        const types = Object.keys(mentionTypeLabels);
+        const types = mentionTypes;
         const current = types.indexOf(activeMentionType);
         const direction = event.shiftKey ? -1 : 1;
         setMentionType(types[(current + direction + types.length) % types.length]);
@@ -5025,7 +5226,6 @@
       setTaskMode(true);
       showToast('已模拟上传图片：截图参考');
     });
-    document.querySelector('[data-reference]').addEventListener('click', openScopePanel);
     manualQaBtn.addEventListener('click', () => {
       if (manualQaPromptPending) {
         prepareManualQaPrefill();
@@ -5034,7 +5234,6 @@
       }
       openManualQa('composer');
     });
-    document.getElementById('scopeClose').addEventListener('click', closeOverlays);
     artifactBody.addEventListener('submit', event => {
       if (!event.target.matches('#manualQaForm')) return;
       event.preventDefault();
@@ -5400,6 +5599,7 @@
     renderManualIssueList();
     renderManualIssueDetail();
     renderArtifact();
+    updateIdentityUi();
     initializePlanningLaunch();
   </script>
 </body>
