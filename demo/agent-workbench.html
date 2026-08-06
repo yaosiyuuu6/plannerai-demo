@@ -412,7 +412,7 @@
       height: 38px;
       border-radius: 9px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 28px;
+      grid-template-columns: minmax(0, 1fr) auto 28px;
       align-items: center;
       gap: 4px;
       padding: 0 5px 0 10px;
@@ -422,6 +422,21 @@
       cursor: pointer;
     }
     .history-row.active { background: var(--primary-bg); color: #0958d9; font-weight: 500; }
+    .history-input-badge {
+      grid-column: 2;
+      height: 22px;
+      border-radius: 999px;
+      background: #e6f4ff;
+      color: #1677ff;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .history-input-badge[hidden] { display: none; }
     .history-pin-indicator {
       position: absolute;
       left: 8px;
@@ -438,6 +453,7 @@
     .history-row.pinned .history-pin-indicator { display: block; }
     .history-row.pinned .history-title { padding-left: 18px; }
     .history-title {
+      grid-column: 1;
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -449,6 +465,7 @@
       outline-offset: 2px;
     }
     .history-more {
+      grid-column: 3;
       width: 28px;
       height: 28px;
       border: 0;
@@ -475,6 +492,7 @@
       color: #262626;
     }
     .history-rename-input {
+      grid-column: 1;
       width: 100%;
       height: 28px;
       border: 1px solid var(--primary);
@@ -896,14 +914,14 @@
     .chat-top {
       height: 48px;
       border-bottom: 1px solid var(--border);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 var(--conversation-gutter);
       position: relative;
       z-index: 6;
     }
-    .task-mode .chat-top { display: flex; }
+    .workspace.settings-mode .chat-top { display: none; }
     .layout.agent-collapsed .chat-top::before {
       content: "";
       position: absolute;
@@ -918,9 +936,102 @@
       width: min(100%, var(--conversation-width));
       min-width: 0;
       margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
     }
-    .conversation-title { font-size: 15px; font-weight: 600; }
+    .conversation-heading {
+      min-width: 0;
+      max-width: calc(100% - 36px);
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conversation-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: 600;
+      flex: 0 1 auto;
+    }
     .conversation-meta { display: none; }
+    .readonly-badge {
+      display: none;
+      flex: none;
+      min-height: 22px;
+      align-items: center;
+      padding: 2px 8px;
+      border: 1px solid #91caff;
+      border-radius: 999px;
+      background: #e6f4ff;
+      color: #0958d9;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .workspace.shared-mode .readonly-badge { display: inline-flex; }
+    .conversation-actions { position: relative; flex: none; }
+    .conversation-more {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #595959;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .conversation-more:hover,
+    .conversation-more[aria-expanded="true"] { background: #f0f0f0; color: #262626; }
+    .conversation-more:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .4);
+      outline-offset: 2px;
+    }
+    .conversation-more .icon { width: 18px; height: 18px; }
+    .conversation-action-menu {
+      position: absolute;
+      top: 38px;
+      left: 0;
+      right: auto;
+      z-index: 190;
+      width: 156px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.16);
+      display: none;
+    }
+    .conversation-action-menu.open { display: block; }
+    .conversation-action-item {
+      width: 100%;
+      min-height: 36px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #262626;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 9px;
+      font-size: 13px;
+      text-align: left;
+    }
+    .conversation-action-item:hover:not(:disabled) { background: #f5f5f5; }
+    .conversation-action-item:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .35);
+      outline-offset: -2px;
+    }
+    .conversation-action-item:disabled {
+      color: #bfbfbf;
+      cursor: not-allowed;
+      opacity: .72;
+    }
+    .conversation-action-item .icon { width: 16px; height: 16px; }
     .panel-toggle {
       width: 32px;
       height: 32px;
@@ -1019,6 +1130,346 @@
     #messages.manual-qa-mode > :not(#manualQaStory) { display: none; }
     #messages.planning-mode > :not(#planningStory) { display: none; }
     #messages.daily-report-mode > :not(#dailyReportStory) { display: none; }
+    #messages.financial-extraction-mode > :not(#financialExtractionStory) { display: none; }
+    .financial-extraction-story {
+      width: min(100%, var(--conversation-width));
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .financial-extraction-story[hidden] { display: none; }
+    .financial-intro {
+      color: #262626;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .financial-intro p { margin: 0; }
+    .financial-asking-status {
+      min-height: 28px;
+      color: #8f959e;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .financial-asking-status[hidden] { display: none; }
+    .financial-asking-status svg {
+      width: 19px;
+      height: 19px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .financial-submitted-result[hidden] { display: none; }
+    .financial-asked-summary {
+      padding: 2px 0 8px;
+      color: #262a30;
+    }
+    .financial-asked-head {
+      min-height: 40px;
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #62676f;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .financial-asked-head::-webkit-details-marker { display: none; }
+    .financial-asked-icon,
+    .financial-asked-chevron {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .financial-asked-chevron {
+      width: 15px;
+      height: 15px;
+      transition: transform .18s ease;
+    }
+    .financial-asked-summary:not([open]) .financial-asked-chevron { transform: rotate(-90deg); }
+    .financial-asked-head:focus-visible {
+      border-radius: 5px;
+      outline: 2px solid rgba(22,119,255,.4);
+      outline-offset: 2px;
+    }
+    .financial-asked-list {
+      margin: 8px 0 0 27px;
+      display: grid;
+      gap: 18px;
+    }
+    .financial-asked-item { display: grid; gap: 4px; }
+    .financial-asked-item dt {
+      color: #4e5359;
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 400;
+    }
+    .financial-asked-item dd {
+      margin: 0;
+      color: #262a30;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .financial-asked-item dd.is-empty { color: #a1a6ad; }
+    .ask-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 14px 16px 12px;
+      overflow: hidden;
+    }
+    .ask-card-head {
+      min-height: 40px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .ask-question-copy { min-width: 0; padding-top: 3px; }
+    .ask-question-title {
+      margin: 0;
+      color: #1f2329;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .ask-question-hint {
+      margin: 2px 0 0;
+      color: #8f959e;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .ask-card-controls {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .ask-icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #4e5359;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .18s ease, background .18s ease;
+    }
+    .ask-icon-btn:hover:not(:disabled) { background: #f5f6f7; color: #1f2329; }
+    .ask-icon-btn:disabled { color: #c9cdd4; cursor: not-allowed; }
+    .ask-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .ask-progress {
+      min-width: 40px;
+      color: #4e5359;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+    .ask-options { display: flex; flex-direction: column; }
+    .ask-option {
+      position: relative;
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-bottom: 1px solid #eceef0;
+      border-radius: 0;
+      background: transparent;
+      color: #1f2329;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) 22px;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      text-align: left;
+      transition: background .18s ease, border-color .18s ease;
+    }
+    .ask-option:hover { background: #f7f8fa; }
+    .ask-option.selected {
+      margin-top: 2px;
+      border-bottom-color: transparent;
+      border-radius: 8px;
+      background: #f2f3f5;
+    }
+    .ask-option-key {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: #f2f3f5;
+      color: #262a30;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+    .ask-option.selected .ask-option-key { background: #fff; }
+    .ask-option-main {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .ask-option-label {
+      flex: 0 1 auto;
+      min-width: 0;
+      color: #1f2329;
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ask-option-recommended {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: #e8e9eb;
+      color: #62676f;
+      padding: 2px 8px;
+      font-size: 11px;
+      line-height: 18px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .ask-option-desc {
+      flex: 1 1 auto;
+      min-width: 0;
+      color: #8f959e;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ask-option-indicator {
+      width: 20px;
+      height: 20px;
+      color: #646a73;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ask-option-indicator svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .ask-check {
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid #bbbfc4;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .ask-option.selected .ask-check {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: inset 0 0 0 4px #fff;
+    }
+    .ask-other-row.active .ask-check {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: inset 0 0 0 4px #fff;
+    }
+    .ask-other-row {
+      min-height: 48px;
+      border-bottom: 1px solid #eceef0;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) 22px;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      color: #62676f;
+    }
+    .ask-other-row.active {
+      margin-top: 2px;
+      border-bottom-color: transparent;
+      border-radius: 8px;
+      background: #f7f8fa;
+      color: #1f2329;
+    }
+    .ask-other-trigger {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      text-align: left;
+      font-size: 14px;
+    }
+    .ask-other-input {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #b8d6ff;
+      border-radius: 6px;
+      outline: 0;
+      background: #fff;
+      padding: 0 11px;
+      color: #1f2329;
+      font-size: 13px;
+    }
+    .ask-other-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(22,119,255,.12); }
+    .ask-card-foot {
+      min-height: 44px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 10px;
+    }
+    .ask-keyboard-hint { color: #a1a6ad; font-size: 12px; }
+    .ask-foot-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .ask-skip,
+    .ask-next {
+      min-width: 64px;
+      min-height: 36px;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background .18s ease, color .18s ease, opacity .18s ease;
+    }
+    .ask-skip { background: #f2f3f5; color: #262a30; }
+    .ask-skip:hover { background: #e8e9eb; }
+    .ask-next { background: var(--primary); color: #fff; }
+    .ask-next:hover:not(:disabled) { background: #0958d9; }
+    .ask-next:disabled { background: #d9dfe8; color: #fff; cursor: not-allowed; }
+    .ask-icon-btn:focus-visible,
+    .ask-option:focus-visible,
+    .ask-other-trigger:focus-visible,
+    .ask-skip:focus-visible,
+    .ask-next:focus-visible {
+      outline: 2px solid rgba(22,119,255,.45);
+      outline-offset: 2px;
+    }
+    @media (max-width: 720px) {
+      .ask-card { border-radius: 10px; padding: 12px; }
+      .ask-card-head { gap: 8px; }
+      .ask-question-title { font-size: 14px; }
+      .ask-card-controls { gap: 0; }
+      .ask-icon-btn { width: 34px; height: 36px; }
+      .ask-progress { min-width: 36px; }
+      .ask-option, .ask-other-row { padding-inline: 6px; grid-template-columns: 32px minmax(0, 1fr) 20px; gap: 8px; }
+      .ask-keyboard-hint { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ask-card *, .ask-card *::before, .ask-card *::after { transition: none !important; scroll-behavior: auto !important; }
+    }
     .manual-qa-story {
       width: min(100%, var(--conversation-width));
       margin: 0 auto;
@@ -1120,7 +1571,7 @@
       line-height: 1.65;
       font-size: 14px;
     }
-    .bubble.user { background: var(--primary-bg); align-self: flex-end; }
+    .bubble.user { display: block; background: var(--primary-bg); align-self: flex-end; }
     .bubble.ai {
       align-self: flex-start;
       width: 100%;
@@ -1543,6 +1994,14 @@
       margin-bottom: auto;
       padding: 0 20px;
     }
+    .financial-question-dock {
+      width: min(100%, var(--conversation-width));
+      max-width: 100%;
+      margin: 0 auto;
+      display: none;
+    }
+    .workspace.financial-question-mode .financial-question-dock { display: block; }
+    .workspace.financial-question-mode .composer { display: none; }
     .composer {
       position: relative;
       width: min(760px, calc(100vw - 40px));
@@ -1576,6 +2035,110 @@
       content: attr(data-placeholder);
       color: #bfbfbf;
     }
+    .workspace.shared-mode .composer {
+      min-height: 56px;
+      border-color: #d9d9d9;
+      background: #fafafa;
+      box-shadow: none;
+    }
+    .workspace.shared-mode .composer-input {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      color: #8c8c8c;
+      cursor: not-allowed;
+    }
+    .workspace.shared-mode .composer-input:empty::before { color: #8c8c8c; }
+    .workspace.shared-mode .composer-bar { display: none; }
+    .workspace.shared-mode .response-action { opacity: .45; pointer-events: none; }
+    .share-invalid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background: #fafafa;
+    }
+    .share-invalid[hidden] { display: none; }
+    .share-invalid-card {
+      width: min(420px, 100%);
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(0,0,0,.06);
+      text-align: center;
+    }
+    .share-invalid-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      color: #8c8c8c;
+      display: grid;
+      place-items: center;
+    }
+    .share-invalid-icon .icon { width: 24px; height: 24px; }
+    .share-invalid-card h2 { margin: 0 0 10px; color: #262626; font-size: 18px; }
+    .share-invalid-card p { margin: 0; color: #8c8c8c; font-size: 14px; line-height: 1.7; }
+    .share-invalid-card button {
+      min-height: 36px;
+      margin-top: 22px;
+      padding: 0 16px;
+      border: 1px solid var(--primary);
+      border-radius: 7px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 14px;
+    }
+    .workspace.share-invalid-mode > .welcome,
+    .workspace.share-invalid-mode > .messages,
+    .workspace.share-invalid-mode > .composer-wrap { display: none; }
+    .message-attachment {
+      width: min(420px, 100%);
+      box-sizing: border-box;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+    .message-attachment-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background: #fff1f0;
+      color: #cf1322;
+      display: grid;
+      place-items: center;
+      flex: none;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .message-attachment-info { min-width: 0; flex: 1; }
+    .message-attachment-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
+    .message-attachment-meta { margin-top: 2px; color: #8c8c8c; font-size: 11px; }
+    .message-attachment-actions {
+      grid-column: 2;
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+    .message-attachment-actions button {
+      min-height: 30px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #1677ff;
+      font-size: 12px;
+    }
+    .message-attachment-actions button:hover { background: #e6f4ff; }
     .launch-context {
       padding: 10px 12px;
       border: 1px solid var(--border);
@@ -2884,7 +3447,7 @@
             <div class="history-row" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0"><span class="history-title">国财A股组规则确认</span><button class="history-more" type="button" aria-label="国财A股组规则确认的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="daily-report" role="button" tabindex="0"><span class="history-title">质检日报生成</span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
-            <div class="history-row" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="financial-extraction" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">规划文档总结</span><button class="history-more" type="button" aria-label="规划文档总结的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">业务流程优化建议</span><button class="history-more" type="button" aria-label="业务流程优化建议的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">AI在招聘中的需求</span><button class="history-more" type="button" aria-label="AI在招聘中的需求的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
@@ -2903,8 +3466,34 @@
       <main class="workspace" id="workspace">
         <div class="chat-top">
           <div class="chat-top-content">
-            <div class="conversation-title" id="conversationTitle">新问答</div>
-            <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、/ 或点击 +</div>
+            <div class="conversation-heading">
+              <div class="conversation-title" id="conversationTitle">新问答</div>
+              <span class="readonly-badge" id="readonlyBadge">只读快照</span>
+              <div class="conversation-meta" id="conversationMeta">空会话 · 可输入 @、/ 或点击 +</div>
+            </div>
+            <div class="conversation-actions">
+              <button class="conversation-more" id="conversationMore" type="button" aria-label="对话更多操作" aria-haspopup="menu" aria-expanded="false">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+              </button>
+              <div class="conversation-action-menu" id="conversationActionMenu" role="menu" aria-hidden="true">
+                <button class="conversation-action-item" type="button" role="menuitem" data-conversation-action="pin">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>
+                  置顶
+                </button>
+                <button class="conversation-action-item" type="button" role="menuitem" data-conversation-action="rename">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                  重命名
+                </button>
+                <button class="conversation-action-item" type="button" role="menuitem" data-conversation-action="copy-id">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><rect x="4" y="4" width="11" height="11" rx="2"/></svg>
+                  复制 ID
+                </button>
+                <button class="conversation-action-item" type="button" role="menuitem" data-conversation-action="share">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4"/><path d="m8.6 13.5 6.8 4"/></svg>
+                  分享
+                </button>
+              </div>
+            </div>
           </div>
           <button class="panel-toggle" id="panelToggle" title="显示或隐藏右侧产物区" aria-label="显示或隐藏右侧产物区">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -2915,6 +3504,17 @@
           </button>
         </div>
 
+        <section class="share-invalid" id="shareInvalid" hidden aria-labelledby="shareInvalidTitle">
+          <div class="share-invalid-card">
+            <div class="share-invalid-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 17h.01"/></svg>
+            </div>
+            <h2 id="shareInvalidTitle">分享链接已失效</h2>
+            <p>该链接可能已过期或原对话已被删除。</p>
+            <button type="button" id="returnToMyChats">返回我的对话</button>
+          </div>
+        </section>
+
         <section class="welcome" id="welcome">
           <h1 class="welcome-title"><span class="spark"><img src="../images/logo.jpg" alt=""></span>早上好，有什么我能帮你的吗？</h1>
         </section>
@@ -2922,6 +3522,17 @@
         <section class="messages" id="messages">
           <div class="bubble user">
             帮我联网查一下近期海外券商对港股股权激励披露口径的要求，并整理到规划文档里。
+            <div class="message-attachment" aria-label="对话附件">
+              <span class="message-attachment-icon" aria-hidden="true">PDF</span>
+              <span class="message-attachment-info">
+                <span class="message-attachment-name">港股股权激励披露规则.pdf</span>
+                <span class="message-attachment-meta">1.8 MB</span>
+              </span>
+              <span class="message-attachment-actions">
+                <button type="button" data-attachment-action="preview">预览</button>
+                <button type="button" data-attachment-action="download">下载</button>
+              </span>
+            </div>
           </div>
           <div class="bubble ai">
             <p class="answer-text" style="margin-bottom: 10px;">我需要先确认联网搜索范围。建议按下面的方式执行：</p>
@@ -3128,6 +3739,17 @@
               </div>
             </details>
           </section>
+          <section class="financial-extraction-story" id="financialExtractionStory" hidden aria-label="财务数据抽取问答">
+            <div class="bubble user">请从华星科技 2025 年年度报告中抽取主要财务数据，整理成结构化结果。</div>
+            <div class="financial-intro">
+              <p>好的。开始抽取前，我需要确认 3 项范围，避免遗漏或重复加工。</p>
+            </div>
+            <div class="financial-asking-status" id="financialAskingStatus" role="status">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 0 1 4.8 1c0 2-2.5 2.2-2.5 4"/><path d="M12 17.2h.01"/></svg>
+              <span>正在提问</span>
+            </div>
+            <div class="financial-submitted-result" id="financialSubmittedResult" hidden></div>
+          </section>
           <section class="manual-qa-story" id="manualQaStory" hidden>
             <div class="bubble user">请确认 LR1105 非经常性损益内部表加工规则。</div>
             <div class="manual-qa-work-log" aria-label="资料检索过程">
@@ -3287,6 +3909,9 @@
         </section>
 
         <div class="composer-wrap">
+          <div class="financial-question-dock" id="financialQuestionDock" aria-label="待回答的问题">
+            <div id="financialQuestionMount"></div>
+          </div>
           <div class="composer" id="composer">
             <div class="suggest-pop" id="suggestPop">
               <div class="mention-shell" id="mentionShell">
@@ -3477,7 +4102,7 @@
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     const layout = document.getElementById('layout');
@@ -3490,6 +4115,10 @@
     const manualSystem = document.getElementById('manualSystem');
     const planningStory = document.getElementById('planningStory');
     const dailyReportStory = document.getElementById('dailyReportStory');
+    const financialExtractionStory = document.getElementById('financialExtractionStory');
+    const financialAskingStatus = document.getElementById('financialAskingStatus');
+    const financialSubmittedResult = document.getElementById('financialSubmittedResult');
+    const financialQuestionMount = document.getElementById('financialQuestionMount');
     const sendBtn = document.getElementById('sendBtn');
     const agentSidebarToggle = document.getElementById('agentSidebarToggle');
     const composerInput = document.getElementById('composerInput');
@@ -3506,6 +4135,10 @@
     const planToggle = document.getElementById('planToggle');
     const conversationTitle = document.getElementById('conversationTitle');
     const conversationMeta = document.getElementById('conversationMeta');
+    const conversationMore = document.getElementById('conversationMore');
+    const conversationActionMenu = document.getElementById('conversationActionMenu');
+    const shareInvalid = document.getElementById('shareInvalid');
+    const returnToMyChats = document.getElementById('returnToMyChats');
     const toast = document.getElementById('toast');
     const agentResizeHandle = document.getElementById('agentResizeHandle');
     const artifactResizeHandle = document.getElementById('artifactResizeHandle');
@@ -3556,9 +4189,60 @@
     let mentionTriggerRange = null;
     let historyMenuRow = null;
     let pendingDeleteHistoryRow = null;
+    let currentConversationState = 'empty';
+    let currentConversationId = 'conv-new';
+    let conversationGenerating = false;
+    let sharedSnapshotMode = false;
+    const financialQuestions = Object.freeze([
+      Object.freeze({
+        id: 'statementScope',
+        title: '需要抽取哪些财务报表？',
+        hint: '选择一项后可直接进入下一题，也可以使用数字键快速选择。',
+        multiSelect: false,
+        options: Object.freeze([
+          Object.freeze({ label: '三大财务报表', description: '资产负债表、利润表和现金流量表', recommended: true }),
+          Object.freeze({ label: '资产负债表', description: '资产、负债及所有者权益' }),
+          Object.freeze({ label: '利润表', description: '收入、成本、费用及利润' }),
+          Object.freeze({ label: '现金流量表', description: '经营、投资和筹资活动现金流' })
+        ])
+      }),
+      Object.freeze({
+        id: 'reportingPeriod',
+        title: '需要抽取哪个报告期？',
+        hint: '默认建议同时保留本期数与上年同期数，便于后续校验。',
+        multiSelect: false,
+        options: Object.freeze([
+          Object.freeze({ label: '2025 年度及上年同期', description: '同时抽取 2025 年与 2024 年对比数据' }),
+          Object.freeze({ label: '仅 2025 年度', description: '只保留本报告期数据' }),
+          Object.freeze({ label: '最近三年', description: '抽取 2023—2025 年连续数据' })
+        ])
+      }),
+      Object.freeze({
+        id: 'outputFields',
+        title: '结果中需要包含哪些辅助信息？',
+        hint: '本题支持多选，选择完成后点击“提交”。',
+        multiSelect: true,
+        options: Object.freeze([
+          Object.freeze({ label: '原始科目名称', description: '保留报告中的披露名称' }),
+          Object.freeze({ label: '标准化字段', description: '映射到统一财务指标口径' }),
+          Object.freeze({ label: '来源页码', description: '记录每项数据所在页面' }),
+          Object.freeze({ label: '校验状态', description: '标记勾稽关系和异常项' })
+        ])
+      })
+    ]);
+    let financialQuestionIndex = 0;
+    let financialAnswers = {};
+    let financialOtherDrafts = {};
+    let financialQuestionStatus = 'asking';
+    let financialQuestionInitialized = false;
+    const baseDocumentTitle = document.title;
+    const pendingInputFaviconId = 'pendingInputFavicon';
+    const SHARE_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
     historyList.querySelectorAll('.history-row').forEach((row, index) => {
       row.dataset.historyOrder = String(index);
+      if (!row.dataset.conversationId) row.dataset.conversationId = `conv-demo-${String(index + 1).padStart(3, '0')}`;
       row.insertAdjacentHTML('afterbegin', '<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>');
+      row.querySelector('.history-more')?.insertAdjacentHTML('beforebegin', '<span class="history-input-badge" hidden>待输入</span>');
       row.removeAttribute('role');
       row.removeAttribute('tabindex');
       const title = row.querySelector('.history-title');
@@ -3655,6 +4339,150 @@
     function closeIdentityMenu() {
       identityMenu.classList.remove('open');
       identityToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeConversationActionMenu() {
+      conversationActionMenu.classList.remove('open');
+      conversationActionMenu.setAttribute('aria-hidden', 'true');
+      conversationMore.setAttribute('aria-expanded', 'false');
+    }
+
+    function canShareConversation(state, generating, isShared) {
+      return state !== 'empty' && !generating && !isShared;
+    }
+
+    function updateConversationActions() {
+      const isShared = sharedSnapshotMode;
+      const invalidShare = currentConversationState === 'invalid-share';
+      const shareEnabled = canShareConversation(currentConversationState, conversationGenerating, isShared);
+      conversationActionMenu.querySelector('[data-conversation-action="pin"]').disabled = isShared;
+      conversationActionMenu.querySelector('[data-conversation-action="rename"]').disabled = isShared;
+      conversationActionMenu.querySelector('[data-conversation-action="copy-id"]').disabled = currentConversationState === 'empty' || invalidShare;
+      conversationActionMenu.querySelector('[data-conversation-action="share"]').disabled = !shareEnabled;
+      conversationActionMenu.querySelector('[data-conversation-action="share"]').title = conversationGenerating
+        ? '回答生成完成后可分享'
+        : currentConversationState === 'empty'
+          ? '对话中暂无内容'
+          : isShared ? '只读快照不可再次分享' : '';
+    }
+
+    function setCurrentConversation(row, stateOverride) {
+      currentConversationState = stateOverride || row?.dataset.historyState || 'conversation';
+      currentConversationId = row?.dataset.conversationId || currentConversationId;
+      conversationGenerating = currentConversationState === 'daily-report';
+      updateConversationActions();
+    }
+
+    function writeTextToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, () => false);
+      const input = document.createElement('textarea');
+      input.value = text;
+      input.setAttribute('readonly', '');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.append(input);
+      input.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch (error) { copied = false; }
+      input.remove();
+      return Promise.resolve(copied);
+    }
+
+    function createConversationShareUrl(now = Date.now()) {
+      const url = new URL(window.location.href);
+      url.search = '';
+      url.hash = '';
+      const token = `shr_${now.toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      url.searchParams.set('share', token);
+      url.searchParams.set('state', currentConversationState);
+      url.searchParams.set('title', conversationTitle.textContent.trim());
+      url.searchParams.set('cid', currentConversationId);
+      url.searchParams.set('expires', String(now + SHARE_VALIDITY_MS));
+      return url.toString();
+    }
+
+    async function shareCurrentConversation() {
+      if (!canShareConversation(currentConversationState, conversationGenerating, sharedSnapshotMode)) return;
+      const copied = await writeTextToClipboard(createConversationShareUrl());
+      showToast(copied ? '链接已复制，30 天内有效' : '链接已生成，但复制失败');
+    }
+
+    async function copyCurrentConversationId() {
+      if (currentConversationState === 'empty') return;
+      const copied = await writeTextToClipboard(currentConversationId);
+      showToast(copied ? '会话 ID 已复制' : '复制失败，请重试');
+    }
+
+    function clearShareParameters() {
+      const url = new URL(window.location.href);
+      ['share', 'state', 'title', 'cid', 'expires'].forEach(key => url.searchParams.delete(key));
+      window.history.replaceState({}, '', url);
+    }
+
+    function exitSharedSnapshot() {
+      if (!sharedSnapshotMode && !workspace.classList.contains('share-invalid-mode')) return;
+      sharedSnapshotMode = false;
+      workspace.classList.remove('shared-mode', 'share-invalid-mode');
+      shareInvalid.hidden = true;
+      composerInput.contentEditable = 'true';
+      composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill';
+      [plusBtn, manualQaBtn, sendBtn].forEach(button => { button.disabled = false; });
+      messages.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = false; });
+      artifact.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = false; });
+      clearShareParameters();
+      updateIdentityUi();
+      updateConversationActions();
+    }
+
+    function showInvalidSharedSnapshot() {
+      sharedSnapshotMode = true;
+      workspace.classList.remove('shared-mode');
+      workspace.classList.add('share-invalid-mode');
+      shareInvalid.hidden = false;
+      conversationTitle.textContent = '无法打开分享快照';
+      currentConversationState = 'invalid-share';
+      conversationGenerating = false;
+      document.querySelectorAll('.history-row').forEach(item => item.classList.remove('active'));
+      updateConversationActions();
+    }
+
+    function applySharedReadOnlyState(title, conversationId) {
+      sharedSnapshotMode = true;
+      workspace.classList.add('shared-mode');
+      workspace.classList.remove('share-invalid-mode');
+      shareInvalid.hidden = true;
+      conversationTitle.textContent = title;
+      currentConversationId = conversationId;
+      conversationGenerating = false;
+      document.querySelectorAll('.history-row').forEach(item => item.classList.remove('active'));
+      composerInput.innerHTML = '';
+      composerInput.contentEditable = 'false';
+      composerInput.dataset.placeholder = '这是分享的只读快照，无法继续对话';
+      [plusBtn, manualQaBtn, sendBtn].forEach(button => { button.disabled = true; });
+      messages.querySelectorAll('button:not([data-attachment-action]), input, textarea, select').forEach(control => { control.disabled = true; });
+      artifact.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = true; });
+      updateConversationActions();
+    }
+
+    function initializeSharedSnapshot(now = Date.now()) {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('share');
+      if (!token) return false;
+      const expires = Number(params.get('expires'));
+      if (token === 'expired' || !Number.isFinite(expires) || expires <= now) {
+        showInvalidSharedSnapshot();
+        return true;
+      }
+      const state = params.get('state') || 'artifact';
+      const title = params.get('title') || '分享的对话';
+      const conversationId = params.get('cid') || 'conv-shared';
+      currentConversationState = state;
+      if (state === 'manual-qa') loadManualQaConversation();
+      else if (state === 'daily-report') loadDailyReportConversation();
+      else loadArtifactConversation();
+      currentConversationState = state;
+      applySharedReadOnlyState(title, conversationId);
+      return true;
     }
 
     function updateIdentityUi() {
@@ -4784,6 +5612,7 @@
     function closeOverlays() {
       suggestPop.classList.remove('open');
       plusMenu.classList.remove('open');
+      closeConversationActionMenu();
       closeHistoryContextMenu();
       closeChatSearch();
       closeModelMenu();
@@ -4866,7 +5695,7 @@
       input.value = original;
       input.setAttribute('aria-label', '修改问答名称');
       title.hidden = true;
-      row.insertBefore(input, row.querySelector('.history-more'));
+      row.insertBefore(input, row.querySelector('.history-input-badge') || row.querySelector('.history-more'));
       let finished = false;
       const finish = save => {
         if (finished) return;
@@ -4877,6 +5706,7 @@
           const button = row.querySelector('.history-more');
           button.setAttribute('aria-label', `${next}的更多操作`);
           if (row.classList.contains('active')) conversationTitle.textContent = next;
+          refreshPendingInputUi();
           showToast('名称已更新');
         }
         title.hidden = false;
@@ -5295,6 +6125,47 @@
     function activateHistoryRow(row) {
       document.querySelectorAll('.history-row').forEach(item => item.classList.remove('active'));
       row.classList.add('active');
+      refreshPendingInputUi();
+    }
+
+    function refreshPendingInputUi() {
+      const rows = [...historyList.querySelectorAll('.history-row')];
+      const backgroundPendingRows = rows.filter(row => row.dataset.needsInput === 'true' && !row.classList.contains('active'));
+      rows.forEach(row => {
+        const title = row.querySelector('.history-title');
+        const badge = row.querySelector('.history-input-badge');
+        const visible = row.dataset.needsInput === 'true' && !row.classList.contains('active');
+        if (badge) badge.hidden = !visible;
+        if (title) title.setAttribute('aria-label', `${title.textContent.trim()}${visible ? '，待输入' : ''}`);
+      });
+      const pendingCount = backgroundPendingRows.length;
+      document.title = pendingCount
+        ? `${pendingCount > 1 ? `${pendingCount} 个` : ''}待输入 · ${baseDocumentTitle}`
+        : baseDocumentTitle;
+      let favicon = document.getElementById(pendingInputFaviconId);
+      if (pendingCount) {
+        if (!favicon) {
+          favicon = document.createElement('link');
+          favicon.id = pendingInputFaviconId;
+          favicon.rel = 'icon';
+          document.head.append(favicon);
+        }
+        favicon.href = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1677ff"/><circle cx="16" cy="16" r="5" fill="white"/></svg>')}`;
+      } else {
+        favicon?.remove();
+      }
+    }
+
+    function setHistoryNeedsInput(row, needsInput) {
+      if (!row) return;
+      if (needsInput) row.dataset.needsInput = 'true';
+      else delete row.dataset.needsInput;
+      refreshPendingInputUi();
+    }
+
+    function syncFinancialQuestionAttention() {
+      const row = historyList.querySelector('[data-history-state="financial-extraction"]');
+      setHistoryNeedsInput(row, financialQuestionInitialized && financialQuestionStatus === 'asking');
     }
 
     function initializePlanningLaunch() {
@@ -5341,6 +6212,198 @@
       conversationTitle.textContent = '无法打开规划文档修改建议';
       conversationMeta.textContent = '上下文加载失败';
       composerInput.textContent = '';
+    }
+
+    function escapeFinancialHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function financialAnswerValues(question) {
+      const answer = financialAnswers[question.id];
+      if (question.multiSelect) return Array.isArray(answer) ? answer : [];
+      return typeof answer === 'string' ? [answer] : [];
+    }
+
+    function financialQuestionHasAnswer(question) {
+      const values = financialAnswerValues(question);
+      if (!values.length) return false;
+      if (!values.includes('__other__')) return true;
+      return Boolean((financialOtherDrafts[question.id] || '').trim());
+    }
+
+    function financialAnswerLabel(question) {
+      const values = financialAnswerValues(question);
+      if (!values.length) return '已跳过';
+      return values
+        .map(value => value === '__other__' ? (financialOtherDrafts[question.id] || '其他') : value)
+        .join('、');
+    }
+
+    function financialQuestionCardHtml(question, index) {
+      const values = financialAnswerValues(question);
+      const otherActive = values.includes('__other__');
+      const options = question.options.map((option, optionIndex) => {
+        const selected = values.includes(option.label);
+        const indicator = question.multiSelect
+          ? '<span class="ask-check" aria-hidden="true"></span>'
+          : selected
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>'
+            : '';
+        return `<button class="ask-option${selected ? ' selected' : ''}" type="button" data-financial-option="${escapeFinancialHtml(option.label)}" aria-pressed="${selected}">
+          <span class="ask-option-key">${optionIndex + 1}</span>
+          <span class="ask-option-main"><span class="ask-option-label">${escapeFinancialHtml(option.label)}</span>${option.recommended ? '<span class="ask-option-recommended">推荐</span>' : ''}<span class="ask-option-desc">${escapeFinancialHtml(option.description)}</span></span>
+          <span class="ask-option-indicator">${indicator}</span>
+        </button>`;
+      }).join('');
+      const otherControl = otherActive
+        ? `<input class="ask-other-input" id="financialOtherInput" type="text" value="${escapeFinancialHtml(financialOtherDrafts[question.id] || '')}" placeholder="输入其他要求，按 Enter 继续" aria-label="其他补充内容">`
+        : '<button class="ask-other-trigger" type="button" data-financial-other>其他补充…</button>';
+      return `<article class="ask-card" aria-labelledby="financialQuestionTitle">
+        <header class="ask-card-head">
+          <div class="ask-question-copy">
+            <h2 class="ask-question-title" id="financialQuestionTitle">${escapeFinancialHtml(question.title)}</h2>
+            <p class="ask-question-hint">${escapeFinancialHtml(question.hint)}</p>
+          </div>
+          <div class="ask-card-controls" aria-label="问题导航">
+            <button class="ask-icon-btn" type="button" data-financial-prev aria-label="上一题" ${index === 0 ? 'disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <span class="ask-progress" aria-label="第 ${index + 1} 题，共 ${financialQuestions.length} 题">${index + 1}/${financialQuestions.length}</span>
+            <button class="ask-icon-btn" type="button" data-financial-forward aria-label="下一题"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+            <button class="ask-icon-btn" type="button" data-financial-close aria-label="关闭问题"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </header>
+        <div class="ask-options" role="group" aria-label="${escapeFinancialHtml(question.title)}">
+          ${options}
+          <div class="ask-other-row${otherActive ? ' active' : ''}">
+            <span class="ask-option-key" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></span>
+            ${otherControl}
+            <span class="ask-option-indicator">${otherActive && question.multiSelect ? '<span class="ask-check" aria-hidden="true"></span>' : ''}</span>
+          </div>
+        </div>
+        <footer class="ask-card-foot">
+          <span class="ask-keyboard-hint">按 1–4 快速选择 · Enter 继续</span>
+          <div class="ask-foot-actions">
+            <button class="ask-skip" type="button" data-financial-skip>跳过</button>
+            <button class="ask-next" type="button" data-financial-next>${index === financialQuestions.length - 1 ? '提交' : '下一步'}</button>
+          </div>
+        </footer>
+      </article>`;
+    }
+
+    function renderFinancialQuestions() {
+      syncFinancialQuestionAttention();
+      if (financialQuestionStatus === 'complete') {
+        const summary = financialQuestions.map(question => {
+          const hasAnswer = financialAnswerValues(question).length > 0;
+          const answer = hasAnswer ? financialAnswerLabel(question) : '未提供答案';
+          return `<div class="financial-asked-item"><dt>${escapeFinancialHtml(question.title)}</dt><dd class="${hasAnswer ? '' : 'is-empty'}">${escapeFinancialHtml(answer)}</dd></div>`;
+        }).join('');
+        financialQuestionMount.innerHTML = '';
+        financialAskingStatus.hidden = true;
+        financialSubmittedResult.hidden = false;
+        financialSubmittedResult.innerHTML = `<details class="financial-asked-summary" open aria-live="polite">
+          <summary class="financial-asked-head">
+            <svg class="financial-asked-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 0 1 4.8 1c0 2-2.5 2.2-2.5 4"/><path d="M12 17.2h.01"/></svg>
+            <span>已提问 ${financialQuestions.length} 个问题</span>
+            <svg class="financial-asked-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <dl class="financial-asked-list">${summary}</dl>
+        </details>`;
+        workspace.classList.remove('financial-question-mode');
+        conversationMeta.textContent = '已确认抽取范围 · 正在处理';
+        requestAnimationFrame(() => composerInput.focus());
+        return;
+      }
+      if (financialQuestionStatus === 'cancelled') {
+        financialAskingStatus.hidden = true;
+        financialSubmittedResult.hidden = true;
+        financialSubmittedResult.innerHTML = '';
+        financialQuestionMount.innerHTML = '';
+        workspace.classList.remove('financial-question-mode');
+        conversationMeta.textContent = '已取消范围确认';
+        requestAnimationFrame(() => composerInput.focus());
+        return;
+      }
+      const question = financialQuestions[financialQuestionIndex];
+      financialAskingStatus.hidden = false;
+      financialSubmittedResult.hidden = true;
+      financialSubmittedResult.innerHTML = '';
+      workspace.classList.add('financial-question-mode');
+      financialQuestionMount.innerHTML = financialQuestionCardHtml(question, financialQuestionIndex);
+      conversationMeta.textContent = `正在提问 · ${financialQuestionIndex + 1}/${financialQuestions.length}`;
+      if (financialAnswerValues(question).includes('__other__')) {
+        requestAnimationFrame(() => document.getElementById('financialOtherInput')?.focus());
+      }
+    }
+
+    function resetFinancialQuestions() {
+      financialQuestionIndex = 0;
+      financialAnswers = {};
+      financialOtherDrafts = {};
+      financialQuestionStatus = 'asking';
+      financialQuestionInitialized = true;
+      renderFinancialQuestions();
+    }
+
+    function advanceFinancialQuestion() {
+      const question = financialQuestions[financialQuestionIndex];
+      if (!financialQuestionHasAnswer(question)) {
+        const answeredValues = financialAnswerValues(question).filter(value => value !== '__other__');
+        if (answeredValues.length) financialAnswers[question.id] = question.multiSelect ? answeredValues : answeredValues[0];
+        else delete financialAnswers[question.id];
+        delete financialOtherDrafts[question.id];
+      }
+      if (financialQuestionIndex >= financialQuestions.length - 1) {
+        financialQuestionStatus = 'complete';
+      } else {
+        financialQuestionIndex += 1;
+      }
+      renderFinancialQuestions();
+    }
+
+    function skipFinancialQuestion() {
+      const questionId = financialQuestions[financialQuestionIndex].id;
+      delete financialAnswers[questionId];
+      delete financialOtherDrafts[questionId];
+      if (financialQuestionIndex >= financialQuestions.length - 1) financialQuestionStatus = 'complete';
+      else financialQuestionIndex += 1;
+      renderFinancialQuestions();
+    }
+
+    function selectFinancialOption(label) {
+      const question = financialQuestions[financialQuestionIndex];
+      if (question.multiSelect) {
+        const selected = new Set(financialAnswerValues(question));
+        if (selected.has(label)) selected.delete(label);
+        else selected.add(label);
+        financialAnswers[question.id] = [...selected];
+        renderFinancialQuestions();
+        return;
+      }
+      financialAnswers[question.id] = label;
+      advanceFinancialQuestion();
+    }
+
+    function activateFinancialOther() {
+      const question = financialQuestions[financialQuestionIndex];
+      if (question.multiSelect) {
+        const selected = new Set(financialAnswerValues(question));
+        selected.add('__other__');
+        financialAnswers[question.id] = [...selected];
+      } else {
+        financialAnswers[question.id] = '__other__';
+      }
+      renderFinancialQuestions();
+    }
+
+    function clearFinancialExtractionStory() {
+      messages.classList.remove('financial-extraction-mode');
+      workspace.classList.remove('financial-question-mode');
+      financialExtractionStory.hidden = true;
     }
 
     function clearManualQaStory() {
@@ -5399,6 +6462,7 @@
     function loadEmptyConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
       clearDailyReportStory();
+      clearFinancialExtractionStory();
       tabs.report.open = false;
       tabs.table.open = false;
       setTaskMode(false);
@@ -5412,6 +6476,7 @@
     function loadArtifactConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
       clearDailyReportStory();
+      clearFinancialExtractionStory();
       tabs.report.open = true;
       tabs.table.open = true;
       activeTab = 'report';
@@ -5423,6 +6488,7 @@
     function loadManualQaConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
       clearDailyReportStory();
+      clearFinancialExtractionStory();
       setTaskMode(true);
       setArtifactVisible(false);
       tabs.report.open = false;
@@ -5439,6 +6505,7 @@
     function loadDailyReportConversation() {
       resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
       clearDailyReportStory();
+      clearFinancialExtractionStory();
       setTaskMode(true);
       setArtifactVisible(false);
       tabs.report.open = false;
@@ -5453,9 +6520,29 @@
       });
     }
 
+    function loadFinancialExtractionConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
+      clearFinancialExtractionStory();
+      setTaskMode(true);
+      setArtifactVisible(false);
+      tabs.report.open = false;
+      tabs.table.open = false;
+      messages.classList.add('financial-extraction-mode');
+      workspace.classList.add('financial-question-mode');
+      financialExtractionStory.hidden = false;
+      conversationTitle.textContent = '财务数据抽取';
+      closeOverlays();
+      if (financialQuestionInitialized) renderFinancialQuestions();
+      else resetFinancialQuestions();
+      requestAnimationFrame(() => { messages.scrollTop = 0; });
+    }
+
     function openHistoryRow(row) {
+      exitSharedSnapshot();
       activateHistoryRow(row);
       const state = row.dataset.historyState;
+      setCurrentConversation(row);
       if (state === 'empty') {
         loadEmptyConversation();
       } else if (state === 'artifact') {
@@ -5464,6 +6551,8 @@
         loadManualQaConversation();
       } else if (state === 'daily-report') {
         loadDailyReportConversation();
+      } else if (state === 'financial-extraction') {
+        loadFinancialExtractionConversation();
       } else {
         conversationTitle.textContent = row.querySelector('.history-title')?.textContent.trim() || '问答';
         closeOverlays();
@@ -5504,6 +6593,107 @@
       if (action === 'delete') openDeleteHistoryConfirm(row);
     });
 
+    conversationMore.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = !conversationActionMenu.classList.contains('open');
+      closeOverlays();
+      updateConversationActions();
+      conversationActionMenu.classList.toggle('open', open);
+      conversationActionMenu.setAttribute('aria-hidden', String(!open));
+      conversationMore.setAttribute('aria-expanded', String(open));
+      if (open) requestAnimationFrame(() => conversationActionMenu.querySelector('[role="menuitem"]:not(:disabled)')?.focus());
+    });
+
+    conversationActionMenu.addEventListener('click', event => {
+      event.stopPropagation();
+      const item = event.target.closest('[data-conversation-action]');
+      if (!item || item.disabled) return;
+      const action = item.dataset.conversationAction;
+      closeConversationActionMenu();
+      if (action === 'share') {
+        shareCurrentConversation();
+        return;
+      }
+      if (action === 'copy-id') {
+        copyCurrentConversationId();
+        return;
+      }
+      showToast('当前 demo 仅重点演示分享功能');
+    });
+
+    messages.addEventListener('click', event => {
+      const action = event.target.closest('[data-attachment-action]')?.dataset.attachmentAction;
+      if (!action) return;
+      showToast(action === 'preview' ? '已打开附件预览' : '已开始下载附件');
+    });
+
+    financialQuestionMount.addEventListener('click', event => {
+      const option = event.target.closest('[data-financial-option]');
+      if (option) {
+        selectFinancialOption(option.dataset.financialOption);
+        return;
+      }
+      if (event.target.closest('[data-financial-other]')) {
+        activateFinancialOther();
+        return;
+      }
+      if (event.target.closest('[data-financial-prev]')) {
+        financialQuestionIndex = Math.max(0, financialQuestionIndex - 1);
+        renderFinancialQuestions();
+        return;
+      }
+      if (event.target.closest('[data-financial-forward], [data-financial-next]')) {
+        advanceFinancialQuestion();
+        return;
+      }
+      if (event.target.closest('[data-financial-skip]')) {
+        skipFinancialQuestion();
+        return;
+      }
+      if (event.target.closest('[data-financial-close]')) {
+        financialQuestionStatus = 'cancelled';
+        renderFinancialQuestions();
+        return;
+      }
+    });
+
+    financialQuestionMount.addEventListener('input', event => {
+      if (!event.target.matches('#financialOtherInput')) return;
+      const question = financialQuestions[financialQuestionIndex];
+      financialOtherDrafts[question.id] = event.target.value;
+    });
+
+    financialQuestionMount.addEventListener('keydown', event => {
+      if (!event.target.matches('#financialOtherInput') || event.key !== 'Enter' || event.isComposing) return;
+      event.preventDefault();
+      event.stopPropagation();
+      advanceFinancialQuestion();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (!messages.classList.contains('financial-extraction-mode') || financialQuestionStatus !== 'asking') return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.target.matches('input, textarea, [contenteditable="true"]')) return;
+      const question = financialQuestions[financialQuestionIndex];
+      const optionIndex = Number(event.key) - 1;
+      if (Number.isInteger(optionIndex) && optionIndex >= 0 && optionIndex < question.options.length) {
+        event.preventDefault();
+        selectFinancialOption(question.options[optionIndex].label);
+        return;
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        advanceFinancialQuestion();
+      }
+    });
+
+    returnToMyChats.addEventListener('click', () => {
+      exitSharedSnapshot();
+      const firstConversation = historyList.querySelector('[data-history-state="artifact"]') || historyList.querySelector('.history-row');
+      if (firstConversation) openHistoryRow(firstConversation);
+    });
+
     deleteHistoryConfirm.addEventListener('click', event => {
       if (event.target === deleteHistoryConfirm || event.target.closest('[data-delete-cancel]')) {
         closeDeleteHistoryConfirm();
@@ -5516,6 +6706,7 @@
       closeDeleteHistoryConfirm();
       row.remove();
       updateHistoryCount();
+      refreshPendingInputUi();
       if (wasActive) {
         const next = historyList.querySelector('[data-history-state="empty"]') || historyList.querySelector('.history-row');
         if (next) openHistoryRow(next);
@@ -5525,8 +6716,12 @@
     });
 
     document.getElementById('newChat').addEventListener('click', () => {
+      exitSharedSnapshot();
       const emptyRow = document.querySelector('[data-history-state="empty"]');
-      if (emptyRow) activateHistoryRow(emptyRow);
+      if (emptyRow) {
+        activateHistoryRow(emptyRow);
+        setCurrentConversation(emptyRow);
+      }
       loadEmptyConversation();
       showToast('已创建新对话');
     });
@@ -5569,7 +6764,7 @@
     chatSearchResults.addEventListener('click', event => {
       const item = event.target.closest('.chat-search-item');
       if (!item) return;
-      const matchingRow = [...document.querySelectorAll('.history-row')].find(row => row.textContent.trim() === item.dataset.title);
+      const matchingRow = [...document.querySelectorAll('.history-row')].find(row => row.querySelector('.history-title')?.textContent.trim() === item.dataset.title);
       if (matchingRow) matchingRow.click();
       closeChatSearch();
     });
@@ -5600,7 +6795,8 @@
     renderManualIssueDetail();
     renderArtifact();
     updateIdentityUi();
-    initializePlanningLaunch();
+    setCurrentConversation(historyList.querySelector('.history-row.active'), 'empty');
+    if (!initializeSharedSnapshot()) initializePlanningLaunch();
   </script>
 </body>
 </html>
