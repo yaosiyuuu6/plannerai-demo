@@ -1514,6 +1514,334 @@
     .planning-result dl div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid var(--border); }
     .planning-result dt { color: #8c8c8c; }
     .planning-result dd { margin: 0; }
+    .planning-queue-story {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .planning-user-turn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+    }
+    .planning-user-actions {
+      min-height: 32px;
+      display: none;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 2px;
+    }
+    .planning-history-edit {
+      width: 36px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #8c8c8c;
+      cursor: pointer;
+      transition: color .18s ease, background-color .18s ease;
+    }
+    .workspace.planning-queue-stopped .planning-user-turn.latest .planning-user-actions { display: flex; }
+    .planning-history-edit:hover { background: #f0f6ff; color: #0958d9; }
+    .planning-history-edit:active { background: #d6e4ff; }
+    .planning-history-edit:focus-visible {
+      outline: 2px solid #1677ff;
+      outline-offset: 1px;
+      background: #f0f6ff;
+      color: #0958d9;
+    }
+    .planning-history-edit .icon { width: 18px; height: 18px; }
+    .planning-agent-run {
+      color: #262626;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .planning-agent-copy { white-space: pre-wrap; }
+    .planning-run-log {
+      margin-top: 10px;
+      padding: 8px 0 8px 14px;
+      border-left: 2px solid #d9e8ff;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .planning-run-state {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+      color: #8c8c8c;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .planning-run-state::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #52c41a;
+      box-shadow: 0 0 0 3px rgba(82,196,26,.12);
+    }
+    .planning-run-state.ending::before { background: #faad14; box-shadow: 0 0 0 3px rgba(250,173,20,.14); }
+    .planning-run-state.stopped::before { background: #ff4d4f; box-shadow: 0 0 0 3px rgba(255,77,79,.12); }
+    .planning-run-state.done::before { background: #1677ff; box-shadow: none; }
+    .planning-queue-panel {
+      width: min(100%, var(--conversation-width));
+      max-width: 100%;
+      margin: 0 auto -1px;
+      display: none;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      border-bottom-color: #ededed;
+      border-radius: 16px 16px 0 0;
+      background: #f5f5f6;
+      box-shadow: 0 6px 20px rgba(0,0,0,.045);
+    }
+    .workspace.planning-queue-mode .planning-queue-panel:not([hidden]) { display: block; }
+    .workspace.planning-queue-mode .planning-queue-panel:not([hidden]) + .composer {
+      border-color: #e5e7eb;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.055);
+    }
+    .planning-queue-list { margin: 0; padding: 8px 14px; list-style: none; }
+    .planning-queue-item {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      min-height: 60px;
+      border-top: 1px solid #e2e2e2;
+      border-radius: 8px;
+      transition: opacity .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .planning-queue-item:first-child { border-top: 0; }
+    .planning-queue-item:hover { background: rgba(255,255,255,.58); }
+    .planning-queue-item:focus-visible {
+      outline: 2px solid #1677ff;
+      outline-offset: -2px;
+      background: #fff;
+    }
+    .planning-queue-item.dragging { opacity: .4; }
+    .planning-queue-item.drag-over {
+      background: #e6f4ff;
+      box-shadow: inset 0 0 0 1px #91caff;
+      transform: translateY(1px);
+    }
+    .planning-drag-handle,
+    .planning-queue-action {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #595959;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color .18s ease, background-color .18s ease, opacity .18s ease;
+    }
+    .planning-drag-handle { color: #8c8c8c; cursor: grab; }
+    .planning-drag-handle:active { cursor: grabbing; }
+    .planning-drag-handle:disabled { opacity: .35; cursor: not-allowed; }
+    .planning-drag-handle:hover,
+    .planning-queue-action:hover { background: #fff; color: #1677ff; }
+    .planning-drag-handle:focus-visible,
+    .planning-queue-action:focus-visible {
+      outline: 2px solid #1677ff;
+      outline-offset: 1px;
+      background: #fff;
+    }
+    .planning-queue-action:active { background: #e6f4ff; }
+    .planning-queue-action.danger:hover { color: #cf1322; background: #fff1f0; }
+    .planning-queue-action:disabled { opacity: .35; cursor: not-allowed; }
+    .planning-drag-handle .icon,
+    .planning-queue-action .icon { width: 20px; height: 20px; }
+    .planning-queue-copy {
+      min-width: 0;
+      padding: 11px 16px 11px 2px;
+      color: #262626;
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 500;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .planning-queue-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-right: 2px;
+    }
+    .planning-steer-turn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      animation: planningSteerIn .22s ease-out;
+    }
+    .planning-steer-meta {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+    .planning-steer-tag {
+      min-height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border-radius: 5px;
+      background: #d6eaff;
+      color: #0958d9;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .planning-cancel-immediate {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 9px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #595959;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .planning-cancel-immediate:hover { background: #fff; color: #0958d9; }
+    .planning-cancel-immediate .icon { width: 16px; height: 16px; }
+    @keyframes planningSteerIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .planning-queue-edit-input {
+      width: calc(100% - 8px);
+      min-height: 40px;
+      margin: 6px 8px 6px 0;
+      padding: 8px 10px;
+      resize: vertical;
+      border: 1px solid #91caff;
+      border-radius: 7px;
+      background: #fff;
+      color: #262626;
+      font: inherit;
+      line-height: 1.5;
+    }
+    .planning-message-editor {
+      width: min(86%, 720px);
+      align-self: flex-end;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .planning-message-edit-input {
+      width: 100%;
+      min-height: 78px;
+      max-height: 240px;
+      display: block;
+      padding: 0;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #262626;
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .planning-message-edit-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .planning-message-edit-action {
+      min-width: 58px;
+      height: 34px;
+      padding: 0 15px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      background: #fff;
+      color: #262626;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+    }
+    .planning-message-edit-action:hover {
+      border-color: #4096ff;
+      color: #1677ff;
+    }
+    .planning-message-edit-action:focus-visible {
+      outline: 2px solid #1677ff;
+      outline-offset: 2px;
+    }
+    .planning-message-edit-action.primary {
+      border-color: #1677ff;
+      background: #1677ff;
+      color: #fff;
+    }
+    .planning-message-edit-action.primary:hover {
+      border-color: #4096ff;
+      background: #4096ff;
+      color: #fff;
+    }
+    .planning-user-turn.editing .planning-user-copy,
+    .planning-user-turn.editing .planning-user-actions { display: none; }
+    .workspace.planning-queue-stopped .planning-user-turn.latest.editing .planning-user-actions { display: none; }
+    .planning-control {
+      min-width: 34px;
+      height: 34px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 11px;
+      border: 0;
+      border-radius: 17px;
+      background: #262626;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .planning-control[hidden],
+    #sendBtn[hidden] { display: none !important; }
+    .workspace.planning-queue-mode .planning-control { display: inline-flex; }
+    .planning-control.send-action {
+      width: 34px;
+      min-width: 34px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .planning-control.send-action .icon { width: 20px; height: 20px; }
+    .planning-stop-square { width: 12px; height: 12px; border-radius: 2px; background: currentColor; }
+    .planning-queue-mode .composer-bar > .send { margin-left: 6px; }
+    @media (max-width: 720px) {
+      .planning-queue-list { padding-inline: 8px; }
+      .planning-queue-item { grid-template-columns: 40px minmax(0, 1fr); }
+      .planning-queue-copy { padding-right: 8px; }
+      .planning-queue-actions { grid-column: 2; justify-content: flex-end; padding: 0 0 6px; }
+      .planning-result dl div { grid-template-columns: 1fr; gap: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .planning-queue-item { transition: none; }
+      .planning-steer-turn { animation: none; }
+    }
     .similar-issue-card {
       margin: 14px 0;
       border: 1px solid var(--line);
@@ -3448,7 +3776,7 @@
             <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0"><span class="history-title">国财A股组规则确认</span><button class="history-more" type="button" aria-label="国财A股组规则确认的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="daily-report" role="button" tabindex="0"><span class="history-title">质检日报生成</span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="financial-extraction" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
-            <div class="history-row" role="button" tabindex="0"><span class="history-title">规划文档总结</span><button class="history-more" type="button" aria-label="规划文档总结的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="planning-summary" role="button" tabindex="0"><span class="history-title">规划文档总结</span><button class="history-more" type="button" aria-label="规划文档总结的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">业务流程优化建议</span><button class="history-more" type="button" aria-label="业务流程优化建议的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">AI在招聘中的需求</span><button class="history-more" type="button" aria-label="AI在招聘中的需求的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">界面信息层次优化</span><button class="history-more" type="button" aria-label="界面信息层次优化的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
@@ -3912,6 +4240,9 @@
           <div class="financial-question-dock" id="financialQuestionDock" aria-label="待回答的问题">
             <div id="financialQuestionMount"></div>
           </div>
+          <section class="planning-queue-panel" id="planningQueuePanel" hidden aria-label="待发送消息">
+            <ol class="planning-queue-list" id="planningQueueList"></ol>
+          </section>
           <div class="composer" id="composer">
             <div class="suggest-pop" id="suggestPop">
               <div class="mention-shell" id="mentionShell">
@@ -3989,9 +4320,14 @@
                   Plan
                 </span>
               </div>
-              <button class="send" id="sendBtn" aria-label="发送">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
-              </button>
+              <div style="display:flex;align-items:center;">
+                <button class="planning-control" id="planningControlBtn" type="button" aria-label="停止整个对话" title="停止整个对话">
+                  <span class="planning-stop-square" aria-hidden="true"></span>
+                </button>
+                <button class="send" id="sendBtn" aria-label="发送">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -4120,6 +4456,9 @@
     const financialSubmittedResult = document.getElementById('financialSubmittedResult');
     const financialQuestionMount = document.getElementById('financialQuestionMount');
     const sendBtn = document.getElementById('sendBtn');
+    const planningQueuePanel = document.getElementById('planningQueuePanel');
+    const planningQueueList = document.getElementById('planningQueueList');
+    const planningControlBtn = document.getElementById('planningControlBtn');
     const agentSidebarToggle = document.getElementById('agentSidebarToggle');
     const composerInput = document.getElementById('composerInput');
     const launchContext = document.getElementById('launchContext');
@@ -4183,6 +4522,18 @@
     let planningLaunchMode = false;
     let planningOutcome = 'update';
     let planningContext = null;
+    let planningQueueMode = false;
+    let planningQueueRunning = false;
+    let planningQueueEnding = false;
+    let planningQueueStopped = false;
+    let planningQueueEditingHistory = false;
+    let planningQueueEditingId = null;
+    let planningQueueImmediateNext = null;
+    let planningQueueDragId = null;
+    let planningQueueCurrentTask = '';
+    let planningQueueItems = [];
+    let planningQueueTimers = [];
+    let planningQueueItemSequence = 0;
     let currentIdentity = 'planning';
     let activeMentionType = 'doc';
     let activeMentionIndex = 0;
@@ -5281,6 +5632,392 @@
       showToast('已在 Agent 对话中生成建议');
     }
 
+    function planningQueueIcon(name) {
+      const paths = {
+        drag: '<circle cx="8" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="17" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="1" fill="currentColor" stroke="none"/>',
+        immediate: '<path d="M12 19V5"/><path d="m6 11 6-6 6 6"/><path d="M5 21h14"/>',
+        edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+        delete: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/>',
+        confirm: '<path d="m5 12 4 4 10-10"/>',
+        cancel: '<path d="M6 6l12 12M18 6 6 18"/>',
+        undo: '<path d="M9 7 5 11l4 4"/><path d="M5 11h8a6 6 0 0 1 6 6"/>'
+      };
+      return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || ''}</svg>`;
+    }
+
+    function planningQueueNewItem(text) {
+      planningQueueItemSequence += 1;
+      return { id: `planning-queue-${planningQueueItemSequence}`, text };
+    }
+
+    function clearPlanningQueueTimers() {
+      planningQueueTimers.forEach(timer => clearTimeout(timer));
+      planningQueueTimers = [];
+    }
+
+    function planningQueueUserTurnHtml(text) {
+      return `
+        <div class="planning-user-turn latest">
+          <div class="bubble user planning-user-copy">${escapeHtml(text)}</div>
+          <div class="planning-user-actions">
+            <button class="planning-history-edit" type="button" data-planning-history-edit aria-label="编辑最近一条消息" title="编辑并重新运行">
+              ${planningQueueIcon('edit')}
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function planningQueueAgentRunHtml(text) {
+      const summary = text.length > 34 ? `${text.slice(0, 34)}…` : text;
+      return `
+        <article class="planning-agent-run active" aria-live="polite">
+          <div class="planning-agent-copy">我会先梳理现有规划文档，再形成结构化总结。</div>
+          <div class="planning-run-log">
+            <div>✓ 已读取任务：${escapeHtml(summary)}</div>
+            <div class="planning-run-log-dynamic">正在提取目标、关键项目与里程碑…</div>
+          </div>
+          <div class="planning-run-state">Agent 运行中</div>
+        </article>`;
+    }
+
+    function planningSteerTurnHtml(item) {
+      return `
+        <div class="planning-steer-turn" data-planning-steer-id="${item.id}">
+          <div class="bubble user planning-steer-copy">${escapeHtml(item.text)}</div>
+          <div class="planning-steer-meta">
+            <span class="planning-steer-tag">运行中发送</span>
+            <button class="planning-cancel-immediate" type="button" data-planning-steer-cancel aria-label="取消立即发送" title="Agent 接收前可撤回">
+              ${planningQueueIcon('undo')}<span>取消立即发送</span>
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function renderPlanningQueue() {
+      planningQueueList.innerHTML = planningQueueItems.map((item, index) => {
+        const editing = planningQueueEditingId === item.id;
+        return `
+          <li class="planning-queue-item" draggable="${editing ? 'false' : 'true'}" tabindex="0" data-planning-queue-id="${item.id}" aria-label="待发送消息 ${index + 1}：${escapeHtml(item.text)}">
+            <button class="planning-drag-handle" type="button" aria-label="拖动第 ${index + 1} 条消息调整顺序" title="拖动调整顺序">${planningQueueIcon('drag')}</button>
+            ${editing
+              ? `<textarea class="planning-queue-edit-input" aria-label="编辑待发送消息">${escapeHtml(item.text)}</textarea>`
+              : `<div class="planning-queue-copy">${escapeHtml(item.text)}</div>`}
+            <div class="planning-queue-actions" role="group" aria-label="消息操作">
+              ${editing ? `
+                <button class="planning-queue-action" type="button" data-planning-queue-action="save" aria-label="保存编辑" title="保存">${planningQueueIcon('confirm')}</button>
+                <button class="planning-queue-action" type="button" data-planning-queue-action="cancel" aria-label="取消编辑" title="取消">${planningQueueIcon('cancel')}</button>` : `
+                <button class="planning-queue-action" type="button" data-planning-queue-action="immediate" aria-label="立即发送：${escapeHtml(item.text)}" title="立即发送" ${planningQueueEnding ? 'disabled' : ''}>${planningQueueIcon('immediate')}</button>
+                <button class="planning-queue-action" type="button" data-planning-queue-action="edit" aria-label="编辑：${escapeHtml(item.text)}" title="编辑">${planningQueueIcon('edit')}</button>
+                <button class="planning-queue-action danger" type="button" data-planning-queue-action="delete" aria-label="删除：${escapeHtml(item.text)}" title="删除">${planningQueueIcon('delete')}</button>`}
+            </div>
+          </li>`;
+      }).join('');
+      planningQueuePanel.hidden = !planningQueueMode || planningQueueItems.length === 0;
+    }
+
+    function updatePlanningComposerActions() {
+      const hasDraft = Boolean(composerInput.textContent.trim());
+      if (!planningQueueMode) {
+        planningControlBtn.hidden = true;
+        sendBtn.hidden = false;
+        return;
+      }
+      sendBtn.hidden = true;
+      planningControlBtn.hidden = false;
+      if (hasDraft) {
+        planningControlBtn.className = 'planning-control send-action';
+        planningControlBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+        planningControlBtn.setAttribute('aria-label', '发送消息');
+        planningControlBtn.title = '发送消息';
+      } else if (planningQueueStopped) {
+        planningControlBtn.className = 'planning-control send-action';
+        planningControlBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+        planningControlBtn.setAttribute('aria-label', '继续执行待发送消息');
+        planningControlBtn.title = '继续执行待发送消息';
+      } else if (planningQueueRunning || planningQueueEnding) {
+        planningControlBtn.className = 'planning-control';
+        planningControlBtn.innerHTML = '<span class="planning-stop-square" aria-hidden="true"></span>';
+        planningControlBtn.setAttribute('aria-label', '暂停整个对话');
+        planningControlBtn.title = '暂停整个对话';
+      } else {
+        planningControlBtn.hidden = true;
+      }
+    }
+
+    function updatePlanningQueueUi() {
+      workspace.classList.toggle('planning-queue-mode', planningQueueMode);
+      workspace.classList.toggle('planning-queue-stopped', planningQueueMode && planningQueueStopped);
+      if (planningQueueStopped) {
+        planningControlBtn.className = 'planning-control send-action';
+        planningControlBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+        planningControlBtn.setAttribute('aria-label', '继续执行待发送消息');
+        planningControlBtn.title = '继续执行待发送消息';
+        conversationMeta.textContent = `对话已停止 · ${planningQueueItems.length} 条待发送`;
+        composerInput.dataset.placeholder = '输入消息后将保留在待发送区';
+      } else {
+        planningControlBtn.className = 'planning-control';
+        planningControlBtn.innerHTML = '<span class="planning-stop-square" aria-hidden="true"></span>';
+        planningControlBtn.setAttribute('aria-label', '停止整个对话');
+        planningControlBtn.title = '停止整个对话';
+        if (planningQueueEnding) conversationMeta.textContent = `正在接收运行中指令 · ${planningQueueItems.length} 条待发送`;
+        else if (planningQueueRunning) conversationMeta.textContent = `Agent 运行中 · ${planningQueueItems.length} 条待发送`;
+        else conversationMeta.textContent = planningQueueItems.length ? `${planningQueueItems.length} 条待发送` : 'Agent 空闲';
+        composerInput.dataset.placeholder = planningQueueRunning
+          ? '输入后续要求，发送后将加入待发送区'
+          : '输入新的规划文档要求';
+      }
+      conversationGenerating = planningQueueRunning || planningQueueEnding;
+      renderPlanningQueue();
+      updatePlanningComposerActions();
+      updateConversationActions();
+    }
+
+    function markPlanningQueueRun(status) {
+      const run = planningStory.querySelector('.planning-agent-run.active');
+      if (!run) return;
+      const stateNode = run.querySelector('.planning-run-state');
+      const logNode = run.querySelector('.planning-run-log-dynamic');
+      run.classList.remove('active');
+      stateNode.className = `planning-run-state ${status === 'stopped' ? 'stopped' : 'done'}`;
+      if (status === 'stopped') {
+        stateNode.textContent = '已停止';
+        logNode.textContent = '运行已由用户停止';
+      } else if (status === 'early') {
+        stateNode.textContent = '已提前结束';
+        logNode.textContent = '因收到运行中指令，本轮已提前结束';
+      } else {
+        stateNode.textContent = '已完成';
+        logNode.textContent = '✓ 本轮总结已生成';
+        run.querySelector('.planning-agent-copy').textContent = '已完成规划文档总结：当前规划聚焦增长质量、核心能力建设与季度里程碑，并已明确关键指标和主要风险。';
+      }
+    }
+
+    function schedulePlanningQueueRun() {
+      clearPlanningQueueTimers();
+      const active = planningStory.querySelector('.planning-agent-run.active');
+      if (!active) return;
+      planningQueueTimers.push(setTimeout(() => {
+        if (!planningQueueRunning || planningQueueEnding || planningQueueStopped) return;
+        active.querySelector('.planning-run-log-dynamic').textContent = '✓ 已完成文档结构与重点事项提取';
+        active.querySelector('.planning-agent-copy').textContent = '已识别规划背景、目标与关键行动，正在补充季度节奏和衡量指标。';
+      }, 2800));
+      planningQueueTimers.push(setTimeout(() => completePlanningQueueTask(), 9000));
+    }
+
+    function startPlanningQueueTask(text, options = {}) {
+      clearPlanningQueueTimers();
+      planningQueueRunning = true;
+      planningQueueEnding = false;
+      planningQueueStopped = false;
+      planningQueueCurrentTask = text;
+      const story = planningStory.querySelector('.planning-queue-story');
+      story.querySelectorAll('.planning-user-turn.latest').forEach(turn => turn.classList.remove('latest'));
+      if (!options.reuseUser) story.insertAdjacentHTML('beforeend', planningQueueUserTurnHtml(text));
+      else story.querySelector('.planning-user-turn:last-of-type')?.classList.add('latest');
+      story.insertAdjacentHTML('beforeend', planningQueueAgentRunHtml(text));
+      updatePlanningQueueUi();
+      schedulePlanningQueueRun();
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+    }
+
+    function completePlanningQueueTask() {
+      if (!planningQueueRunning || planningQueueStopped) return;
+      clearPlanningQueueTimers();
+      markPlanningQueueRun(planningQueueEnding ? 'early' : 'done');
+      planningQueueRunning = false;
+      planningQueueEnding = false;
+      let next = null;
+      let reuseUser = false;
+      if (planningQueueImmediateNext) {
+        next = planningQueueImmediateNext.item;
+        const steerTurn = planningStory.querySelector(`[data-planning-steer-id="${next.id}"]`);
+        if (steerTurn) {
+          planningStory.querySelectorAll('.planning-user-turn.latest').forEach(turn => turn.classList.remove('latest'));
+          steerTurn.className = 'planning-user-turn latest';
+          steerTurn.removeAttribute('data-planning-steer-id');
+          const copy = steerTurn.querySelector('.planning-steer-copy');
+          if (copy) copy.className = 'bubble user planning-user-copy';
+          steerTurn.querySelector('.planning-steer-meta')?.remove();
+          reuseUser = true;
+        }
+      } else {
+        next = planningQueueItems.shift() || null;
+      }
+      planningQueueImmediateNext = null;
+      updatePlanningQueueUi();
+      if (next) planningQueueTimers.push(setTimeout(() => startPlanningQueueTask(next.text, { reuseUser }), 420));
+    }
+
+    function queuePlanningMessage(text) {
+      planningQueueItems.push(planningQueueNewItem(text));
+      updatePlanningQueueUi();
+      showToast(planningQueueStopped ? '消息已保留在待发送区' : '消息已加入待发送区');
+    }
+
+    function stopPlanningQueueConversation() {
+      if (planningQueueStopped) return;
+      clearPlanningQueueTimers();
+      if (planningQueueImmediateNext) cancelPlanningImmediateSend({ silent: true, resume: false });
+      clearPlanningQueueTimers();
+      if (planningQueueRunning) markPlanningQueueRun('stopped');
+      planningQueueRunning = false;
+      planningQueueEnding = false;
+      planningQueueStopped = true;
+      updatePlanningQueueUi();
+      showToast('整个对话已停止，待发送消息已保留');
+    }
+
+    function continuePlanningQueueConversation() {
+      if (planningQueueEditingHistory) cancelPlanningHistoryEdit();
+      planningQueueStopped = false;
+      const next = planningQueueItems.shift() || null;
+      updatePlanningQueueUi();
+      if (next) startPlanningQueueTask(next.text);
+      else showToast('没有待发送消息，对话已回到空闲状态');
+    }
+
+    function immediatelySendPlanningQueueItem(id) {
+      if (planningQueueEnding) return;
+      const index = planningQueueItems.findIndex(item => item.id === id);
+      if (index < 0) return;
+      const item = planningQueueItems[index];
+      if (planningQueueStopped || !planningQueueRunning) {
+        planningQueueItems.splice(index, 1);
+        planningQueueStopped = false;
+        updatePlanningQueueUi();
+        showToast('消息已立即发送');
+        startPlanningQueueTask(item.text);
+        return;
+      }
+      planningQueueItems.splice(index, 1);
+      planningQueueImmediateNext = { item, originalIndex: index };
+      planningQueueEnding = true;
+      const story = planningStory.querySelector('.planning-queue-story');
+      story.insertAdjacentHTML('beforeend', planningSteerTurnHtml(item));
+      const active = planningStory.querySelector('.planning-agent-run.active');
+      active?.querySelector('.planning-run-state')?.classList.add('ending');
+      const logNode = active?.querySelector('.planning-run-log-dynamic');
+      if (logNode) logNode.textContent = '已收到运行中指令，正在结束当前运行…';
+      updatePlanningQueueUi();
+      clearPlanningQueueTimers();
+      planningQueueTimers.push(setTimeout(() => completePlanningQueueTask(), 650));
+      showToast('消息已在运行中发送，Agent 正在接收');
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+    }
+
+    function cancelPlanningImmediateSend(options = {}) {
+      if (!planningQueueImmediateNext) return;
+      const { item, originalIndex } = planningQueueImmediateNext;
+      planningQueueItems.splice(Math.min(originalIndex, planningQueueItems.length), 0, item);
+      planningStory.querySelector(`[data-planning-steer-id="${item.id}"]`)?.remove();
+      planningQueueImmediateNext = null;
+      planningQueueEnding = false;
+      const active = planningStory.querySelector('.planning-agent-run.active');
+      active?.querySelector('.planning-run-state')?.classList.remove('ending');
+      const logNode = active?.querySelector('.planning-run-log-dynamic');
+      if (logNode) logNode.textContent = '已取消运行中指令，继续当前任务…';
+      updatePlanningQueueUi();
+      if (options.resume !== false && planningQueueRunning && !planningQueueStopped) schedulePlanningQueueRun();
+      if (!options.silent) showToast('已取消立即发送，消息已恢复到待发送区');
+    }
+
+    function beginPlanningHistoryEdit() {
+      if (!planningQueueStopped || planningQueueEditingHistory) return;
+      const latestTurn = planningStory.querySelector('.planning-user-turn.latest');
+      const latest = latestTurn?.querySelector('.planning-user-copy');
+      if (!latestTurn || !latest) return;
+      planningQueueEditingHistory = true;
+      latestTurn.classList.add('editing');
+      latestTurn.insertAdjacentHTML('beforeend', `
+        <div class="planning-message-editor" role="group" aria-label="修改最近一条消息">
+          <textarea class="planning-message-edit-input" aria-label="消息内容">${escapeHtml(latest.textContent)}</textarea>
+          <div class="planning-message-edit-actions">
+            <button class="planning-message-edit-action" type="button" data-planning-message-edit-cancel>取消</button>
+            <button class="planning-message-edit-action primary" type="button" data-planning-message-edit-send>发送</button>
+          </div>
+        </div>`);
+      const input = latestTurn.querySelector('.planning-message-edit-input');
+      input?.focus();
+      input?.setSelectionRange(input.value.length, input.value.length);
+    }
+
+    function cancelPlanningHistoryEdit() {
+      const latestTurn = planningStory.querySelector('.planning-user-turn.latest');
+      latestTurn?.querySelector('.planning-message-editor')?.remove();
+      latestTurn?.classList.remove('editing');
+      planningQueueEditingHistory = false;
+    }
+
+    function applyPlanningHistoryEdit(text) {
+      const latestTurn = planningStory.querySelector('.planning-user-turn.latest');
+      if (!latestTurn) return;
+      const value = text.trim();
+      if (!value) {
+        showToast('消息不能为空');
+        latestTurn.querySelector('.planning-message-edit-input')?.focus();
+        return;
+      }
+      latestTurn.querySelector('.planning-user-copy').textContent = value;
+      latestTurn.querySelector('.planning-message-editor')?.remove();
+      latestTurn.classList.remove('editing');
+      let next = latestTurn.nextElementSibling;
+      while (next) {
+        const target = next;
+        next = next.nextElementSibling;
+        target.remove();
+      }
+      planningQueueEditingHistory = false;
+      showToast('原回复已作废，正在从修改后的消息重新生成');
+      startPlanningQueueTask(value, { reuseUser: true });
+    }
+
+    function resetPlanningQueueDemo() {
+      clearPlanningQueueTimers();
+      planningQueueMode = false;
+      planningQueueRunning = false;
+      planningQueueEnding = false;
+      planningQueueStopped = false;
+      planningQueueEditingHistory = false;
+      planningQueueEditingId = null;
+      planningQueueImmediateNext = null;
+      planningQueueDragId = null;
+      planningQueueCurrentTask = '';
+      planningQueueItems = [];
+      planningQueuePanel.hidden = true;
+      planningQueueList.innerHTML = '';
+      planningControlBtn.hidden = true;
+      sendBtn.hidden = false;
+      workspace.classList.remove('planning-queue-mode', 'planning-queue-stopped');
+      if (!sharedSnapshotMode) composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill';
+    }
+
+    function loadPlanningSummaryConversation() {
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
+      clearFinancialExtractionStory();
+      setTaskMode(true, true);
+      setArtifactVisible(false);
+      tabs.report.open = false;
+      tabs.table.open = false;
+      messages.classList.add('planning-mode');
+      planningStory.hidden = false;
+      planningQueueMode = true;
+      planningQueueItems = [
+        planningQueueNewItem('补充一页核心指标，给出每个季度的目标值。'),
+        planningQueueNewItem('增长策略不要只写获客，也要覆盖留存和商业化。'),
+        planningQueueNewItem('最后增加风险与资源依赖，整体控制在 2500 字以内。')
+      ];
+      planningQueueCurrentTask = '请总结 2027 年产品规划文档，重点覆盖增长策略、关键项目和季度里程碑。';
+      planningStory.innerHTML = `<div class="planning-queue-story">${planningQueueUserTurnHtml(planningQueueCurrentTask)}${planningQueueAgentRunHtml(planningQueueCurrentTask)}</div>`;
+      planningQueueRunning = true;
+      conversationTitle.textContent = '规划文档总结';
+      composerInput.textContent = '';
+      updatePlanningQueueUi();
+      schedulePlanningQueueRun();
+      closeOverlays();
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+    }
+
     function selectManualIssue(issues, currentId, nextId) {
       return issues.some(issue => issue.id === nextId) ? nextId : currentId;
     }
@@ -5917,6 +6654,7 @@
     composerInput.addEventListener('input', () => {
       promoteTrailingComposerUrl();
       const text = composerInput.textContent.trim();
+      updatePlanningComposerActions();
       if (text.endsWith('@')) openSuggest('@');
       else if (text.endsWith('/')) openSuggest('/');
       else suggestPop.classList.remove('open');
@@ -6092,6 +6830,23 @@
 
     sendBtn.addEventListener('click', () => {
       const text = composerInput.textContent.trim();
+      if (planningQueueMode) {
+        if (!text) {
+          showToast('请输入内容');
+          composerInput.focus();
+          return;
+        }
+        if (planningQueueRunning || planningQueueStopped) {
+          queuePlanningMessage(text);
+          composerInput.textContent = '';
+          updatePlanningComposerActions();
+        } else {
+          composerInput.textContent = '';
+          updatePlanningComposerActions();
+          startPlanningQueueTask(text);
+        }
+        return;
+      }
       if (planningLaunchMode) {
         submitPlanningEvaluation(text);
         return;
@@ -6120,6 +6875,140 @@
       setArtifactVisible(true);
       renderArtifact();
       showToast('已生成右侧产物窗口');
+    });
+
+    planningControlBtn.addEventListener('click', () => {
+      if (!planningQueueMode) return;
+      if (composerInput.textContent.trim()) {
+        sendBtn.click();
+        return;
+      }
+      if (planningQueueStopped) continuePlanningQueueConversation();
+      else stopPlanningQueueConversation();
+    });
+
+    planningStory.addEventListener('click', event => {
+      if (event.target.closest('[data-planning-steer-cancel]')) {
+        cancelPlanningImmediateSend();
+        return;
+      }
+      if (event.target.closest('[data-planning-message-edit-cancel]')) {
+        cancelPlanningHistoryEdit();
+        return;
+      }
+      if (event.target.closest('[data-planning-message-edit-send]')) {
+        const input = planningStory.querySelector('.planning-user-turn.latest .planning-message-edit-input');
+        if (input) applyPlanningHistoryEdit(input.value);
+        return;
+      }
+      if (event.target.closest('[data-planning-history-edit]')) beginPlanningHistoryEdit();
+    });
+
+    planningStory.addEventListener('keydown', event => {
+      if (!event.target.matches('.planning-message-edit-input')) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        cancelPlanningHistoryEdit();
+      } else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        applyPlanningHistoryEdit(event.target.value);
+      }
+    });
+
+    planningQueueList.addEventListener('click', event => {
+      const actionButton = event.target.closest('[data-planning-queue-action]');
+      const row = event.target.closest('[data-planning-queue-id]');
+      if (!actionButton || !row) return;
+      const id = row.dataset.planningQueueId;
+      const action = actionButton.dataset.planningQueueAction;
+      const item = planningQueueItems.find(candidate => candidate.id === id);
+      if (!item) return;
+      if (action === 'immediate') {
+        immediatelySendPlanningQueueItem(id);
+        return;
+      }
+      if (action === 'delete') {
+        planningQueueItems = planningQueueItems.filter(candidate => candidate.id !== id);
+        if (planningQueueEditingId === id) planningQueueEditingId = null;
+        updatePlanningQueueUi();
+        showToast('已删除待发送消息');
+        return;
+      }
+      if (action === 'edit') {
+        planningQueueEditingId = id;
+        renderPlanningQueue();
+        const input = planningQueueList.querySelector(`[data-planning-queue-id="${id}"] .planning-queue-edit-input`);
+        input?.focus();
+        input?.setSelectionRange(input.value.length, input.value.length);
+        return;
+      }
+      if (action === 'cancel') {
+        planningQueueEditingId = null;
+        renderPlanningQueue();
+        return;
+      }
+      if (action === 'save') {
+        const input = row.querySelector('.planning-queue-edit-input');
+        const value = input?.value.trim() || '';
+        if (!value) {
+          showToast('消息不能为空');
+          input?.focus();
+          return;
+        }
+        item.text = value;
+        planningQueueEditingId = null;
+        renderPlanningQueue();
+        showToast('待发送消息已更新');
+      }
+    });
+
+    planningQueueList.addEventListener('dragstart', event => {
+      const row = event.target.closest('[data-planning-queue-id]');
+      if (!row || row.getAttribute('draggable') !== 'true') return;
+      planningQueueDragId = row.dataset.planningQueueId;
+      row.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+    });
+
+    planningQueueList.addEventListener('dragover', event => {
+      const row = event.target.closest('[data-planning-queue-id]');
+      if (!row || row.dataset.planningQueueId === planningQueueDragId) return;
+      event.preventDefault();
+      planningQueueList.querySelectorAll('.drag-over').forEach(node => node.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+
+    planningQueueList.addEventListener('drop', event => {
+      const row = event.target.closest('[data-planning-queue-id]');
+      if (!row || !planningQueueDragId) return;
+      event.preventDefault();
+      const from = planningQueueItems.findIndex(item => item.id === planningQueueDragId);
+      const to = planningQueueItems.findIndex(item => item.id === row.dataset.planningQueueId);
+      if (from >= 0 && to >= 0 && from !== to) {
+        const [moved] = planningQueueItems.splice(from, 1);
+        planningQueueItems.splice(to, 0, moved);
+        renderPlanningQueue();
+        showToast('执行顺序已调整');
+      }
+    });
+
+    planningQueueList.addEventListener('dragend', () => {
+      planningQueueDragId = null;
+      planningQueueList.querySelectorAll('.dragging, .drag-over').forEach(node => node.classList.remove('dragging', 'drag-over'));
+    });
+
+    planningQueueList.addEventListener('keydown', event => {
+      const row = event.target.closest('[data-planning-queue-id]');
+      if (!row || !event.altKey || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+      event.preventDefault();
+      const index = planningQueueItems.findIndex(item => item.id === row.dataset.planningQueueId);
+      const targetIndex = event.key === 'ArrowUp' ? index - 1 : index + 1;
+      if (index < 0 || targetIndex < 0 || targetIndex >= planningQueueItems.length) return;
+      const [moved] = planningQueueItems.splice(index, 1);
+      planningQueueItems.splice(targetIndex, 0, moved);
+      renderPlanningQueue();
+      planningQueueList.querySelector(`[data-planning-queue-id="${moved.id}"]`)?.focus();
+      showToast('执行顺序已调整');
     });
 
     function activateHistoryRow(row) {
@@ -6412,6 +7301,7 @@
     }
 
     function clearPlanningStory() {
+      resetPlanningQueueDemo();
       planningLaunchMode = false;
       planningContext = null;
       messages.classList.remove('planning-mode');
@@ -6553,6 +7443,8 @@
         loadDailyReportConversation();
       } else if (state === 'financial-extraction') {
         loadFinancialExtractionConversation();
+      } else if (state === 'planning-summary') {
+        loadPlanningSummaryConversation();
       } else {
         conversationTitle.textContent = row.querySelector('.history-title')?.textContent.trim() || '问答';
         closeOverlays();
