@@ -139,7 +139,7 @@
       transition: grid-template-columns .28s ease;
     }
     .layout.with-artifact { --artifact-width: var(--artifact-expanded-width); }
-    .layout.agent-collapsed { --agent-width: 40px; }
+    .layout.agent-collapsed { --agent-width: 0px; }
     .layout.resizing {
       transition: none;
       user-select: none;
@@ -316,9 +316,9 @@
     .agent-sidebar-toggle {
       position: absolute;
       left: 8px;
-      top: 14px;
-      width: 32px;
-      height: 32px;
+      top: 6px;
+      width: 36px;
+      height: 36px;
       border: 0;
       border-radius: 8px;
       background: transparent;
@@ -327,7 +327,7 @@
       align-items: center;
       justify-content: center;
       padding: 0;
-      z-index: 20;
+      z-index: 8;
     }
     .agent-sidebar-toggle:hover {
       background: #f5f5f5;
@@ -372,7 +372,12 @@
     .artifact.open .artifact-resizer {
       display: block;
     }
-    .side-actions { padding: 52px 14px 10px; border-bottom: 1px solid var(--border); }
+    .side-actions {
+      padding: 10px 10px 8px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      gap: 2px;
+    }
     .side-action {
       width: 100%;
       height: 42px;
@@ -672,7 +677,7 @@
     .chat-search-results.empty + .chat-search-empty { display: block; }
 
     .workspace {
-      --conversation-width: 900px;
+      --conversation-width: clamp(680px, 68%, 900px);
       --conversation-gutter: 28px;
       background: #fff;
       min-width: 0;
@@ -922,16 +927,6 @@
       z-index: 6;
     }
     .workspace.settings-mode .chat-top { display: none; }
-    .layout.agent-collapsed .chat-top::before {
-      content: "";
-      position: absolute;
-      left: calc(-1 * var(--agent-width));
-      bottom: -1px;
-      width: var(--agent-width);
-      height: 1px;
-      background: var(--border);
-      pointer-events: none;
-    }
     .chat-top-content {
       width: min(100%, var(--conversation-width));
       min-width: 0;
@@ -1085,12 +1080,15 @@
       flex: 0 0 auto;
       justify-content: flex-end;
       margin-top: auto;
-      padding: 0 20px;
+      padding: 0 var(--conversation-gutter);
     }
     .welcome-title {
+      width: min(100%, var(--conversation-width));
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 14px;
+      margin-inline: auto;
       margin-bottom: 42px;
       font-size: 28px;
       line-height: 1.3;
@@ -1898,6 +1896,7 @@
       padding: 12px 14px;
       line-height: 1.65;
       font-size: 14px;
+      overflow-wrap: anywhere;
     }
     .bubble.user { display: block; background: var(--primary-bg); align-self: flex-end; }
     .bubble.ai {
@@ -1915,9 +1914,21 @@
       width: min(100%, var(--conversation-width));
       margin-inline: auto;
     }
-    #messages > .bubble.user {
-      margin-left: auto;
-      margin-right: max(0px, calc((100% - var(--conversation-width)) / 2));
+    .user-message {
+      --user-content-width: 80%;
+      --message-attachment-height: 72px;
+      width: min(100%, var(--conversation-width));
+      min-width: 0;
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .user-message > .bubble.user {
+      width: fit-content;
+      max-width: var(--user-content-width);
+      min-width: 0;
     }
     .thinking-panel {
       margin: 0 0 10px;
@@ -2320,7 +2331,7 @@
     .workspace:not(.task-mode) .composer-wrap {
       width: 100%;
       margin-bottom: auto;
-      padding: 0 20px;
+      padding: 0 var(--conversation-gutter);
     }
     .financial-question-dock {
       width: min(100%, var(--conversation-width));
@@ -2347,7 +2358,7 @@
       gap: 10px;
     }
     .workspace:not(.task-mode) .composer {
-      width: min(860px, 100%);
+      width: min(100%, var(--conversation-width));
     }
     .task-mode .composer {
       width: min(100%, var(--conversation-width));
@@ -2423,50 +2434,103 @@
     .workspace.share-invalid-mode > .welcome,
     .workspace.share-invalid-mode > .messages,
     .workspace.share-invalid-mode > .composer-wrap { display: none; }
-    .message-attachment {
-      width: min(420px, 100%);
+    .message-attachment-flow {
+      width: var(--user-content-width);
+      max-width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .message-image-card {
+      flex: 0 0 120px;
+      width: 120px;
+      height: var(--message-attachment-height);
+      overflow: hidden;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      background: #f7f9fc;
+      box-shadow: 0 1px 2px rgba(0,0,0,.025);
+    }
+    .message-image-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .message-attachment-list {
+      width: var(--user-content-width);
+      max-width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 240px));
+      justify-content: end;
+      gap: 8px;
+    }
+    .message-attachment-list > :last-child:nth-child(odd) { grid-column: 2; }
+    .message-attachment-card {
+      min-width: 0;
+      height: var(--message-attachment-height);
       box-sizing: border-box;
-      margin-top: 10px;
       padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
       background: #fff;
       display: grid;
-      grid-template-columns: 34px minmax(0, 1fr);
+      grid-template-columns: 36px minmax(0, 1fr);
       align-items: center;
       gap: 10px;
+      color: #262626;
+      box-shadow: 0 1px 2px rgba(0,0,0,.025);
+    }
+    .message-attachment-flow > .message-attachment-card {
+      flex: 1 1 200px;
+      max-width: 208px;
     }
     .message-attachment-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 7px;
-      background: #fff1f0;
-      color: #cf1322;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       display: grid;
       place-items: center;
-      flex: none;
+    }
+    .message-attachment-icon .icon {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.8;
+    }
+    .message-attachment-card.is-pdf .message-attachment-icon { background: #fff1f0; color: #cf1322; }
+    .message-attachment-card.is-xlsx .message-attachment-icon { background: #f0f9eb; color: #389e0d; }
+    .message-attachment-card.is-image .message-attachment-icon { background: #e6f4ff; color: #1677ff; }
+    .message-attachment-info { min-width: 0; }
+    .message-attachment-name {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .message-attachment-meta {
+      display: block;
+      margin-top: 2px;
+      color: #737373;
       font-size: 11px;
-      font-weight: 700;
+      line-height: 1.4;
     }
-    .message-attachment-info { min-width: 0; flex: 1; }
-    .message-attachment-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
-    .message-attachment-meta { margin-top: 2px; color: #8c8c8c; font-size: 11px; }
-    .message-attachment-actions {
-      grid-column: 2;
-      display: flex;
-      justify-content: flex-end;
-      gap: 4px;
+    @media (max-width: 720px) {
+      .workspace { --conversation-gutter: 12px; }
+      .messages { padding: 18px var(--conversation-gutter); }
+      .message-image-card { flex-basis: calc((100% - 8px) / 2); width: auto; }
+      .message-attachment-flow > .message-attachment-card {
+        flex-basis: 100%;
+        max-width: none;
+      }
+      .message-attachment-list {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .message-attachment-list > :last-child:nth-child(odd) { grid-column: auto; }
     }
-    .message-attachment-actions button {
-      min-height: 30px;
-      padding: 0 8px;
-      border: 0;
-      border-radius: 6px;
-      background: transparent;
-      color: #1677ff;
-      font-size: 12px;
-    }
-    .message-attachment-actions button:hover { background: #e6f4ff; }
     .launch-context {
       padding: 10px 12px;
       border: 1px solid var(--border);
@@ -3396,6 +3460,7 @@
       .layout:not(.manual-system-mode) > .platform-nav,
       .layout:not(.manual-system-mode) > .business-module,
       .layout:not(.manual-system-mode) > .agent-sidebar { display: none; }
+      .layout:not(.manual-system-mode) .agent-sidebar-toggle { display: none; }
       .layout:not(.manual-system-mode) > .workspace { grid-column: 1; }
       .layout:not(.manual-system-mode) > .artifact:not(.open) { display: none; }
       .layout:not(.manual-system-mode) > .artifact.open {
@@ -3579,7 +3644,7 @@
         --agent-expanded-width: 220px;
         --artifact-expanded-width: min(34vw, 420px);
       }
-      .layout.agent-collapsed { --agent-width: 40px; }
+      .layout.agent-collapsed { --agent-width: 0px; }
       .welcome-title { font-size: 24px; }
     }
     @media (max-width: 980px) {
@@ -3785,14 +3850,14 @@
             <div class="history-row" role="button" tabindex="0"><span class="history-title">删除核心分岔代码</span><button class="history-more" type="button" aria-label="删除核心分岔代码的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
           </div>
         </div>
-        <button class="agent-sidebar-toggle" id="agentSidebarToggle" aria-label="收起历史侧栏" title="收起历史侧栏">
-          <span class="toggle-icon sidebar" aria-hidden="true"></span>
-        </button>
         <div class="panel-resizer agent-resizer" id="agentResizeHandle" data-resizer="agent" role="separator" aria-label="调整历史侧栏和问答主界面宽度" aria-orientation="vertical" tabindex="0"></div>
       </aside>
 
       <main class="workspace" id="workspace">
         <div class="chat-top">
+          <button class="agent-sidebar-toggle" id="agentSidebarToggle" aria-label="收起历史侧栏" title="收起历史侧栏">
+            <span class="toggle-icon sidebar" aria-hidden="true"></span>
+          </button>
           <div class="chat-top-content">
             <div class="conversation-heading">
               <div class="conversation-title" id="conversationTitle">新问答</div>
@@ -3848,19 +3913,19 @@
         </section>
 
         <section class="messages" id="messages">
-          <div class="bubble user">
-            帮我联网查一下近期海外券商对港股股权激励披露口径的要求，并整理到规划文档里。
-            <div class="message-attachment" aria-label="对话附件">
-              <span class="message-attachment-icon" aria-hidden="true">PDF</span>
-              <span class="message-attachment-info">
-                <span class="message-attachment-name">港股股权激励披露规则.pdf</span>
-                <span class="message-attachment-meta">1.8 MB</span>
-              </span>
-              <span class="message-attachment-actions">
-                <button type="button" data-attachment-action="preview">预览</button>
-                <button type="button" data-attachment-action="download">下载</button>
-              </span>
+          <div class="user-message">
+            <div class="message-attachment-list" role="list" aria-label="本条消息的 1 个附件">
+              <div class="message-attachment-card is-pdf" role="listitem">
+                <span class="message-attachment-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+                </span>
+                <span class="message-attachment-info">
+                  <span class="message-attachment-name" title="港股股权激励披露规则.pdf">港股股权激励披露规则.pdf</span>
+                  <span class="message-attachment-meta">PDF · 1.8 MB</span>
+                </span>
+              </div>
             </div>
+            <div class="bubble user">帮我联网查一下近期海外券商对港股股权激励披露口径的要求，并整理到规划文档里。</div>
           </div>
           <div class="bubble ai">
             <p class="answer-text" style="margin-bottom: 10px;">我需要先确认联网搜索范围。建议按下面的方式执行：</p>
@@ -3875,8 +3940,8 @@
             </div>
             <p class="reply-hint">如果范围可以，回复“继续”。也可以回复“只查监管来源”“不要新闻来源”或补充指定网站。</p>
           </div>
-          <div class="bubble user">
-            继续，只查监管和交易所来源，新闻不用。
+          <div class="user-message">
+            <div class="bubble user">继续，只查监管和交易所来源，新闻不用。</div>
           </div>
           <details class="work-log" open>
             <summary class="work-log-head">Worked for 42s <span class="work-log-chevron" aria-hidden="true"></span></summary>
@@ -3914,8 +3979,43 @@
             </footer>
           </div>
           <section class="daily-report-story" id="dailyReportStory" hidden aria-label="质检日报生成对话">
-            <div class="bubble user">
-              生成今天的质检日报，重点汇总规则缺口、口径冲突和需要人工确认的事项。
+            <div class="user-message">
+              <div class="message-attachment-flow" role="list" aria-label="本条消息的 5 个附件">
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="规则冲突截图.png">
+                </div>
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="待确认任务截图.png">
+                </div>
+                  <div class="message-attachment-card is-image" role="listitem">
+                    <span class="message-attachment-icon" aria-hidden="true">
+                      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 15-5-5L5 20"/></svg>
+                    </span>
+                    <span class="message-attachment-info">
+                      <span class="message-attachment-name" title="质检异常样例截图.png">质检异常样例截图.png</span>
+                      <span class="message-attachment-meta">PNG · 1.2 MB</span>
+                    </span>
+                  </div>
+                  <div class="message-attachment-card is-pdf" role="listitem">
+                    <span class="message-attachment-icon" aria-hidden="true">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+                    </span>
+                    <span class="message-attachment-info">
+                      <span class="message-attachment-name" title="质检规则汇总.pdf">质检规则汇总.pdf</span>
+                      <span class="message-attachment-meta">PDF · 2.4 MB</span>
+                    </span>
+                  </div>
+                  <div class="message-attachment-card is-xlsx" role="listitem">
+                    <span class="message-attachment-icon" aria-hidden="true">
+                      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18M15 9v12M3 15h18"/></svg>
+                    </span>
+                    <span class="message-attachment-info">
+                      <span class="message-attachment-name" title="今日质检任务明细.xlsx">今日质检任务明细.xlsx</span>
+                      <span class="message-attachment-meta">XLSX · 386 KB</span>
+                    </span>
+                  </div>
+              </div>
+              <div class="bubble user">生成今天的质检日报，重点汇总规则缺口、口径冲突和需要人工确认的事项。</div>
             </div>
 
             <details class="daily-run-log">
@@ -4006,8 +4106,55 @@
               </ul>
             </div>
 
-            <div class="bubble user">
-              再按业务组拆分异常任务，并补充近 7 日的质检趋势。
+            <div class="user-message">
+              <div class="message-attachment-flow" role="list" aria-label="本条消息的 3 个文件附件">
+                <div class="message-attachment-card is-xlsx" role="listitem">
+                  <span class="message-attachment-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18M15 9v12M3 15h18"/></svg>
+                  </span>
+                  <span class="message-attachment-info">
+                    <span class="message-attachment-name" title="近7日质检任务明细.xlsx">近7日质检任务明细.xlsx</span>
+                    <span class="message-attachment-meta">XLSX · 842 KB</span>
+                  </span>
+                </div>
+                <div class="message-attachment-card is-xlsx" role="listitem">
+                  <span class="message-attachment-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18M15 9v12M3 15h18"/></svg>
+                  </span>
+                  <span class="message-attachment-info">
+                    <span class="message-attachment-name" title="业务组任务映射.xlsx">业务组任务映射.xlsx</span>
+                    <span class="message-attachment-meta">XLSX · 214 KB</span>
+                  </span>
+                </div>
+                <div class="message-attachment-card is-pdf" role="listitem">
+                  <span class="message-attachment-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+                  </span>
+                  <span class="message-attachment-info">
+                    <span class="message-attachment-name" title="历史异常处理说明.pdf">历史异常处理说明.pdf</span>
+                    <span class="message-attachment-meta">PDF · 1.6 MB</span>
+                  </span>
+                </div>
+              </div>
+              <div class="bubble user">我补充了近 7 日明细、业务组映射和历史处理记录。请再按业务组拆分异常任务，并补充质检趋势。</div>
+            </div>
+
+            <div class="user-message">
+              <div class="message-attachment-flow" role="list" aria-label="本条消息的 4 张图片附件">
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="财务组异常截图-01.png">
+                </div>
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="财务组异常截图-02.png">
+                </div>
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="历史数据回补截图-01.png">
+                </div>
+                <div class="message-image-card" role="listitem">
+                  <img src="../images/logo.jpg" alt="历史数据回补截图-02.png">
+                </div>
+              </div>
+              <div class="bubble user">另外结合这 4 张异常截图，重点核对财务组历史数据回补场景。</div>
             </div>
 
             <details class="daily-live-run" open aria-label="正在生成质检趋势分析" aria-live="polite">
@@ -4068,7 +4215,7 @@
             </details>
           </section>
           <section class="financial-extraction-story" id="financialExtractionStory" hidden aria-label="财务数据抽取问答">
-            <div class="bubble user">请从华星科技 2025 年年度报告中抽取主要财务数据，整理成结构化结果。</div>
+            <div class="user-message"><div class="bubble user">请从华星科技 2025 年年度报告中抽取主要财务数据，整理成结构化结果。</div></div>
             <div class="financial-intro">
               <p>好的。开始抽取前，我需要确认 3 项范围，避免遗漏或重复加工。</p>
             </div>
@@ -4079,7 +4226,7 @@
             <div class="financial-submitted-result" id="financialSubmittedResult" hidden></div>
           </section>
           <section class="manual-qa-story" id="manualQaStory" hidden>
-            <div class="bubble user">请确认 LR1105 非经常性损益内部表加工规则。</div>
+            <div class="user-message"><div class="bubble user">请确认 LR1105 非经常性损益内部表加工规则。</div></div>
             <div class="manual-qa-work-log" aria-label="资料检索过程">
               <strong>已检索</strong> 规划文档、业务表、历史人工问答与规则资料。<br>
               后台预填不影响当前回答：已提前识别团队、业务、品种、市场、涉及表和规则文档。
@@ -4810,7 +4957,7 @@
       composerInput.contentEditable = 'false';
       composerInput.dataset.placeholder = '这是分享的只读快照，无法继续对话';
       [plusBtn, manualQaBtn, sendBtn].forEach(button => { button.disabled = true; });
-      messages.querySelectorAll('button:not([data-attachment-action]), input, textarea, select').forEach(control => { control.disabled = true; });
+      messages.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = true; });
       artifact.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = true; });
       updateConversationActions();
     }
@@ -5257,11 +5404,14 @@
     function appendComposerMessage() {
       const html = renderComposerContent();
       if (!html) return;
+      const message = document.createElement('div');
+      message.className = 'user-message';
       const bubble = document.createElement('div');
       bubble.className = 'bubble user';
       bubble.innerHTML = html;
+      message.append(bubble);
       const story = document.getElementById('manualQaStory');
-      messages.insertBefore(bubble, story);
+      messages.insertBefore(message, story);
       requestAnimationFrame(() => {
         messages.scrollTop = messages.scrollHeight;
       });
@@ -5592,7 +5742,7 @@
     function planningResultHtml(outcome, text, context) {
       if (outcome === 'no-update') {
         return `
-          <div class="bubble user">${escapeHtml(text)}</div>
+          <div class="user-message"><div class="bubble user">${escapeHtml(text)}</div></div>
           <article class="planning-result" role="status" aria-live="polite">
             <h3>无需更新</h3>
             <dl>
@@ -5604,7 +5754,7 @@
           </article>`;
       }
       return `
-        <div class="bubble user">${escapeHtml(text)}</div>
+        <div class="user-message"><div class="bubble user">${escapeHtml(text)}</div></div>
         <article class="planning-result" role="status" aria-live="polite">
           <h3>建议更新规划文档</h3>
           <dl>
@@ -5657,7 +5807,7 @@
 
     function planningQueueUserTurnHtml(text) {
       return `
-        <div class="planning-user-turn latest">
+        <div class="planning-user-turn user-message latest">
           <div class="bubble user planning-user-copy">${escapeHtml(text)}</div>
           <div class="planning-user-actions">
             <button class="planning-history-edit" type="button" data-planning-history-edit aria-label="编辑最近一条消息" title="编辑并重新运行">
@@ -5682,7 +5832,7 @@
 
     function planningSteerTurnHtml(item) {
       return `
-        <div class="planning-steer-turn" data-planning-steer-id="${item.id}">
+        <div class="planning-steer-turn user-message" data-planning-steer-id="${item.id}">
           <div class="bubble user planning-steer-copy">${escapeHtml(item.text)}</div>
           <div class="planning-steer-meta">
             <span class="planning-steer-tag">运行中发送</span>
@@ -5833,7 +5983,7 @@
         const steerTurn = planningStory.querySelector(`[data-planning-steer-id="${next.id}"]`);
         if (steerTurn) {
           planningStory.querySelectorAll('.planning-user-turn.latest').forEach(turn => turn.classList.remove('latest'));
-          steerTurn.className = 'planning-user-turn latest';
+          steerTurn.className = 'planning-user-turn user-message latest';
           steerTurn.removeAttribute('data-planning-steer-id');
           const copy = steerTurn.querySelector('.planning-steer-copy');
           if (copy) copy.className = 'bubble user planning-user-copy';
@@ -7511,12 +7661,6 @@
         return;
       }
       showToast('当前 demo 仅重点演示分享功能');
-    });
-
-    messages.addEventListener('click', event => {
-      const action = event.target.closest('[data-attachment-action]')?.dataset.attachmentAction;
-      if (!action) return;
-      showToast(action === 'preview' ? '已打开附件预览' : '已开始下载附件');
     });
 
     financialQuestionMount.addEventListener('click', event => {
