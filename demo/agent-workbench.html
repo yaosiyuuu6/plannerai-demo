@@ -403,6 +403,7 @@
       flex: none;
     }
     .history-head {
+      display: none;
       padding: 14px 10px 8px;
       display: flex;
       align-items: center;
@@ -412,6 +413,64 @@
       font-weight: 600;
     }
     .history-list { padding: 0 8px 12px; overflow: auto; flex: 1; }
+    .conversation-group { margin: 6px 0 10px; }
+    .conversation-group[data-project-draggable="true"] .conversation-group-header { cursor: grab; }
+    .conversation-group[data-project-draggable="true"].dragging { opacity: .45; }
+    .conversation-group[data-project-draggable="true"].drag-over { border-radius: 8px; box-shadow: 0 -2px 0 #1677ff; }
+    .conversation-group-header {
+      position: relative;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 4px 0 7px;
+      color: #8c8c8c;
+    }
+    .conversation-group-toggle {
+      min-width: 0;
+      height: 34px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0;
+      flex: 1;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+    .conversation-group-toggle:focus-visible,
+    .project-header-action:focus-visible { outline: 2px solid rgba(22,119,255,.35); outline-offset: 1px; }
+    .group-caret { width: 14px; height: 14px; transition: transform .18s ease; }
+    .conversation-group.collapsed .group-caret { transform: rotate(-90deg); }
+    .conversation-group-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+    .conversation-group-count { margin-left: auto; padding-right: 5px; color: #bfbfbf; font-size: 12px; font-variant-numeric: tabular-nums; transition: opacity .14s ease; }
+    .project-header-actions { position: absolute; right: 4px; top: 2px; display: flex; align-items: center; gap: 2px; opacity: 0; pointer-events: none; }
+    .conversation-group-header:hover .project-header-actions,
+    .conversation-group-header:focus-within .project-header-actions { opacity: 1; pointer-events: auto; }
+    .conversation-group:not(.general-group) .conversation-group-header:hover .conversation-group-count,
+    .conversation-group:not(.general-group) .conversation-group-header:focus-within .conversation-group-count { opacity: 0; }
+    .project-header-action {
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #8c8c8c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .project-header-action:hover { color: #262626; background: #e8e8e8; }
+    .project-header-action .icon { width: 15px; height: 15px; }
+    .conversation-group.collapsed .conversation-group-body { display: none; }
+    .conversation-group-empty { padding: 7px 10px 9px 28px; color: #b0b0b0; font-size: 12px; }
+    .history-row { margin-left: 10px; }
+    .general-group { margin-top: 12px; }
+    .general-group .history-row { margin-left: 0; }
     .history-row {
       position: relative;
       height: 38px;
@@ -511,7 +570,7 @@
     .history-context-menu {
       position: fixed;
       z-index: 180;
-      width: 128px;
+      width: 174px;
       padding: 6px;
       border: 1px solid var(--line);
       border-radius: 9px;
@@ -538,6 +597,29 @@
     .history-menu-item[data-history-action="pin"] { color: #0958d9; }
     .history-menu-item.danger { color: #cf1322; }
     .history-menu-item .icon { width: 15px; height: 15px; }
+    .history-menu-item .menu-chevron { margin-left: auto; width: 14px; height: 14px; }
+    .move-conversation-menu {
+      position: fixed;
+      z-index: 190;
+      width: 224px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
+      display: none;
+    }
+    .move-conversation-menu.open { display: block; }
+    .move-project-search { width: 100%; height: 34px; border: 1px solid #d9d9d9; border-radius: 7px; padding: 0 10px; font: inherit; }
+    .move-project-search:focus { border-color: #1677ff; outline: 2px solid rgba(22,119,255,.12); }
+    .move-project-list { max-height: 220px; overflow: auto; margin-top: 5px; }
+    .move-project-option {
+      width: 100%; min-height: 36px; border: 0; border-radius: 6px; background: transparent; color: #262626;
+      display: flex; align-items: center; gap: 9px; padding: 7px 9px; text-align: left; font-size: 13px; cursor: pointer;
+    }
+    .move-project-option:hover:not(:disabled), .move-project-option:focus-visible { background: #f5f5f5; }
+    .move-project-option:disabled { color: #bfbfbf; cursor: default; }
+    .move-project-option .icon { width: 15px; height: 15px; }
     .confirm-overlay {
       position: fixed;
       inset: 0;
@@ -572,6 +654,11 @@
       background: #ff4d4f;
       color: #fff;
     }
+    .confirm-actions .danger:disabled { border-color: #ffccc7; background: #ffccc7; cursor: not-allowed; }
+    .confirm-field { margin-top: 16px; }
+    .confirm-field label { display: block; margin-bottom: 7px; color: #262626; font-size: 13px; font-weight: 600; }
+    .confirm-field input { width: 100%; height: 40px; border: 1px solid #d9d9d9; border-radius: 8px; padding: 0 11px; font: inherit; }
+    .confirm-field input:focus { border-color: #ff4d4f; outline: 2px solid rgba(255,77,79,.12); }
     .settings {
       border-top: 1px solid var(--border);
       padding: 10px 14px 14px;
@@ -685,6 +772,68 @@
       display: flex;
       flex-direction: column;
       position: relative;
+    }
+    .project-view { flex: 1; min-height: 0; display: none; overflow: auto; background: #fff; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .workspace.project-mode .chat-top,
+    .workspace.project-mode .welcome,
+    .workspace.project-mode .messages,
+    .workspace.project-mode .composer-wrap,
+    .workspace.project-mode .settings-view { display: none; }
+    .workspace.project-mode .project-view { display: block; }
+    .project-page { width: min(1040px, calc(100% - 48px)); margin: 0 auto; padding: 28px 0 56px; }
+    .project-page-title { margin: 0; color: #1f1f1f; font-size: 22px; line-height: 1.35; }
+    .project-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 28px; }
+    .project-list-heading { margin: 0; font-size: 17px; font-weight: 650; color: #262626; }
+    .project-toolbar-actions { display: flex; align-items: center; gap: 12px; }
+    .project-search-wrap { position: relative; width: min(300px, 34vw); }
+    .project-search-wrap .icon { position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; color: #8c8c8c; transform: translateY(-50%); pointer-events: none; }
+    .project-search { width: 100%; height: 38px; border: 1px solid #d9d9d9; border-radius: 9px; padding: 0 12px 0 40px; font: inherit; }
+    .project-search:focus { border-color: #1677ff; outline: 2px solid rgba(22,119,255,.12); }
+    .project-primary { height: 38px; border: 0; border-radius: 9px; background: #202124; color: #fff; display: inline-flex; align-items: center; gap: 7px; padding: 0 14px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .project-primary:hover { background: #34363a; }
+    .project-primary .icon { width: 18px; height: 18px; }
+    .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .project-card {
+      min-height: 94px; border: 1px solid #e1e1e1; border-radius: 12px; background: #fff; display: grid;
+      grid-template-columns: 48px minmax(0,1fr) auto; align-items: center; gap: 13px; padding: 15px 16px; transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .project-card:hover, .project-card.highlight { border-color: #b7d5ff; box-shadow: 0 8px 24px rgba(31,35,41,.07); }
+    .project-card[draggable="true"] { cursor: grab; }
+    .project-card.dragging { opacity: .5; }
+    .project-card.drag-over { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.12); }
+    .project-card-icon { width: 48px; height: 48px; border-radius: 11px; background: #f5f6f7; color: #6b7280; display: grid; place-items: center; }
+    .project-card-icon .icon { width: 22px; height: 22px; }
+    .project-card-title { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 650; color: #202124; }
+    .project-card-meta { margin-top: 5px; color: #8c8c8c; font-size: 12px; }
+    .project-card-actions { display: flex; gap: 4px; opacity: 0; }
+    .project-card:hover .project-card-actions, .project-card:focus-within .project-card-actions { opacity: 1; }
+    .project-card-action { width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: #6b7280; display: grid; place-items: center; cursor: pointer; }
+    .project-card-action:hover { background: #f0f0f0; color: #202124; }
+    .project-card-action.danger:hover { background: #fff1f0; color: #cf1322; }
+    .project-card-action .icon { width: 17px; height: 17px; }
+    .project-empty-state { grid-column: 1 / -1; padding: 84px 20px; text-align: center; color: #8c8c8c; }
+    .project-empty-state strong { display: block; color: #262626; font-size: 17px; margin-bottom: 6px; }
+    .form-dialog { width: min(440px, 100%); }
+    .form-dialog h3 { margin: 0 0 6px; }
+    .form-label { display: block; margin-top: 18px; color: #262626; font-size: 13px; font-weight: 600; }
+    .form-input { width: 100%; height: 42px; margin-top: 7px; border: 1px solid #d9d9d9; border-radius: 8px; padding: 0 11px; font: inherit; }
+    .form-input:focus { border-color: #1677ff; outline: 2px solid rgba(22,119,255,.12); }
+    .form-help { min-height: 19px; margin: 5px 0 0; color: #8c8c8c; font-size: 12px; }
+    .form-help:empty { display: none; }
+    .form-help.error { color: #cf1322; }
+    @media (max-width: 900px) {
+      .project-page { width: min(100% - 32px, 680px); padding-top: 28px; }
+      .project-toolbar { align-items: flex-start; flex-direction: column; }
+      .project-toolbar-actions, .project-search-wrap { width: 100%; }
+      .project-search-wrap { max-width: none; }
+      .project-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .group-caret, .project-card { transition: none; }
+    }
+    @media (hover: none) {
+      .project-header-actions, .project-card-actions { opacity: 1; pointer-events: auto; }
     }
     .settings-view {
       flex: 1;
@@ -3824,6 +3973,10 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
               新对话
             </button>
+            <button class="side-action" id="projectsBtn">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5h6l2 2h10v9.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 7.5V5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2.5"/></svg>
+              项目
+            </button>
             <button class="side-action" id="searchChats">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
               搜索问答
@@ -4250,6 +4403,29 @@
           <section class="planning-story" id="planningStory" hidden aria-label="规划文档修改建议对话"></section>
         </section>
 
+        <section class="project-view" id="projectView" aria-label="项目管理">
+          <div class="project-page">
+            <header>
+              <h1 class="project-page-title">项目</h1>
+            </header>
+            <div class="project-toolbar">
+              <h2 class="project-list-heading">我的项目（<span id="projectTotal">0</span>）</h2>
+              <div class="project-toolbar-actions">
+                <label class="project-search-wrap">
+                  <span class="sr-only">搜索项目</span>
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                  <input class="project-search" id="projectSearch" type="search" placeholder="搜索项目" autocomplete="off">
+                </label>
+                <button class="project-primary" id="createProjectBtn" type="button">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                  新建项目
+                </button>
+              </div>
+            </div>
+            <div class="project-grid" id="projectGrid"></div>
+          </div>
+        </section>
+
         <section class="settings-view" id="settingsView" aria-label="设置">
           <nav class="settings-tabs" aria-label="设置分类">
             <button class="settings-tab active" type="button" data-settings-tab="skills" aria-pressed="true">
@@ -4564,6 +4740,15 @@
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>
       <span data-history-pin-label>置顶</span>
     </button>
+    <button class="history-menu-item" type="button" role="menuitem" data-history-action="move" aria-haspopup="menu">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/><path d="m12 13 2 2 4-4"/></svg>
+      移动到项目
+      <svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <button class="history-menu-item" type="button" role="menuitem" data-history-action="move-out" hidden>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/><path d="m15 12-3 3-3-3"/></svg>
+      移出项目
+    </button>
     <button class="history-menu-item" type="button" role="menuitem" data-history-action="rename">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
       改名
@@ -4574,6 +4759,11 @@
     </button>
   </div>
 
+  <div class="move-conversation-menu" id="moveConversationMenu" role="menu" aria-hidden="true">
+    <input class="move-project-search" id="moveProjectSearch" type="search" placeholder="搜索项目" aria-label="搜索要移入的项目" autocomplete="off">
+    <div class="move-project-list" id="moveProjectList"></div>
+  </div>
+
   <div class="confirm-overlay" id="deleteHistoryConfirm" role="dialog" aria-modal="true" aria-labelledby="deleteHistoryTitle" aria-hidden="true">
     <div class="confirm-dialog">
       <h3 id="deleteHistoryTitle">删除此问答？</h3>
@@ -4581,6 +4771,34 @@
       <div class="confirm-actions">
         <button type="button" data-delete-cancel>取消</button>
         <button class="danger" type="button" data-delete-confirm>删除</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirm-overlay" id="projectFormOverlay" role="dialog" aria-modal="true" aria-labelledby="projectFormTitle" aria-hidden="true">
+    <form class="confirm-dialog form-dialog" id="projectForm">
+      <h3 id="projectFormTitle">新建项目</h3>
+      <label class="form-label" for="projectNameInput">项目名称</label>
+      <input class="form-input" id="projectNameInput" maxlength="30" autocomplete="off" required>
+      <p class="form-help" id="projectNameHelp" role="alert"></p>
+      <div class="confirm-actions">
+        <button type="button" data-project-form-cancel>取消</button>
+        <button class="project-primary" id="projectFormSubmit" type="submit">创建</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="confirm-overlay" id="deleteProjectConfirm" role="dialog" aria-modal="true" aria-labelledby="deleteProjectTitle" aria-hidden="true">
+    <div class="confirm-dialog">
+      <h3 id="deleteProjectTitle">删除项目？</h3>
+      <p>项目“<span id="deleteProjectName"></span>”及其中的 <strong id="deleteProjectConversationCount">0</strong> 个对话将被永久删除。此操作不可撤销。</p>
+      <div class="confirm-field">
+        <label for="deleteProjectNameInput">输入“<span id="deleteProjectNamePrompt"></span>”以确认</label>
+        <input id="deleteProjectNameInput" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="confirm-actions">
+        <button type="button" data-delete-project-cancel>取消</button>
+        <button class="danger" id="deleteProjectSubmit" type="button" disabled>删除项目</button>
       </div>
     </div>
   </div>
@@ -4654,6 +4872,25 @@
     const historyContextMenu = document.getElementById('historyContextMenu');
     const deleteHistoryConfirm = document.getElementById('deleteHistoryConfirm');
     const deleteHistoryName = document.getElementById('deleteHistoryName');
+    const projectsBtn = document.getElementById('projectsBtn');
+    const projectGrid = document.getElementById('projectGrid');
+    const projectTotal = document.getElementById('projectTotal');
+    const projectSearch = document.getElementById('projectSearch');
+    const projectFormOverlay = document.getElementById('projectFormOverlay');
+    const projectForm = document.getElementById('projectForm');
+    const projectFormTitle = document.getElementById('projectFormTitle');
+    const projectNameInput = document.getElementById('projectNameInput');
+    const projectNameHelp = document.getElementById('projectNameHelp');
+    const projectFormSubmit = document.getElementById('projectFormSubmit');
+    const deleteProjectConfirm = document.getElementById('deleteProjectConfirm');
+    const deleteProjectName = document.getElementById('deleteProjectName');
+    const deleteProjectNamePrompt = document.getElementById('deleteProjectNamePrompt');
+    const deleteProjectConversationCount = document.getElementById('deleteProjectConversationCount');
+    const deleteProjectNameInput = document.getElementById('deleteProjectNameInput');
+    const deleteProjectSubmit = document.getElementById('deleteProjectSubmit');
+    const moveConversationMenu = document.getElementById('moveConversationMenu');
+    const moveProjectSearch = document.getElementById('moveProjectSearch');
+    const moveProjectList = document.getElementById('moveProjectList');
 
     let taskMode = false;
     let artifactVisible = false;
@@ -4691,6 +4928,26 @@
     let currentConversationId = 'conv-new';
     let conversationGenerating = false;
     let sharedSnapshotMode = false;
+    let projectFormMode = 'create';
+    let editingProjectId = null;
+    let pendingDeleteProjectId = null;
+    let highlightedProjectId = null;
+    let moveMenuRow = null;
+    let draggedProjectId = null;
+    let projects = [
+      { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false },
+      { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false }
+    ];
+    try {
+      const savedProjectOrder = JSON.parse(localStorage.getItem('plannerai-project-order') || '[]');
+      if (Array.isArray(savedProjectOrder)) {
+        projects.sort((a, b) => {
+          const aIndex = savedProjectOrder.indexOf(a.id);
+          const bIndex = savedProjectOrder.indexOf(b.id);
+          return (aIndex < 0 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex < 0 ? Number.MAX_SAFE_INTEGER : bIndex);
+        });
+      }
+    } catch (error) {}
     const financialQuestions = Object.freeze([
       Object.freeze({
         id: 'statementScope',
@@ -4737,7 +4994,7 @@
     const pendingInputFaviconId = 'pendingInputFavicon';
     const SHARE_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
     historyList.querySelectorAll('.history-row').forEach((row, index) => {
-      row.dataset.historyOrder = String(index);
+      row.dataset.historyOrder = String(Date.now() - index * 1000);
       if (!row.dataset.conversationId) row.dataset.conversationId = `conv-demo-${String(index + 1).padStart(3, '0')}`;
       row.insertAdjacentHTML('afterbegin', '<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>');
       row.querySelector('.history-more')?.insertAdjacentHTML('beforebegin', '<span class="history-input-badge" hidden>待输入</span>');
@@ -4746,6 +5003,15 @@
       const title = row.querySelector('.history-title');
       title?.setAttribute('role', 'button');
       if (title) title.tabIndex = 0;
+      const initialProjectByTitle = {
+        '规划文档总结': 'project-planning',
+        '业务流程优化建议': 'project-planning',
+        '界面信息层次优化': 'project-planning',
+        '港股股权激励处理方案': 'project-finance',
+        '财务数据抽取': 'project-finance'
+      };
+      const initialProjectId = initialProjectByTitle[title?.textContent.trim()];
+      if (initialProjectId) row.dataset.projectId = initialProjectId;
     });
     const manualIssues = Object.freeze([
       Object.freeze({ id: 'ADTD-3194', type: '常规', shortTitle: 'STK288 公告披露大宗交易变动日期确认', title: 'STK288 公告披露大宗交易变动日期确认', table: 'STK288', code: '603019', team: '股票分部-交易组', business: '大宗交易变动', market: '中国', category: '股票', description: '请确认公告披露的大宗交易变动日期应采用公告日还是交易日。', ruleDoc: 'STK288 大宗交易录入规则.docx', targetDoc: 'STK288 大宗交易规划文档' }),
@@ -5091,8 +5357,10 @@
     function openSettings() {
       closeOverlays();
       setArtifactVisible(false);
+      workspace.classList.remove('project-mode');
       workspace.classList.add('settings-mode');
       settingsBtn.classList.add('active');
+      projectsBtn.classList.remove('active');
       document.querySelectorAll('.history-row').forEach(item => item.classList.remove('active'));
       setSettingsTab('skills');
     }
@@ -5208,8 +5476,9 @@
 
     function setTaskMode(on, preserveTitle = false) {
       taskMode = on;
-      workspace.classList.remove('settings-mode');
+      workspace.classList.remove('settings-mode', 'project-mode');
       settingsBtn.classList.remove('active');
+      projectsBtn.classList.remove('active');
       workspace.classList.toggle('task-mode', on);
       conversationTitle.textContent = resolveConversationTitle(on, conversationTitle.textContent, preserveTitle);
       conversationMeta.textContent = '';
@@ -6496,6 +6765,256 @@
       plusMenu.classList.remove('open');
     }
 
+    function escapeProjectHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function folderIconHtml() {
+      return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>';
+    }
+
+    function projectRows(projectId) {
+      return [...historyList.querySelectorAll('.history-row')].filter(row => (row.dataset.projectId || '') === (projectId || ''));
+    }
+
+    function orderedConversationRows(rows) {
+      return rows.sort((a, b) => {
+        const aPinned = a.classList.contains('pinned');
+        const bPinned = b.classList.contains('pinned');
+        if (aPinned !== bPinned) return aPinned ? -1 : 1;
+        if (aPinned) return Number(b.dataset.pinnedAt || 0) - Number(a.dataset.pinnedAt || 0);
+        return Number(b.dataset.historyOrder || 0) - Number(a.dataset.historyOrder || 0);
+      });
+    }
+
+    function groupSection(project, rows, isGeneral = false) {
+      const section = document.createElement('section');
+      section.className = `conversation-group${isGeneral ? ' general-group' : ''}${project.collapsed ? ' collapsed' : ''}`;
+      section.dataset.groupId = project.id;
+      if (!isGeneral) {
+        section.dataset.projectDraggable = 'true';
+        section.draggable = true;
+        section.title = '拖动调整项目顺序';
+      }
+      const safeName = escapeProjectHtml(project.name);
+      section.innerHTML = `<div class="conversation-group-header">
+        <button class="conversation-group-toggle" type="button" data-group-toggle="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}">
+          <svg class="group-caret icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          <span class="conversation-group-name">${safeName}</span>
+          <span class="conversation-group-count">${rows.length}</span>
+        </button>
+        ${isGeneral ? '' : `<span class="project-header-actions">
+          <button class="project-header-action" type="button" data-project-new="${escapeProjectHtml(project.id)}" aria-label="在${safeName}中新建对话" title="新建对话"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="project-header-action" type="button" data-project-manage="${escapeProjectHtml(project.id)}" aria-label="管理${safeName}" title="管理项目"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l-1.8 1.8a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6h-2.5a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-1.8-1.8A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.6-1H4v-2.5h2.4A1.7 1.7 0 0 0 8 10a1.7 1.7 0 0 0-.3-1.9l1.8-1.8a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6H15a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l1.8 1.8a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1v2.5a1.7 1.7 0 0 0-1.6 1.5Z"/></svg></button>
+        </span>`}
+      </div><div class="conversation-group-body"></div>`;
+      const body = section.querySelector('.conversation-group-body');
+      orderedConversationRows(rows).forEach(row => body.append(row));
+      if (!rows.length && !isGeneral) body.innerHTML = '<div class="conversation-group-empty">暂无对话</div>';
+      return section;
+    }
+
+    function renderProjectSidebar() {
+      const rows = [...historyList.querySelectorAll('.history-row')];
+      historyList.innerHTML = '';
+      projects.forEach(project => {
+        historyList.append(groupSection(project, rows.filter(row => row.dataset.projectId === project.id)));
+      });
+      const generalCollapsed = historyList.dataset.generalCollapsed === 'true';
+      historyList.append(groupSection({ id: 'general', name: '对话', collapsed: generalCollapsed }, rows.filter(row => !row.dataset.projectId), true));
+      refreshPendingInputUi();
+    }
+
+    function renderProjectGrid(query = projectSearch.value) {
+      const normalized = query.trim().toLocaleLowerCase();
+      const visible = projects.filter(project => !normalized || project.name.toLocaleLowerCase().includes(normalized));
+      projectTotal.textContent = String(projects.length);
+      if (!visible.length) {
+        projectGrid.innerHTML = `<div class="project-empty-state"><strong>${projects.length ? '没有匹配的项目' : '还没有项目'}</strong><span>${projects.length ? '试试其他关键词' : '点击“新建项目”开始整理对话'}</span></div>`;
+        return;
+      }
+      projectGrid.innerHTML = visible.map(project => {
+        const count = projectRows(project.id).length;
+        const created = new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' }).format(new Date(project.createdAt));
+        return `<article class="project-card${highlightedProjectId === project.id ? ' highlight' : ''}" data-project-card="${escapeProjectHtml(project.id)}" draggable="${!normalized}" tabindex="0" aria-label="${escapeProjectHtml(project.name)}，按 Alt 加上下方向键调整顺序" title="${normalized ? '清除搜索后可拖动排序' : '拖动调整项目顺序'}">
+          <div class="project-card-icon">${folderIconHtml()}</div>
+          <div><h3 class="project-card-title">${escapeProjectHtml(project.name)}</h3><div class="project-card-meta">${count} 个对话 · 创建于 ${created}</div></div>
+          <div class="project-card-actions">
+            <button class="project-card-action" type="button" data-project-card-action="rename" data-project-id="${escapeProjectHtml(project.id)}" aria-label="重命名${escapeProjectHtml(project.name)}" title="重命名"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button>
+            <button class="project-card-action danger" type="button" data-project-card-action="delete" data-project-id="${escapeProjectHtml(project.id)}" aria-label="删除${escapeProjectHtml(project.name)}" title="删除"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 15H6L5 6"/></svg></button>
+          </div>
+        </article>`;
+      }).join('');
+      if (highlightedProjectId) {
+        requestAnimationFrame(() => {
+          projectGrid.querySelector(`[data-project-card="${CSS.escape(highlightedProjectId)}"]`)?.scrollIntoView({ block: 'center' });
+          highlightedProjectId = null;
+        });
+      }
+    }
+
+    function saveProjectOrder() {
+      try { localStorage.setItem('plannerai-project-order', JSON.stringify(projects.map(project => project.id))); } catch (error) {}
+    }
+
+    function reorderProject(sourceId, targetId, placeAfter = false) {
+      if (!sourceId || !targetId || sourceId === targetId) return false;
+      const sourceIndex = projects.findIndex(project => project.id === sourceId);
+      if (sourceIndex < 0) return false;
+      const [moved] = projects.splice(sourceIndex, 1);
+      const targetIndex = projects.findIndex(project => project.id === targetId);
+      if (targetIndex < 0) { projects.splice(sourceIndex, 0, moved); return false; }
+      projects.splice(targetIndex + (placeAfter ? 1 : 0), 0, moved);
+      saveProjectOrder();
+      renderProjectSidebar();
+      renderProjectGrid(projectSearch.value);
+      showToast('项目顺序已更新');
+      return true;
+    }
+
+    function moveProjectByDelta(projectId, delta) {
+      const index = projects.findIndex(project => project.id === projectId);
+      const targetIndex = index + delta;
+      if (index < 0 || targetIndex < 0 || targetIndex >= projects.length) return;
+      const targetId = projects[targetIndex].id;
+      if (reorderProject(projectId, targetId, delta > 0)) {
+        requestAnimationFrame(() => {
+          historyList.querySelector(`[data-group-id="${CSS.escape(projectId)}"] [data-group-toggle]`)?.focus();
+          projectGrid.querySelector(`[data-project-card="${CSS.escape(projectId)}"]`)?.focus();
+        });
+      }
+    }
+
+    function openProjectManager(projectId = null) {
+      closeOverlays();
+      setArtifactVisible(false);
+      workspace.classList.remove('settings-mode', 'task-mode');
+      workspace.classList.add('project-mode');
+      settingsBtn.classList.remove('active');
+      projectsBtn.classList.add('active');
+      document.querySelectorAll('.history-row').forEach(item => item.classList.remove('active'));
+      highlightedProjectId = projectId;
+      projectSearch.value = '';
+      renderProjectGrid('');
+      if (projectId) requestAnimationFrame(() => projectGrid.querySelector(`[data-project-card="${CSS.escape(projectId)}"]`)?.focus());
+    }
+
+    function exitProjectManager() {
+      workspace.classList.remove('project-mode');
+      projectsBtn.classList.remove('active');
+    }
+
+    function validateProjectName(value, ignoreId = null) {
+      const name = value.trim();
+      if (!name) return { ok: false, message: '请输入项目名称。' };
+      if ([...name].length > 30) return { ok: false, message: '项目名称不能超过 30 个字符。' };
+      const duplicate = projects.some(project => project.id !== ignoreId && project.name.trim().toLocaleLowerCase() === name.toLocaleLowerCase());
+      if (duplicate) return { ok: false, message: '已有同名项目，请换一个名称。' };
+      return { ok: true, name };
+    }
+
+    function openProjectForm(mode, projectId = null) {
+      projectFormMode = mode;
+      editingProjectId = projectId;
+      const project = projects.find(item => item.id === projectId);
+      projectFormTitle.textContent = mode === 'create' ? '新建项目' : '重命名项目';
+      projectFormSubmit.textContent = mode === 'create' ? '创建' : '保存';
+      projectNameInput.value = project?.name || '';
+      projectNameHelp.textContent = '';
+      projectNameHelp.classList.remove('error');
+      projectFormOverlay.classList.add('open');
+      projectFormOverlay.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => { projectNameInput.focus(); projectNameInput.select(); });
+    }
+
+    function closeProjectForm() {
+      projectFormOverlay.classList.remove('open');
+      projectFormOverlay.setAttribute('aria-hidden', 'true');
+      editingProjectId = null;
+    }
+
+    function createEmptyConversation(projectId = '') {
+      const row = document.createElement('div');
+      row.className = 'history-row';
+      row.dataset.historyState = 'empty';
+      row.dataset.historyOrder = String(Date.now());
+      row.dataset.conversationId = `conv-${Date.now().toString(36)}`;
+      if (projectId) row.dataset.projectId = projectId;
+      row.innerHTML = '<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg><span class="history-title" role="button" tabindex="0">新对话</span><span class="history-input-badge" hidden>待输入</span><button class="history-more" type="button" aria-label="新对话的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>';
+      historyList.append(row);
+      const project = projects.find(item => item.id === projectId);
+      if (project) { project.collapsed = false; project.lastActive = Date.now(); }
+      renderProjectSidebar();
+      openHistoryRow(row);
+      showToast(project ? `已在“${project.name}”中创建对话` : '已创建新对话');
+    }
+
+    function renderMoveProjectOptions(query = '') {
+      const currentId = moveMenuRow?.dataset.projectId || '';
+      const normalized = query.trim().toLocaleLowerCase();
+      const items = projects.filter(project => !normalized || project.name.toLocaleLowerCase().includes(normalized));
+      moveProjectList.innerHTML = items.length ? items.map(project => `<button class="move-project-option" type="button" role="menuitem" data-move-project="${escapeProjectHtml(project.id)}" ${project.id === currentId ? 'disabled' : ''}>${folderIconHtml()}<span>${escapeProjectHtml(project.name)}</span>${project.id === currentId ? '<span style="margin-left:auto">当前</span>' : ''}</button>`).join('') : '<div class="conversation-group-empty">没有匹配的项目</div>';
+    }
+
+    function openMoveConversationMenu(row, trigger) {
+      moveMenuRow = row;
+      const triggerRect = trigger.getBoundingClientRect();
+      const parentRect = historyContextMenu.getBoundingClientRect();
+      renderMoveProjectOptions('');
+      moveProjectSearch.value = '';
+      moveConversationMenu.classList.add('open');
+      moveConversationMenu.setAttribute('aria-hidden', 'false');
+      const width = 224;
+      const left = parentRect.right + width + 8 <= window.innerWidth
+        ? parentRect.right + 4
+        : Math.max(8, parentRect.left - width - 4);
+      const top = Math.max(8, Math.min(triggerRect.top - 6, window.innerHeight - 300));
+      moveConversationMenu.style.left = `${left}px`;
+      moveConversationMenu.style.top = `${top}px`;
+      requestAnimationFrame(() => moveProjectSearch.focus());
+    }
+
+    function closeMoveConversationMenu() {
+      moveConversationMenu.classList.remove('open');
+      moveConversationMenu.setAttribute('aria-hidden', 'true');
+      moveMenuRow = null;
+    }
+
+    function moveConversation(row, projectId = '') {
+      const destination = projects.find(project => project.id === projectId);
+      if (destination) { row.dataset.projectId = destination.id; destination.collapsed = false; destination.lastActive = Date.now(); }
+      else delete row.dataset.projectId;
+      row.dataset.historyOrder = String(Date.now());
+      renderProjectSidebar();
+      renderProjectGrid();
+      showToast(destination ? `已移动到“${destination.name}”` : '已移出项目');
+    }
+
+    function openDeleteProject(projectId) {
+      const project = projects.find(item => item.id === projectId);
+      if (!project) return;
+      pendingDeleteProjectId = project.id;
+      deleteProjectName.textContent = project.name;
+      deleteProjectNamePrompt.textContent = project.name;
+      deleteProjectConversationCount.textContent = String(projectRows(project.id).length);
+      deleteProjectNameInput.value = '';
+      deleteProjectSubmit.disabled = true;
+      deleteProjectConfirm.classList.add('open');
+      deleteProjectConfirm.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => deleteProjectNameInput.focus());
+    }
+
+    function closeDeleteProject() {
+      deleteProjectConfirm.classList.remove('open');
+      deleteProjectConfirm.setAttribute('aria-hidden', 'true');
+      pendingDeleteProjectId = null;
+    }
+
     function closeOverlays() {
       suggestPop.classList.remove('open');
       plusMenu.classList.remove('open');
@@ -6505,6 +7024,7 @@
       closeModelMenu();
       closeArtifactMenu();
       closeIdentityMenu();
+      closeMoveConversationMenu();
     }
 
     function closeHistoryContextMenu() {
@@ -6528,11 +7048,12 @@
       const pinned = row.classList.contains('pinned');
       const pinLabel = historyContextMenu.querySelector('[data-history-pin-label]');
       pinLabel.textContent = pinned ? '取消置顶' : '置顶';
+      historyContextMenu.querySelector('[data-history-action="move-out"]').hidden = !row.dataset.projectId;
       historyContextMenu.classList.add('open');
       historyContextMenu.setAttribute('aria-hidden', 'false');
       const rect = button.getBoundingClientRect();
-      const menuWidth = 128;
-      const menuHeight = 126;
+      const menuWidth = 174;
+      const menuHeight = row.dataset.projectId ? 198 : 162;
       const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8));
       const top = rect.bottom + menuHeight + 8 > window.innerHeight
         ? Math.max(8, rect.top - menuHeight - 4)
@@ -6545,18 +7066,11 @@
     function updateHistoryCount() {
       const count = historyList.querySelectorAll('.history-row').length;
       document.querySelector('.history-head span:last-child').textContent = String(count);
+      projectTotal.textContent = String(projects.length);
     }
 
     function sortHistoryRows() {
-      const rows = [...historyList.querySelectorAll('.history-row')];
-      rows.sort((a, b) => {
-        const aPinned = a.classList.contains('pinned');
-        const bPinned = b.classList.contains('pinned');
-        if (aPinned !== bPinned) return aPinned ? -1 : 1;
-        if (aPinned) return Number(b.dataset.pinnedAt || 0) - Number(a.dataset.pinnedAt || 0);
-        return Number(a.dataset.historyOrder || 0) - Number(b.dataset.historyOrder || 0);
-      });
-      rows.forEach(item => historyList.append(item));
+      renderProjectSidebar();
     }
 
     function toggleHistoryPinned(row) {
@@ -7580,6 +8094,12 @@
 
     function openHistoryRow(row) {
       exitSharedSnapshot();
+      exitProjectManager();
+      workspace.classList.remove('settings-mode');
+      settingsBtn.classList.remove('active');
+      const project = projects.find(item => item.id === row.dataset.projectId);
+      if (project) project.lastActive = Date.now();
+      row.dataset.historyOrder = String(Date.now());
       activateHistoryRow(row);
       const state = row.dataset.historyState;
       setCurrentConversation(row);
@@ -7602,6 +8122,29 @@
     }
 
     historyList.addEventListener('click', event => {
+      const projectNew = event.target.closest('[data-project-new]');
+      if (projectNew) {
+        event.stopPropagation();
+        createEmptyConversation(projectNew.dataset.projectNew);
+        return;
+      }
+      const projectManage = event.target.closest('[data-project-manage]');
+      if (projectManage) {
+        event.stopPropagation();
+        openProjectManager(projectManage.dataset.projectManage);
+        return;
+      }
+      const groupToggle = event.target.closest('[data-group-toggle]');
+      if (groupToggle) {
+        const groupId = groupToggle.dataset.groupToggle;
+        if (groupId === 'general') historyList.dataset.generalCollapsed = String(historyList.dataset.generalCollapsed !== 'true');
+        else {
+          const project = projects.find(item => item.id === groupId);
+          if (project) project.collapsed = !project.collapsed;
+        }
+        renderProjectSidebar();
+        return;
+      }
       const row = event.target.closest('.history-row');
       if (!row) return;
       const more = event.target.closest('.history-more');
@@ -7615,6 +8158,12 @@
     });
 
     historyList.addEventListener('keydown', event => {
+      const projectToggle = event.target.closest('[data-group-toggle]');
+      if (projectToggle && event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key) && projectToggle.dataset.groupToggle !== 'general') {
+        event.preventDefault();
+        moveProjectByDelta(projectToggle.dataset.groupToggle, event.key === 'ArrowUp' ? -1 : 1);
+        return;
+      }
       const row = event.target.closest('.history-row');
       if (!row || event.target.closest('button, input')) return;
       if (!['Enter', ' '].includes(event.key)) return;
@@ -7622,8 +8171,41 @@
       openHistoryRow(row);
     });
 
+    historyList.addEventListener('dragstart', event => {
+      const group = event.target.closest('[data-project-draggable="true"]');
+      if (!group || event.target.closest('.project-header-action')) { event.preventDefault(); return; }
+      draggedProjectId = group.dataset.groupId;
+      group.classList.add('dragging');
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', draggedProjectId);
+      }
+    });
+    historyList.addEventListener('dragover', event => {
+      const group = event.target.closest('[data-project-draggable="true"]');
+      if (!group || !draggedProjectId || group.dataset.groupId === draggedProjectId) return;
+      event.preventDefault();
+      historyList.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
+      group.classList.add('drag-over');
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    });
+    historyList.addEventListener('drop', event => {
+      const group = event.target.closest('[data-project-draggable="true"]');
+      if (!group || !draggedProjectId) return;
+      event.preventDefault();
+      const rect = group.getBoundingClientRect();
+      const sourceId = draggedProjectId;
+      draggedProjectId = null;
+      reorderProject(sourceId, group.dataset.groupId, event.clientY > rect.top + rect.height / 2);
+    });
+    historyList.addEventListener('dragend', () => {
+      draggedProjectId = null;
+      historyList.querySelectorAll('.dragging, .drag-over').forEach(item => item.classList.remove('dragging', 'drag-over'));
+    });
+
     historyContextMenu.addEventListener('click', event => {
-      const action = event.target.closest('[data-history-action]')?.dataset.historyAction;
+      const item = event.target.closest('[data-history-action]');
+      const action = item?.dataset.historyAction;
       const row = historyMenuRow;
       if (!action || !row) return;
       event.stopPropagation();
@@ -7633,6 +8215,21 @@
       }
       if (action === 'rename') startHistoryRename(row);
       if (action === 'delete') openDeleteHistoryConfirm(row);
+      if (action === 'move') openMoveConversationMenu(row, item);
+      if (action === 'move-out') {
+        closeHistoryContextMenu();
+        moveConversation(row, '');
+      }
+    });
+
+    moveProjectSearch.addEventListener('input', () => renderMoveProjectOptions(moveProjectSearch.value));
+    moveProjectList.addEventListener('click', event => {
+      const option = event.target.closest('[data-move-project]');
+      if (!option || option.disabled || !moveMenuRow) return;
+      const row = moveMenuRow;
+      closeMoveConversationMenu();
+      closeHistoryContextMenu();
+      moveConversation(row, option.dataset.moveProject);
     });
 
     conversationMore.addEventListener('click', event => {
@@ -7742,6 +8339,8 @@
       closeDeleteHistoryConfirm();
       row.remove();
       updateHistoryCount();
+      renderProjectSidebar();
+      renderProjectGrid();
       refreshPendingInputUi();
       if (wasActive) {
         const next = historyList.querySelector('[data-history-state="empty"]') || historyList.querySelector('.history-row');
@@ -7751,15 +8350,110 @@
       showToast(`已删除“${deletedName}”`);
     });
 
-    document.getElementById('newChat').addEventListener('click', () => {
-      exitSharedSnapshot();
-      const emptyRow = document.querySelector('[data-history-state="empty"]');
-      if (emptyRow) {
-        activateHistoryRow(emptyRow);
-        setCurrentConversation(emptyRow);
+    document.getElementById('newChat').addEventListener('click', () => createEmptyConversation(''));
+    projectsBtn.addEventListener('click', () => openProjectManager());
+    document.getElementById('createProjectBtn').addEventListener('click', () => openProjectForm('create'));
+    projectSearch.addEventListener('input', () => renderProjectGrid(projectSearch.value));
+    projectGrid.addEventListener('click', event => {
+      const action = event.target.closest('[data-project-card-action]');
+      if (!action) return;
+      if (action.dataset.projectCardAction === 'rename') openProjectForm('rename', action.dataset.projectId);
+      if (action.dataset.projectCardAction === 'delete') openDeleteProject(action.dataset.projectId);
+    });
+    projectGrid.addEventListener('keydown', event => {
+      const card = event.target.closest('[data-project-card]');
+      if (!card || !event.altKey || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+      event.preventDefault();
+      moveProjectByDelta(card.dataset.projectCard, event.key === 'ArrowUp' ? -1 : 1);
+    });
+    projectGrid.addEventListener('dragstart', event => {
+      const card = event.target.closest('[data-project-card][draggable="true"]');
+      if (!card || event.target.closest('[data-project-card-action]')) { event.preventDefault(); return; }
+      draggedProjectId = card.dataset.projectCard;
+      card.classList.add('dragging');
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', draggedProjectId);
       }
-      loadEmptyConversation();
-      showToast('已创建新对话');
+    });
+    projectGrid.addEventListener('dragover', event => {
+      const card = event.target.closest('[data-project-card][draggable="true"]');
+      if (!card || !draggedProjectId || card.dataset.projectCard === draggedProjectId) return;
+      event.preventDefault();
+      projectGrid.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
+      card.classList.add('drag-over');
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    });
+    projectGrid.addEventListener('drop', event => {
+      const card = event.target.closest('[data-project-card][draggable="true"]');
+      if (!card || !draggedProjectId) return;
+      event.preventDefault();
+      const rect = card.getBoundingClientRect();
+      const sourceId = draggedProjectId;
+      draggedProjectId = null;
+      reorderProject(sourceId, card.dataset.projectCard, event.clientY > rect.top + rect.height / 2);
+    });
+    projectGrid.addEventListener('dragend', () => {
+      draggedProjectId = null;
+      projectGrid.querySelectorAll('.dragging, .drag-over').forEach(item => item.classList.remove('dragging', 'drag-over'));
+    });
+    projectForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const result = validateProjectName(projectNameInput.value, projectFormMode === 'rename' ? editingProjectId : null);
+      if (!result.ok) {
+        projectNameHelp.textContent = result.message;
+        projectNameHelp.classList.add('error');
+        projectNameInput.focus();
+        return;
+      }
+      if (projectFormMode === 'create') {
+        const project = { id: `project-${Date.now().toString(36)}`, name: result.name, createdAt: Date.now(), lastActive: Date.now(), collapsed: false };
+        projects.unshift(project);
+        saveProjectOrder();
+        highlightedProjectId = project.id;
+        showToast(`已创建“${project.name}”`);
+      } else {
+        const project = projects.find(item => item.id === editingProjectId);
+        if (project) { project.name = result.name; project.lastActive = Date.now(); showToast('项目名称已更新'); }
+      }
+      closeProjectForm();
+      renderProjectSidebar();
+      renderProjectGrid();
+    });
+    projectNameInput.addEventListener('input', () => {
+      projectNameHelp.textContent = '';
+      projectNameHelp.classList.remove('error');
+    });
+    projectFormOverlay.addEventListener('click', event => {
+      if (event.target === projectFormOverlay || event.target.closest('[data-project-form-cancel]')) closeProjectForm();
+    });
+    deleteProjectNameInput.addEventListener('input', () => {
+      const project = projects.find(item => item.id === pendingDeleteProjectId);
+      deleteProjectSubmit.disabled = !project || deleteProjectNameInput.value !== project.name;
+    });
+    deleteProjectConfirm.addEventListener('click', event => {
+      if (event.target === deleteProjectConfirm || event.target.closest('[data-delete-project-cancel]')) {
+        closeDeleteProject();
+        return;
+      }
+      if (!event.target.closest('#deleteProjectSubmit') || deleteProjectSubmit.disabled) return;
+      const project = projects.find(item => item.id === pendingDeleteProjectId);
+      if (!project) return;
+      const rows = projectRows(project.id);
+      const count = rows.length;
+      rows.forEach(row => row.remove());
+      projects = projects.filter(item => item.id !== project.id);
+      saveProjectOrder();
+      closeDeleteProject();
+      renderProjectSidebar();
+      renderProjectGrid();
+      showToast(`项目及其中的 ${count} 个对话已删除`);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      if (deleteProjectConfirm.classList.contains('open')) closeDeleteProject();
+      else if (projectFormOverlay.classList.contains('open')) closeProjectForm();
+      else if (moveConversationMenu.classList.contains('open')) closeMoveConversationMenu();
     });
 
     document.getElementById('panelToggle').addEventListener('click', () => {
@@ -7824,9 +8518,12 @@
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.addEventListener('click', event => {
       if (event.target.closest('.chat-search-dialog') || event.target.closest('#searchChats')) return;
+      if (event.target.closest('#historyContextMenu, #moveConversationMenu')) return;
       if (!event.target.closest('.composer')) closeOverlays();
     });
 
+    renderProjectSidebar();
+    renderProjectGrid('');
     renderManualIssueList();
     renderManualIssueDetail();
     renderArtifact();
