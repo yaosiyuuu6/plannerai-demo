@@ -135,7 +135,9 @@
       flex: 1;
       display: grid;
       grid-template-columns: var(--platform-width) var(--module-width) var(--agent-width) minmax(0, 1fr) var(--artifact-width);
+      grid-template-rows: minmax(0, 1fr);
       min-height: 0;
+      overflow: hidden;
       transition: grid-template-columns .28s ease;
     }
     .layout.with-artifact { --artifact-width: var(--artifact-expanded-width); }
@@ -1068,6 +1070,7 @@
       overflow-wrap: anywhere;
     }
     .chat-top {
+      flex: 0 0 48px;
       height: 48px;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -2475,7 +2478,12 @@
     }
     .ref svg { width: 16px; height: 16px; stroke-width: 1.8; }
 
-    .composer-wrap { padding: 14px 20px 18px; background: #fff; }
+    .composer-wrap {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 14px 20px 18px;
+      background: #fff;
+    }
     .task-mode .composer-wrap {
       padding-inline: var(--conversation-gutter);
     }
