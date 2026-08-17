@@ -3991,8 +3991,8 @@
 
           <div class="history-head"><span>历史记录</span><span>12</span></div>
           <div class="history-list" id="historyList">
-            <div class="history-row active" data-history-state="empty" role="button" tabindex="0"><span class="history-title">新问答</span><button class="history-more" type="button" aria-label="新问答的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
-            <div class="history-row" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="empty" role="button" tabindex="0"><span class="history-title">新问答</span><button class="history-more" type="button" aria-label="新问答的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row active" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0"><span class="history-title">国财A股组规则确认</span><button class="history-more" type="button" aria-label="国财A股组规则确认的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="daily-report" role="button" tabindex="0"><span class="history-title">质检日报生成</span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="financial-extraction" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
@@ -8617,8 +8617,9 @@
     renderManualIssueDetail();
     renderArtifact();
     updateIdentityUi();
-    setCurrentConversation(historyList.querySelector('.history-row.active'), 'empty');
-    if (!initializeSharedSnapshot()) initializePlanningLaunch();
+    const initialConversationRow = historyList.querySelector('.history-row.active');
+    setCurrentConversation(initialConversationRow, 'artifact');
+    if (!initializeSharedSnapshot() && !initializePlanningLaunch()) openHistoryRow(initialConversationRow);
   </script>
 </body>
 </html>
