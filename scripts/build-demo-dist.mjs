@@ -10,6 +10,7 @@ const publishFiles = Object.freeze([
   "index.html",
   "demo/agent-workbench.html",
   "demo/agent-message-queue.html",
+  "demo/agent-monitoring-dashboard.html",
   "images/logo.jpg",
 ]);
 

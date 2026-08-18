@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agent 产品数据看板 Mock Demo">
+  <title>Agent 产品数据看板</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #1677ff;
+      --primary-strong: #0958d9;
+      --primary-soft: #eaf3ff;
+      --text: #1f2329;
+      --text-secondary: #646a73;
+      --text-tertiary: #8f959e;
+      --surface: #ffffff;
+      --page: #f5f6f8;
+      --soft: #f8f9fb;
+      --border: #e5e7eb;
+      --border-strong: #d7dae0;
+      --up: #d4380d;
+      --down: #389e0d;
+      --warning: #d46b08;
+      --shadow: 0 1px 2px rgba(31, 35, 41, .04), 0 5px 18px rgba(31, 35, 41, .035);
+      --radius: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--page); }
+    body { margin: 0; min-height: 100vh; color: var(--text); background: var(--page); }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(22, 119, 255, .22);
+      outline-offset: 2px;
+    }
+
+    .topbar {
+      min-height: 58px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, .96);
+      backdrop-filter: blur(12px);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--primary);
+      box-shadow: inset 0 -6px 12px rgba(9, 88, 217, .26);
+    }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .brand-title { font-size: 16px; font-weight: 680; white-space: nowrap; }
+    .top-meta { display: flex; align-items: center; gap: 12px; }
+    .mock-badge {
+      min-height: 28px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #b7d5ff;
+      border-radius: 999px;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      font-weight: 650;
+    }
+    .mock-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+
+    main { width: min(1480px, calc(100% - 40px)); margin: 0 auto; padding: 24px 0 48px; }
+    .page-heading { margin-bottom: 18px; }
+    h1 { margin: 0; font-size: 24px; line-height: 1.35; letter-spacing: -.025em; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding: 15px 16px;
+      position: sticky;
+      top: 70px;
+      z-index: 40;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .97);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .field { display: grid; gap: 6px; }
+    .field label, .field-label { color: var(--text-secondary); font-size: 12px; font-weight: 650; }
+    .control {
+      height: 40px;
+      min-width: 124px;
+      padding: 0 34px 0 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      color: var(--text);
+      background: #fff;
+    }
+    .control:hover { border-color: #91caff; }
+    .date-range { display: flex; align-items: center; gap: 8px; }
+    .date-range input { min-width: 145px; padding-right: 10px; }
+    .date-arrow { color: var(--text-tertiary); }
+    .role-segment {
+      min-height: 40px;
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 8px;
+      background: #f1f2f4;
+    }
+    .role-button {
+      min-height: 34px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      background: transparent;
+      transition: color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .role-button:hover { color: var(--text); }
+    .role-button.active { color: var(--primary-strong); background: #fff; box-shadow: 0 1px 4px rgba(31, 35, 41, .12); font-weight: 650; }
+    .section { margin-top: 26px; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 11px; }
+    .section-title { margin: 0; font-size: 17px; line-height: 1.4; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    #latencyMetrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .metric-card {
+      min-width: 0;
+      min-height: 126px;
+      padding: 15px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+    button.metric-card { transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+    button.metric-card:hover { border-color: #adcfff; box-shadow: 0 7px 22px rgba(22, 119, 255, .08); }
+    button.metric-card:active { transform: translateY(1px); }
+    button.metric-card.selected { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(22, 119, 255, .08); }
+    .metric-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .metric-label { color: var(--text-secondary); font-size: 13px; font-weight: 550; }
+    .metric-info-wrap {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      position: relative;
+      flex: none;
+      border: 1px solid #aeb4bc;
+      border-radius: 50%;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .metric-tooltip {
+      width: 286px;
+      padding: 11px 12px;
+      position: absolute;
+      right: -4px;
+      top: 25px;
+      z-index: 80;
+      border: 1px solid #d9dde3;
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(31, 35, 41, .96);
+      box-shadow: 0 10px 28px rgba(31, 35, 41, .2);
+      font-size: 12px;
+      font-weight: 450;
+      line-height: 1.65;
+      text-align: left;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-3px);
+      transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+    }
+    .metric-tooltip strong { display: block; margin-bottom: 3px; color: #fff; font-weight: 650; }
+    .metric-info-wrap:hover .metric-tooltip,
+    .metric-card:focus-visible .metric-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+    .metric-value { margin-top: 13px; font-size: 27px; line-height: 1; font-weight: 700; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+    .metric-unit { margin-left: 3px; color: var(--text-secondary); font-size: 12px; font-weight: 500; }
+    .metric-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 11px; }
+    .metric-pair-item + .metric-pair-item { padding-left: 16px; border-left: 1px solid #eef0f2; }
+    .metric-percentile { color: var(--text-tertiary); font-size: 11px; font-weight: 650; }
+    .metric-pair-value { margin-top: 3px; font-size: 22px; line-height: 1.25; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+    .metric-pair .metric-delta { margin-top: 6px; font-size: 11px; }
+    .metric-delta { margin-top: 13px; display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 620; }
+    .delta-up { color: var(--up); }
+    .delta-down { color: var(--down); }
+    .delta-flat { color: var(--text-tertiary); }
+    .delta-label { color: var(--text-tertiary); font-weight: 450; }
+
+    .panel {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-header {
+      min-height: 62px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid #eef0f2;
+    }
+    .panel-title { margin: 0; font-size: 14px; font-weight: 680; }
+    .panel-actions { display: flex; align-items: center; gap: 8px; }
+    .button {
+      min-height: 38px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .button:hover { color: var(--primary); border-color: #91caff; background: #f7fbff; }
+    .button svg { width: 16px; height: 16px; }
+
+    .chart-wrap { min-width: 0; padding: 14px 16px 10px; }
+    .chart-svg { width: 100%; height: 280px; display: block; overflow: visible; }
+    .grid-line { stroke: #edf0f3; stroke-width: 1; }
+    .axis-label { fill: #8f959e; font: 10px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .chart-area { fill: rgba(22, 119, 255, .08); }
+    .chart-line { fill: none; stroke: var(--primary); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-point { fill: var(--primary); stroke: #fff; stroke-width: 2; }
+    .chart-empty { min-height: 280px; display: grid; place-items: center; color: var(--text-tertiary); font-size: 13px; }
+    .chart-legend { display: flex; align-items: center; gap: 14px; color: var(--text-secondary); font-size: 11px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .legend-line { width: 15px; height: 3px; border-radius: 2px; background: currentColor; }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 100;
+      max-width: min(360px, calc(100vw - 44px));
+      padding: 12px 15px;
+      border: 1px solid #b7eb8f;
+      border-radius: 9px;
+      color: #135200;
+      background: #f6ffed;
+      box-shadow: 0 12px 32px rgba(31, 35, 41, .14);
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1050px) {
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .topbar { padding: 0 14px; }
+      main { width: min(100% - 24px, 1480px); padding-top: 16px; }
+      h1 { font-size: 21px; }
+      .filters { position: static; top: auto; padding: 12px; align-items: stretch; }
+      .field { width: 100%; }
+      .control { width: 100%; }
+      .date-range { display: grid; grid-template-columns: 1fr 18px 1fr; }
+      .date-range input { min-width: 0; }
+      .role-segment { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .role-button { padding: 0 8px; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .panel-header { align-items: stretch; flex-direction: column; }
+      .panel-actions { justify-content: flex-end; }
+      .chart-svg { height: 230px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V5m8 14v-7"/><path d="M2 19h20"/></svg>
+      </div>
+      <span class="brand-title">Agent 产品数据看板</span>
+    </div>
+    <div class="top-meta"><span class="mock-badge"><span class="mock-dot"></span>Mock 数据</span></div>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <h1>产品使用与体验概览</h1>
+    </div>
+
+    <section class="filters" aria-label="看板筛选条件">
+      <div class="field">
+        <label for="rangePreset">时间范围</label>
+        <select id="rangePreset" class="control">
+          <option value="today">今天</option>
+          <option value="yesterday">昨天</option>
+          <option value="7">近7日</option>
+          <option value="30" selected>近30日</option>
+          <option value="custom">自定义</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">日期</span>
+        <div class="date-range">
+          <input id="startDate" class="control" type="date" value="2026-07-19" aria-label="开始日期">
+          <span class="date-arrow" aria-hidden="true">→</span>
+          <input id="endDate" class="control" type="date" value="2026-08-17" aria-label="结束日期">
+        </div>
+      </div>
+      <div class="field">
+        <label for="granularity">时间粒度</label>
+        <select id="granularity" class="control">
+          <option value="day" selected>天</option>
+          <option value="week">周</option>
+          <option value="month">月</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">角色</span>
+        <div class="role-segment" role="group" aria-label="角色筛选">
+          <button class="role-button active" type="button" data-role="all" aria-pressed="true">全部</button>
+          <button class="role-button" type="button" data-role="planning" aria-pressed="false">规划</button>
+          <button class="role-button" type="button" data-role="entry" aria-pressed="false">录入/质检</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="usageHeading">
+      <div class="section-heading">
+        <h2 id="usageHeading" class="section-title">用户规模</h2>
+      </div>
+      <div id="usageMetrics" class="metrics-grid"></div>
+      <div class="panel">
+        <div class="panel-header"><h3 id="usageChartTitle" class="panel-title">活跃用户趋势</h3></div>
+        <div id="usageChart" class="chart-wrap" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="costHeading">
+      <div class="section-heading">
+        <h2 id="costHeading" class="section-title">Token 与成本</h2>
+      </div>
+      <div id="costMetrics" class="metrics-grid"></div>
+      <div class="panel">
+        <div class="panel-header"><h3 id="costChartTitle" class="panel-title">各模型总 Token 趋势</h3><div id="costLegend" class="chart-legend"></div></div>
+        <div id="costChart" class="chart-wrap" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="latencyHeading">
+      <div class="section-heading">
+        <h2 id="latencyHeading" class="section-title">响应体验</h2>
+      </div>
+      <div id="latencyMetrics" class="metrics-grid"></div>
+      <div class="panel">
+        <div class="panel-header">
+          <h3 id="latencyChartTitle" class="panel-title">首字延迟 P50 / P95 趋势</h3>
+          <div id="latencyLegend" class="chart-legend"></div>
+        </div>
+        <div id="latencyChart" class="chart-wrap" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="feedbackHeading">
+      <div class="section-heading">
+        <h2 id="feedbackHeading" class="section-title">用户反馈</h2>
+      </div>
+      <div id="feedbackMetrics" class="metrics-grid"></div>
+      <div class="panel">
+        <div class="panel-header">
+          <h3 id="feedbackChartTitle" class="panel-title">有反馈 Thread 趋势</h3>
+          <div class="panel-actions">
+            <button id="exportFeedback" class="button" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2"/></svg>
+              导出用户 Trace
+            </button>
+          </div>
+        </div>
+        <div id="feedbackChart" class="chart-wrap" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const DAY = 86400000;
+    const MAX_DATE = "2026-08-17";
+    const roles = ["planning", "entry"];
+    const roleLabels = { all: "全部", planning: "规划", entry: "录入/质检" };
+    const granularityLabels = { day: "天", week: "周", month: "月" };
+    const models = [
+      { key: "model-pro", label: "Model Pro", color: "#1677ff", inputPrice: 9, outputPrice: 72 },
+      { key: "model-balanced", label: "Model Balanced", color: "#7656d6", inputPrice: 1.8, outputPrice: 14.4 },
+      { key: "model-fast", label: "Model Fast", color: "#13a8a8", inputPrice: .36, outputPrice: 2.88 }
+    ];
+
+    const state = {
+      role: "all",
+      selectedMetric: {
+        usage: "activeUsers",
+        cost: "totalTokens",
+        latency: "ttft",
+        feedback: "feedbackThreads"
+      }
+    };
+
+    function parseDate(value) { return new Date(`${value}T00:00:00+08:00`); }
+    function isoDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    function addDays(value, days) { return isoDate(new Date(parseDate(value).getTime() + days * DAY)); }
+    function dateDiffInclusive(start, end) { return Math.round((parseDate(end) - parseDate(start)) / DAY) + 1; }
+    function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+    function seededNoise(seed) {
+      const x = Math.sin(seed * 12.9898) * 43758.5453;
+      return x - Math.floor(x);
+    }
+
+    function generateMockData() {
+      const rows = [];
+      const start = parseDate("2026-04-20");
+      const end = parseDate(MAX_DATE);
+      let dayIndex = 0;
+      for (let time = start.getTime(); time <= end.getTime(); time += DAY, dayIndex += 1) {
+        const date = new Date(time);
+        const weekday = date.getDay();
+        const weekdayFactor = weekday === 0 || weekday === 6 ? .68 : 1;
+        for (const [roleIndex, role] of roles.entries()) {
+          const roleFactor = role === "planning" ? 1 : .76;
+          const trend = 1 + dayIndex * .0042;
+          const season = 1 + Math.sin(dayIndex / 5.5 + roleIndex) * .075;
+          const noise = .93 + seededNoise(dayIndex * 3 + roleIndex * 17) * .14;
+          const activeUsers = Math.round(245 * roleFactor * trend * season * weekdayFactor * noise);
+          const activeThreads = Math.round(activeUsers * (1.2 + seededNoise(dayIndex + roleIndex) * .18));
+          const turns = Math.round(activeThreads * (2.35 + Math.sin(dayIndex / 8) * .12));
+          const feedbackThreads = Math.max(0, Math.round(activeThreads * (.118 + Math.sin(dayIndex / 9 + roleIndex) * .018)));
+          const negativeRate = clamp(.025 + Math.sin(dayIndex / 11 + roleIndex * .8) * .008 + (dayIndex > 103 ? .004 : 0), .012, .055);
+          const negativeThreads = Math.min(feedbackThreads, Math.max(0, Math.round(activeThreads * negativeRate)));
+          const failedTurns = Math.round(turns * (.014 + seededNoise(dayIndex + 41 + roleIndex) * .008));
+          const cancelledTurns = Math.round(turns * (.021 + seededNoise(dayIndex + 57 + roleIndex) * .009));
+          const noReplyTurns = Math.round(turns * (.006 + seededNoise(dayIndex + 71 + roleIndex) * .005));
+          const modelUsage = {};
+          const shares = role === "planning" ? [.5, .34, .16] : [.3, .42, .28];
+          models.forEach((model, modelIndex) => {
+            const modelTurns = Math.round(turns * shares[modelIndex]);
+            const inputTokens = Math.round(modelTurns * (modelIndex === 0 ? 2820 : modelIndex === 1 ? 1950 : 1120) * (1 + seededNoise(dayIndex + modelIndex * 13) * .08));
+            const outputTokens = Math.round(modelTurns * (modelIndex === 0 ? 970 : modelIndex === 1 ? 720 : 410) * (1 + seededNoise(dayIndex + modelIndex * 19) * .08));
+            const cost = inputTokens / 1e6 * model.inputPrice + outputTokens / 1e6 * model.outputPrice;
+            modelUsage[model.key] = { modelTurns, inputTokens, outputTokens, cost };
+          });
+          const ttftP50 = 1.12 + Math.sin(dayIndex / 7 + roleIndex) * .11;
+          const ttftP95 = 3.48 + Math.sin(dayIndex / 9 + roleIndex) * .38;
+          const completionP50 = 16.2 + Math.sin(dayIndex / 8 + roleIndex) * 1.4;
+          const completionP95 = 51.5 + Math.sin(dayIndex / 10 + roleIndex) * 5.2;
+          rows.push({
+            date: isoDate(date), role, activeUsers, activeThreads, turns,
+            feedbackThreads, negativeThreads, failedTurns, cancelledTurns, noReplyTurns,
+            ttftP10: ttftP50 * .38,
+            ttftP25: ttftP50 * .67,
+            ttftP50,
+            ttftP75: ttftP50 * 1.46,
+            ttftP95,
+            completionP10: completionP50 * .32,
+            completionP25: completionP50 * .65,
+            completionP50,
+            completionP75: completionP50 * 1.52,
+            completionP95,
+            modelUsage
+          });
+        }
+      }
+      return rows;
+    }
+
+    const mockData = generateMockData();
+
+    function generateFeedbackTraceData() {
+      const traces = [];
+      let sequence = 1;
+      mockData.forEach((row, rowIndex) => {
+        for (let index = 0; index < row.feedbackThreads; index += 1) {
+          const model = models[(rowIndex + index) % models.length];
+          const inputTokens = Math.round(850 + seededNoise(sequence * 5) * 4200);
+          const outputTokens = Math.round(240 + seededNoise(sequence * 7) * 1500);
+          const costCny = inputTokens / 1e6 * model.inputPrice + outputTokens / 1e6 * model.outputPrice;
+          const hour = String(8 + (sequence * 7) % 13).padStart(2, "0");
+          const minute = String((sequence * 17) % 60).padStart(2, "0");
+          traces.push({
+            answerGeneratedAt: `${row.date} ${hour}:${minute}:00`,
+            date: row.date,
+            role: row.role,
+            userId: `user_${String((rowIndex * 37 + index) % 1800 + 1).padStart(4, "0")}`,
+            threadId: `thread_${String(sequence).padStart(7, "0")}`,
+            turnId: `turn_${String(sequence * 2 + 11).padStart(8, "0")}`,
+            traceId: `trace_${row.date.replaceAll("-", "")}_${String(sequence).padStart(7, "0")}`,
+            feedbackStatus: index < row.negativeThreads ? "差评" : "好评",
+            model: model.label,
+            inputTokens,
+            outputTokens,
+            costCny,
+            firstTokenLatencyMs: Math.round((row.ttftP50 * (.72 + seededNoise(sequence * 11) * .72)) * 1000),
+            completionLatencyMs: Math.round((row.completionP50 * (.66 + seededNoise(sequence * 13) * .86)) * 1000),
+            endStatus: "成功",
+            toolCalls: Math.floor(seededNoise(sequence * 23) * 5)
+          });
+          sequence += 1;
+        }
+      });
+      return traces;
+    }
+
+    const feedbackTraceData = generateFeedbackTraceData();
+
+    function currentFilters() {
+      return {
+        start: document.querySelector("#startDate").value,
+        end: document.querySelector("#endDate").value,
+        granularity: document.querySelector("#granularity").value,
+        role: state.role
+      };
+    }
+
+    function rowsForRange(start, end, role = state.role) {
+      return mockData.filter(row => row.date >= start && row.date <= end && (role === "all" || row.role === role));
+    }
+
+    function aggregate(rows) {
+      const result = {
+        activeUsers: 0, activeThreads: 0, turns: 0, feedbackThreads: 0, negativeThreads: 0,
+        failedTurns: 0, cancelledTurns: 0, noReplyTurns: 0,
+        ttftP10: 0, ttftP25: 0, ttftP50: 0, ttftP75: 0, ttftP95: 0,
+        completionP10: 0, completionP25: 0, completionP50: 0, completionP75: 0, completionP95: 0,
+        modelUsage: Object.fromEntries(models.map(model => [model.key, { modelTurns: 0, inputTokens: 0, outputTokens: 0, cost: 0 }]))
+      };
+      let latencyWeight = 0;
+      rows.forEach(row => {
+        ["activeUsers", "activeThreads", "turns", "feedbackThreads", "negativeThreads", "failedTurns", "cancelledTurns", "noReplyTurns"].forEach(key => result[key] += row[key]);
+        const weight = row.turns;
+        latencyWeight += weight;
+        ["ttftP10", "ttftP25", "ttftP50", "ttftP75", "ttftP95", "completionP10", "completionP25", "completionP50", "completionP75", "completionP95"].forEach(key => result[key] += row[key] * weight);
+        models.forEach(model => {
+          result.modelUsage[model.key].modelTurns += row.modelUsage[model.key].modelTurns;
+          result.modelUsage[model.key].inputTokens += row.modelUsage[model.key].inputTokens;
+          result.modelUsage[model.key].outputTokens += row.modelUsage[model.key].outputTokens;
+          result.modelUsage[model.key].cost += row.modelUsage[model.key].cost;
+        });
+      });
+      if (latencyWeight) ["ttftP10", "ttftP25", "ttftP50", "ttftP75", "ttftP95", "completionP10", "completionP25", "completionP50", "completionP75", "completionP95"].forEach(key => result[key] /= latencyWeight);
+      result.totalTokens = models.reduce((sum, model) => sum + result.modelUsage[model.key].inputTokens + result.modelUsage[model.key].outputTokens, 0);
+      result.totalCost = models.reduce((sum, model) => sum + result.modelUsage[model.key].cost, 0);
+      result.turnsPerThread = result.activeThreads ? result.turns / result.activeThreads : 0;
+      result.tokensPerTurn = result.turns ? result.totalTokens / result.turns : 0;
+      result.costPerTurn = result.turns ? result.totalCost / result.turns : 0;
+      result.feedbackCoverage = result.activeThreads ? result.feedbackThreads / result.activeThreads : 0;
+      result.negativeTrigger = result.activeThreads ? result.negativeThreads / result.activeThreads : 0;
+      result.failureRate = result.turns ? (result.failedTurns + result.cancelledTurns + result.noReplyTurns) / result.turns : 0;
+      result.cancelRate = result.turns ? result.cancelledTurns / result.turns : 0;
+      result.noReplyRate = result.turns ? result.noReplyTurns / result.turns : 0;
+      return result;
+    }
+
+    function formatNumber(value, digits = 0) { return new Intl.NumberFormat("zh-CN", { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value || 0); }
+    function compactNumber(value) { return new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 1 }).format(value || 0); }
+    function formatPercent(value, digits = 1) { return `${(value * 100).toFixed(digits)}%`; }
+    function formatCurrency(value, digits = 2) { return new Intl.NumberFormat("zh-CN", { style: "currency", currency: "CNY", maximumFractionDigits: digits }).format(value || 0); }
+
+    function deltaMarkup(current, previous, type = "relative") {
+      if (!Number.isFinite(previous) || previous === 0) {
+        if (current > 0) return `<span class="metric-delta delta-up">↑ 新增 <span class="delta-label">较上一周期</span></span>`;
+        return `<span class="metric-delta delta-flat">— 持平 <span class="delta-label">较上一周期</span></span>`;
+      }
+      const delta = type === "point" ? (current - previous) * 100 : (current - previous) / Math.abs(previous) * 100;
+      const displayThreshold = type === "point" ? .05 : .05;
+      const direction = delta > displayThreshold ? "up" : delta < -displayThreshold ? "down" : "flat";
+      const icon = direction === "up" ? "↑" : direction === "down" ? "↓" : "—";
+      const text = direction === "flat" ? "持平" : type === "point" ? `${Math.abs(delta).toFixed(1)} 个百分点` : `${Math.abs(delta).toFixed(1)}%`;
+      return `<span class="metric-delta delta-${direction}">${icon} ${text} <span class="delta-label">较上一周期</span></span>`;
+    }
+
+    const metricGroups = {
+      usage: [
+        { key: "activeUsers", label: "活跃用户", format: value => compactNumber(value), definition: "所选时间内至少主动提交过一个 Turn 的去重 User 数。", scope: "按 Turn 提交时间归属；排除测试及系统账号；受时间与角色筛选影响。" },
+        { key: "activeThreads", label: "活跃 Thread", format: value => compactNumber(value), definition: "所选时间内至少发生一次用户主动 Turn 的去重 Thread 数。", scope: "包含历史创建但当期继续使用的 Thread；按主动 Turn 提交时间归属。" },
+        { key: "turns", label: "Turn", format: value => compactNumber(value), definition: "用户主动提交一次消息计为一个 Turn。", scope: "系统内部重试和模型切换不增加 Turn 数；按提交时间归属。" },
+        { key: "turnsPerThread", label: "Turn / 活跃 Thread", format: value => formatNumber(value, 2), definition: "所选时间内 Turn 数 ÷ 活跃 Thread 数。", scope: "反映当期每个活跃 Thread 的平均交互深度；分母为同一筛选下的活跃 Thread。" }
+      ],
+      cost: [
+        { key: "totalTokens", label: "总 Token", format: value => compactNumber(value), definition: "所选时间内所有 Turn 的输入、输出及其他计费 Token 合计。", scope: "一个 Turn 内全部模型调用和自动重试均汇总到该 Turn；按 Turn 提交时间归属。" },
+        { key: "tokensPerTurn", label: "Token / Turn", format: value => compactNumber(value), definition: "总 Token ÷ Turn 数。", scope: "分子包含成功、失败和取消 Turn 已实际产生的 Token；受模型调用结构影响。" },
+        { key: "totalCost", label: "总成本", format: value => formatCurrency(value), definition: "各模型输入 Token × 输入单价 + 输出 Token × 输出单价等计费项的总和。", scope: "按调用发生时生效的价格计算；Demo 使用 Mock 模型单价，币种为人民币。" },
+        { key: "costPerTurn", label: "成本 / Turn", format: value => formatCurrency(value, 3), definition: "所选时间内总成本 ÷ Turn 数。", scope: "包含失败、取消及内部重试产生的实际成本；按 Turn 提交时间归属。" }
+      ],
+      latency: [
+        { key: "ttft", label: "首字延迟", p50Key: "ttftP50", p95Key: "ttftP95", digits: 2, definition: "用户提交到收到首个可见输出所需的时间，同时展示 P50 和 P95。", scope: "仅统计成功产生首字的 Turn；按 Turn 提交时间归属；趋势图使用同一纵轴对照 P50 与 P95。" },
+        { key: "completion", label: "完成时间", p50Key: "completionP50", p95Key: "completionP95", digits: 1, definition: "用户提交到回答正常完成所需的时间，同时展示 P50 和 P95。", scope: "仅统计正常完成的 Turn；失败和取消 Turn 不进入完成时间统计；趋势图使用同一纵轴。" },
+        { key: "failureRate", label: "失败率", format: value => formatPercent(value), deltaType: "point", definition: "未成功输出结果的 Turn 数 ÷ 全部已结束 Turn 数。", scope: "未成功输出包括系统失败、超时或结束时没有形成成功结果；处理中 Turn 不进入分母。" }
+      ],
+      feedback: [
+        { key: "feedbackThreads", label: "有反馈 Thread", format: value => compactNumber(value), definition: "当前存在有效反馈状态的去重 Thread 数。", scope: "一个 Thread 只计一次；允许修改并以当前状态为准；按目标回答产生时间归属。" },
+        { key: "feedbackCoverage", label: "反馈覆盖率", format: value => formatPercent(value), deltaType: "point", definition: "有反馈 Thread 数 ÷ 活跃 Thread 数。", scope: "分子读取 Thread 当前反馈状态；分母为相同时间与角色筛选下的活跃 Thread。" },
+        { key: "negativeThreads", label: "差评 Thread", format: value => compactNumber(value), definition: "当前反馈状态为差评的去重 Thread 数。", scope: "一个 Thread 只计一次；用户修改反馈后历史看板读取最新状态。" },
+        { key: "negativeTrigger", label: "差评触发率", format: value => formatPercent(value), deltaType: "point", definition: "差评 Thread 数 ÷ 活跃 Thread 数。", scope: "按触发反馈的目标回答产生时间归属；不再计算差评占反馈比例。" }
+      ]
+    };
+
+    function renderCards(group, containerId, definitions, current, previous) {
+      const container = document.querySelector(`#${containerId}`);
+      container.innerHTML = definitions.map(def => {
+        const selected = def.key === state.selectedMetric[group];
+        const tooltipId = `${group}-${def.key}-tooltip`;
+        return `<button type="button" class="metric-card${selected ? " selected" : ""}" data-metric-group="${group}" data-metric-key="${def.key}" aria-pressed="${selected}">
+          <div class="metric-top"><span class="metric-label">${def.label}</span><span class="metric-info-wrap" aria-label="${def.label}指标说明" aria-describedby="${tooltipId}">i<span id="${tooltipId}" class="metric-tooltip" role="tooltip"><strong>指标定义</strong>${def.definition}<strong style="margin-top:5px">统计口径</strong>${def.scope}</span></span></div>
+          <div class="metric-value">${def.format(current[def.key])}${def.unit ? `<span class="metric-unit">${def.unit}</span>` : ""}</div>
+          ${deltaMarkup(current[def.key], previous[def.key], def.deltaType)}
+        </button>`;
+      }).join("");
+      container.querySelectorAll("[data-metric-key]").forEach(button => button.addEventListener("click", () => {
+        state.selectedMetric[group] = button.dataset.metricKey;
+        renderDashboard();
+      }));
+    }
+
+    function renderLatencyCards(current, previous) {
+      const container = document.querySelector("#latencyMetrics");
+      container.innerHTML = metricGroups.latency.map(def => {
+        const selected = def.key === state.selectedMetric.latency;
+        const tooltipId = `latency-${def.key}-tooltip`;
+        if (def.p50Key) {
+          return `<button type="button" class="metric-card${selected ? " selected" : ""}" data-latency-key="${def.key}" aria-pressed="${selected}">
+            <div class="metric-top"><span class="metric-label">${def.label}</span><span class="metric-info-wrap" aria-label="${def.label}指标说明" aria-describedby="${tooltipId}">i<span id="${tooltipId}" class="metric-tooltip" role="tooltip"><strong>指标定义</strong>${def.definition}<strong style="margin-top:5px">统计口径</strong>${def.scope}</span></span></div>
+            <div class="metric-pair">
+              <div class="metric-pair-item"><div class="metric-percentile">P50</div><div class="metric-pair-value">${formatNumber(current[def.p50Key], def.digits)}<span class="metric-unit">秒</span></div>${deltaMarkup(current[def.p50Key], previous[def.p50Key])}</div>
+              <div class="metric-pair-item"><div class="metric-percentile">P95</div><div class="metric-pair-value">${formatNumber(current[def.p95Key], def.digits)}<span class="metric-unit">秒</span></div>${deltaMarkup(current[def.p95Key], previous[def.p95Key])}</div>
+            </div>
+          </button>`;
+        }
+        return `<button type="button" class="metric-card${selected ? " selected" : ""}" data-latency-key="${def.key}" aria-pressed="${selected}">
+          <div class="metric-top"><span class="metric-label">${def.label}</span><span class="metric-info-wrap" aria-label="${def.label}指标说明" aria-describedby="${tooltipId}">i<span id="${tooltipId}" class="metric-tooltip" role="tooltip"><strong>指标定义</strong>${def.definition}<strong style="margin-top:5px">统计口径</strong>${def.scope}</span></span></div>
+          <div class="metric-value">${def.format(current[def.key])}</div>${deltaMarkup(current[def.key], previous[def.key], def.deltaType)}
+        </button>`;
+      }).join("");
+      container.querySelectorAll("[data-latency-key]").forEach(button => button.addEventListener("click", () => {
+        state.selectedMetric.latency = button.dataset.latencyKey;
+        renderDashboard();
+      }));
+    }
+
+    function groupKey(dateValue, granularity) {
+      const date = parseDate(dateValue);
+      if (granularity === "month") return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      if (granularity === "week") {
+        const day = date.getDay() || 7;
+        return isoDate(new Date(date.getTime() - (day - 1) * DAY));
+      }
+      return dateValue;
+    }
+
+    function groupedRows(rows, granularity) {
+      const groups = new Map();
+      rows.forEach(row => {
+        const key = groupKey(row.date, granularity);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(row);
+      });
+      return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, values]) => ({ key, ...aggregate(values) }));
+    }
+
+    function metricDefinition(group, key) { return metricGroups[group].find(item => item.key === key); }
+
+    function chartPath(points) { return points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" "); }
+
+    function renderLineChart(group, groups, containerId, titleId) {
+      const selectedKey = state.selectedMetric[group];
+      const definition = metricDefinition(group, selectedKey);
+      document.querySelector(`#${titleId}`).textContent = `${definition.label}趋势`;
+      const container = document.querySelector(`#${containerId}`);
+      if (!groups.length) {
+        container.innerHTML = `<div class="chart-empty">当前筛选范围暂无数据</div>`;
+        return;
+      }
+      const width = 960;
+      const height = 280;
+      const margin = { top: 16, right: 22, bottom: 34, left: 64 };
+      const values = groups.map(item => item[selectedKey]);
+      const maximum = Math.max(...values, definition.deltaType === "point" ? .01 : 1);
+      const x = index => margin.left + (groups.length === 1 ? (width - margin.left - margin.right) / 2 : index / (groups.length - 1) * (width - margin.left - margin.right));
+      const y = value => height - margin.bottom - value / (maximum * 1.14) * (height - margin.top - margin.bottom);
+      const points = groups.map((item, index) => ({ x: x(index), y: y(item[selectedKey]), value: item[selectedKey], label: item.key }));
+      const area = `${chartPath(points)} L${points.at(-1).x},${height - margin.bottom} L${points[0].x},${height - margin.bottom} Z`;
+      const formatAxis = value => {
+        if (definition.deltaType === "point") return formatPercent(value);
+        if (selectedKey === "totalCost") return formatCurrency(value, 0);
+        if (selectedKey === "costPerTurn") return formatCurrency(value, 3);
+        if (selectedKey === "turnsPerThread") return formatNumber(value, 1);
+        return compactNumber(value);
+      };
+      const tickIndexes = [...new Set([0, Math.floor((groups.length - 1) / 2), groups.length - 1])];
+      container.innerHTML = `<svg class="chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${definition.label}时间趋势图">
+        ${[0, .25, .5, .75, 1].map(ratio => {
+          const yy = margin.top + ratio * (height - margin.top - margin.bottom);
+          const value = maximum * 1.14 * (1 - ratio);
+          return `<line class="grid-line" x1="${margin.left}" x2="${width - margin.right}" y1="${yy}" y2="${yy}"/><text class="axis-label" x="${margin.left - 8}" y="${yy + 3}" text-anchor="end">${formatAxis(value)}</text>`;
+        }).join("")}
+        <path class="chart-area" d="${area}"/><path class="chart-line" d="${chartPath(points)}"/>
+        ${points.map(point => `<circle class="chart-point" cx="${point.x}" cy="${point.y}" r="4"><title>${point.label}：${definition.format(point.value)}</title></circle>`).join("")}
+        ${tickIndexes.map(index => `<text class="axis-label" x="${points[index].x}" y="${height - 10}" text-anchor="middle">${groups[index].key}</text>`).join("")}
+      </svg>`;
+    }
+
+    function modelMetricValue(group, modelKey, metricKey) {
+      const usage = group.modelUsage[modelKey];
+      const totalTokens = usage.inputTokens + usage.outputTokens;
+      if (metricKey === "totalTokens") return totalTokens;
+      if (metricKey === "tokensPerTurn") return usage.modelTurns ? totalTokens / usage.modelTurns : 0;
+      if (metricKey === "totalCost") return usage.cost;
+      return usage.modelTurns ? usage.cost / usage.modelTurns : 0;
+    }
+
+    function renderModelTrendChart(groups) {
+      const selectedKey = state.selectedMetric.cost;
+      const definition = metricDefinition("cost", selectedKey);
+      document.querySelector("#costChartTitle").textContent = `各模型${definition.label}趋势`;
+      document.querySelector("#costLegend").innerHTML = models.map(model => `<span class="legend-item" style="color:${model.color}"><span class="legend-line"></span><span style="color:var(--text-secondary)">${model.label}</span></span>`).join("");
+      const container = document.querySelector("#costChart");
+      if (!groups.length) {
+        container.innerHTML = `<div class="chart-empty">当前筛选范围暂无数据</div>`;
+        return;
+      }
+      const width = 960;
+      const height = 280;
+      const margin = { top: 16, right: 24, bottom: 34, left: 72 };
+      const series = models.map(model => ({
+        ...model,
+        values: groups.map(group => modelMetricValue(group, model.key, selectedKey))
+      }));
+      const maximum = Math.max(...series.flatMap(item => item.values), selectedKey.includes("Cost") || selectedKey.includes("cost") ? .01 : 1) * 1.14;
+      const x = index => margin.left + (groups.length === 1 ? (width - margin.left - margin.right) / 2 : index / (groups.length - 1) * (width - margin.left - margin.right));
+      const y = value => height - margin.bottom - value / maximum * (height - margin.top - margin.bottom);
+      const axisFormat = value => selectedKey === "totalCost" ? formatCurrency(value, 0) : selectedKey === "costPerTurn" ? formatCurrency(value, 3) : compactNumber(value);
+      const tickIndexes = [...new Set([0, Math.floor((groups.length - 1) / 2), groups.length - 1])];
+      const dashPatterns = ["", "7 5", "2 4"];
+      container.innerHTML = `<svg class="chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${definition.label}按模型时间趋势图">
+        ${[0, .25, .5, .75, 1].map(ratio => {
+          const yy = margin.top + ratio * (height - margin.top - margin.bottom);
+          return `<line class="grid-line" x1="${margin.left}" x2="${width - margin.right}" y1="${yy}" y2="${yy}"/><text class="axis-label" x="${margin.left - 8}" y="${yy + 3}" text-anchor="end">${axisFormat(maximum * (1 - ratio))}</text>`;
+        }).join("")}
+        ${series.map((item, seriesIndex) => {
+          const points = item.values.map((value, index) => ({ x: x(index), y: y(value), value, label: groups[index].key }));
+          return `<g><path d="${chartPath(points)}" fill="none" stroke="${item.color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${dashPatterns[seriesIndex]}"/>${points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="3.2" fill="${item.color}" stroke="#fff" stroke-width="1.6"><title>${point.label} · ${item.label}：${definition.format(point.value)}</title></circle>`).join("")}</g>`;
+        }).join("")}
+        ${tickIndexes.map(index => `<text class="axis-label" x="${x(index)}" y="${height - 10}" text-anchor="middle">${groups[index].key}</text>`).join("")}
+      </svg>`;
+    }
+
+    function renderLatencyChart(groups) {
+      const selectedKey = state.selectedMetric.latency;
+      const definition = metricDefinition("latency", selectedKey);
+      const legend = document.querySelector("#latencyLegend");
+      if (selectedKey === "failureRate") {
+        legend.innerHTML = "";
+        renderLineChart("latency", groups, "latencyChart", "latencyChartTitle");
+        return;
+      }
+      const p50Color = "#1677ff";
+      const p95Color = "#7656d6";
+      document.querySelector("#latencyChartTitle").textContent = `${definition.label} P50 / P95 趋势`;
+      legend.innerHTML = `<span class="legend-item" style="color:${p50Color}"><span class="legend-line"></span><span style="color:var(--text-secondary)">P50</span></span><span class="legend-item" style="color:${p95Color}"><span class="legend-line"></span><span style="color:var(--text-secondary)">P95</span></span>`;
+      const container = document.querySelector("#latencyChart");
+      if (!groups.length) {
+        container.innerHTML = `<div class="chart-empty">当前筛选范围暂无${definition.label}数据</div>`;
+        return;
+      }
+      const width = 960;
+      const height = 280;
+      const margin = { top: 16, right: 24, bottom: 34, left: 62 };
+      const maximum = Math.max(...groups.flatMap(item => [item[definition.p50Key], item[definition.p95Key]]), 1) * 1.14;
+      const x = index => margin.left + (groups.length === 1 ? (width - margin.left - margin.right) / 2 : index / (groups.length - 1) * (width - margin.left - margin.right));
+      const y = value => height - margin.bottom - value / maximum * (height - margin.top - margin.bottom);
+      const p50Points = groups.map((item, index) => ({ x: x(index), y: y(item[definition.p50Key]), value: item[definition.p50Key], label: item.key }));
+      const p95Points = groups.map((item, index) => ({ x: x(index), y: y(item[definition.p95Key]), value: item[definition.p95Key], label: item.key }));
+      const tickIndexes = [...new Set([0, Math.floor((groups.length - 1) / 2), groups.length - 1])];
+      container.innerHTML = `<svg class="chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${definition.label} P50 与 P95 单轴趋势图">
+        ${[0, .25, .5, .75, 1].map(ratio => {
+          const yy = margin.top + ratio * (height - margin.top - margin.bottom);
+          return `<line class="grid-line" x1="${margin.left}" x2="${width - margin.right}" y1="${yy}" y2="${yy}"/><text class="axis-label" x="${margin.left - 8}" y="${yy + 3}" text-anchor="end">${formatNumber(maximum * (1 - ratio), definition.digits)}s</text>`;
+        }).join("")}
+        <path d="${chartPath(p50Points)}" fill="none" stroke="${p50Color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="${chartPath(p95Points)}" fill="none" stroke="${p95Color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
+        ${p50Points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="3.4" fill="${p50Color}" stroke="#fff" stroke-width="1.6"><title>${point.label} · ${definition.label} P50：${formatNumber(point.value, definition.digits)}秒</title></circle>`).join("")}
+        ${p95Points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="3.4" fill="${p95Color}" stroke="#fff" stroke-width="1.6"><title>${point.label} · ${definition.label} P95：${formatNumber(point.value, definition.digits)}秒</title></circle>`).join("")}
+        ${tickIndexes.map(index => `<text class="axis-label" x="${x(index)}" y="${height - 10}" text-anchor="middle">${groups[index].key}</text>`).join("")}
+      </svg>`;
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+      return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+    }
+
+    function feedbackTracesForFilters(filters) {
+      return feedbackTraceData.filter(trace => trace.date >= filters.start && trace.date <= filters.end && (filters.role === "all" || trace.role === filters.role));
+    }
+
+    function buildFeedbackTraceCsv(traces) {
+      const headers = ["回答产生时间", "角色", "用户ID", "Thread ID", "Turn ID", "Trace ID", "当前反馈状态", "模型", "输入Token", "输出Token", "成本(人民币)", "首字延迟(ms)", "完成时间(ms)", "结束状态", "工具调用数"];
+      const rows = traces.map(trace => [
+        trace.answerGeneratedAt, roleLabels[trace.role], trace.userId, trace.threadId, trace.turnId, trace.traceId,
+        trace.feedbackStatus, trace.model, trace.inputTokens, trace.outputTokens, trace.costCny.toFixed(6),
+        trace.firstTokenLatencyMs, trace.completionLatencyMs, trace.endStatus, trace.toolCalls
+      ]);
+      return "\ufeff" + [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
+    }
+
+    function downloadFeedbackTraceCsv() {
+      const filters = currentFilters();
+      const traces = feedbackTracesForFilters(filters);
+      const csv = buildFeedbackTraceCsv(traces);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `用户反馈Trace_${filters.start}_${filters.end}_${filters.role}.csv`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast(`已导出 ${traces.length} 条用户 Trace`);
+      return { csv, filename: anchor.download, rowCount: traces.length };
+    }
+
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.querySelector("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function renderDashboard() {
+      const filters = currentFilters();
+      if (!filters.start || !filters.end || filters.start > filters.end) return;
+      const days = dateDiffInclusive(filters.start, filters.end);
+      const previousEnd = addDays(filters.start, -1);
+      const previousStart = addDays(previousEnd, -(days - 1));
+      const current = aggregate(rowsForRange(filters.start, filters.end, filters.role));
+      const previous = aggregate(rowsForRange(previousStart, previousEnd, filters.role));
+      const groups = groupedRows(rowsForRange(filters.start, filters.end, filters.role), filters.granularity);
+      renderCards("usage", "usageMetrics", metricGroups.usage, current, previous);
+      renderCards("cost", "costMetrics", metricGroups.cost, current, previous);
+      renderLatencyCards(current, previous);
+      renderCards("feedback", "feedbackMetrics", metricGroups.feedback, current, previous);
+      renderLineChart("usage", groups, "usageChart", "usageChartTitle");
+      renderModelTrendChart(groups);
+      renderLatencyChart(groups);
+      renderLineChart("feedback", groups, "feedbackChart", "feedbackChartTitle");
+    }
+
+    function applyPreset(value) {
+      let start = document.querySelector("#startDate").value;
+      let end = MAX_DATE;
+      if (value === "today") start = MAX_DATE;
+      else if (value === "yesterday") start = end = addDays(MAX_DATE, -1);
+      else if (value === "7") start = addDays(MAX_DATE, -6);
+      else if (value === "30") start = addDays(MAX_DATE, -29);
+      else return;
+      document.querySelector("#startDate").value = start;
+      document.querySelector("#endDate").value = end;
+      renderDashboard();
+    }
+
+    document.querySelector("#rangePreset").addEventListener("change", event => applyPreset(event.target.value));
+    ["startDate", "endDate", "granularity"].forEach(id => document.querySelector(`#${id}`).addEventListener("change", () => {
+      if (id === "startDate" || id === "endDate") document.querySelector("#rangePreset").value = "custom";
+      renderDashboard();
+    }));
+    document.querySelectorAll(".role-button").forEach(button => button.addEventListener("click", () => {
+      state.role = button.dataset.role;
+      document.querySelectorAll(".role-button").forEach(item => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+      renderDashboard();
+    }));
+    document.querySelector("#exportFeedback").addEventListener("click", downloadFeedbackTraceCsv);
+
+    window.__dashboard = {
+      mockData,
+      feedbackTraceData,
+      currentFilters,
+      rowsForRange,
+      groupedRows,
+      feedbackTracesForFilters,
+      buildFeedbackTraceCsv,
+      downloadFeedbackTraceCsv,
+      renderDashboard
+    };
+
+    renderDashboard();
+  </script>
+</body>
+</html>
