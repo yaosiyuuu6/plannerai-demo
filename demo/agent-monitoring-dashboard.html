@@ -348,7 +348,7 @@
         <div class="role-segment" role="group" aria-label="角色筛选">
           <button class="role-button active" type="button" data-role="all" aria-pressed="true">全部</button>
           <button class="role-button" type="button" data-role="planning" aria-pressed="false">规划</button>
-          <button class="role-button" type="button" data-role="entry" aria-pressed="false">录入/质检</button>
+          <button class="role-button" type="button" data-role="entry" aria-pressed="false">录入/质检/配置</button>
         </div>
       </div>
     </section>
@@ -415,7 +415,7 @@
     const DAY = 86400000;
     const MAX_DATE = "2026-08-17";
     const roles = ["planning", "entry"];
-    const roleLabels = { all: "全部", planning: "规划", entry: "录入/质检" };
+    const roleLabels = { all: "全部", planning: "规划", entry: "录入/质检/配置" };
     const granularityLabels = { day: "天", week: "周", month: "月" };
     const models = [
       { key: "model-pro", label: "Model Pro", color: "#1677ff", inputPrice: 9, outputPrice: 72 },
