@@ -141,6 +141,9 @@
       transition: grid-template-columns .28s ease;
     }
     .layout.with-artifact { --artifact-width: var(--artifact-expanded-width); }
+    .layout.artifact-maximized {
+      --artifact-width: calc(100% - var(--platform-width) - var(--module-width) - var(--agent-width));
+    }
     .layout.agent-collapsed { --agent-width: 0px; }
     .layout.resizing {
       transition: none;
@@ -404,16 +407,6 @@
       fill: none;
       flex: none;
     }
-    .history-head {
-      display: none;
-      padding: 14px 10px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-    }
     .history-list { padding: 0 8px 12px; overflow: auto; flex: 1; }
     .conversation-group { margin: 6px 0 10px; }
     .conversation-group[data-project-draggable="true"] .conversation-group-header { cursor: grab; }
@@ -445,16 +438,20 @@
     }
     .conversation-group-toggle:focus-visible,
     .project-header-action:focus-visible { outline: 2px solid rgba(22,119,255,.35); outline-offset: 1px; }
-    .group-caret { width: 14px; height: 14px; transition: transform .18s ease; }
+    .group-caret { width: 14px; height: 14px; opacity: 0; transition: opacity .14s ease, transform .18s ease; }
+    .conversation-group-header:hover .group-caret,
+    .conversation-group-header:focus-within .group-caret { opacity: 1; }
     .conversation-group.collapsed .group-caret { transform: rotate(-90deg); }
+    .group-folder-icon { width: 16px; height: 16px; color: #8c8c8c; display: inline-flex; flex: none; }
+    .group-folder-icon .icon { width: 16px; height: 16px; }
     .conversation-group-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
     .project-pin-indicator { width: 12px; height: 12px; color: #8c8c8c; flex: none; }
     .conversation-group-count { margin-left: auto; padding-right: 5px; color: #bfbfbf; font-size: 12px; font-variant-numeric: tabular-nums; transition: opacity .14s ease; }
     .project-header-actions { position: absolute; right: 4px; top: 2px; display: flex; align-items: center; gap: 2px; opacity: 0; pointer-events: none; }
     .conversation-group-header:hover .project-header-actions,
     .conversation-group-header:focus-within .project-header-actions { opacity: 1; pointer-events: auto; }
-    .conversation-group:not(.general-group) .conversation-group-header:hover .conversation-group-count,
-    .conversation-group:not(.general-group) .conversation-group-header:focus-within .conversation-group-count { opacity: 0; }
+    .conversation-group-header:hover .conversation-group-count,
+    .conversation-group-header:focus-within .conversation-group-count { opacity: 0; }
     .project-header-action {
       width: 30px;
       height: 30px;
@@ -1181,6 +1178,15 @@
       opacity: .72;
     }
     .conversation-action-item .icon { width: 16px; height: 16px; }
+    .artifact-panel-controls {
+      position: fixed;
+      top: 54px;
+      right: 12px;
+      z-index: 120;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .panel-toggle {
       width: 32px;
       height: 32px;
@@ -1191,10 +1197,6 @@
       align-items: center;
       justify-content: center;
       color: #262626;
-      position: fixed;
-      top: 58px;
-      right: 18px;
-      z-index: 120;
     }
     .task-mode .panel-toggle { display: inline-flex; }
     .panel-toggle:hover { background: #f5f5f5; color: var(--primary); }
@@ -1202,6 +1204,29 @@
       width: 18px;
       height: 18px;
     }
+    .artifact-expand-toggle {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #262626;
+    }
+    .layout.with-artifact .artifact-expand-toggle { display: inline-flex; }
+    .artifact-expand-toggle:hover,
+    .artifact-expand-toggle[aria-pressed="true"] { background: #f5f5f5; color: var(--primary); }
+    .artifact-expand-toggle:focus-visible,
+    .panel-toggle:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .4);
+      outline-offset: 2px;
+    }
+    .artifact-expand-toggle .icon { width: 18px; height: 18px; stroke-width: 1.7; }
+    .artifact-expand-toggle .restore-glyph { display: none; }
+    .artifact-expand-toggle[aria-pressed="true"] .expand-glyph { display: none; }
+    .artifact-expand-toggle[aria-pressed="true"] .restore-glyph { display: inline; }
     .toggle-icon {
       width: 16px;
       height: 16px;
@@ -3632,6 +3657,7 @@
         transform: none;
       }
       .layout:not(.manual-system-mode) > .artifact.open .artifact-resizer { display: none; }
+      .artifact-expand-toggle { display: none !important; }
       .artifact-pane-close { display: inline-flex; }
       .artifact.open.no-tabs .artifact-head { display: flex; }
       .planning-outcome-picker { flex-wrap: wrap; }
@@ -3834,6 +3860,9 @@
       }
       .layout { --artifact-expanded-width: min(32vw, 320px); }
     }
+    @media (prefers-reduced-motion: reduce) {
+      .layout, .artifact { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -3997,7 +4026,6 @@
             </button>
           </div>
 
-          <div class="history-head"><span>历史记录</span><span>12</span></div>
           <div class="history-list" id="historyList">
             <div class="history-row" data-history-state="empty" role="button" tabindex="0"><span class="history-title">新问答</span><button class="history-more" type="button" aria-label="新问答的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row active" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
@@ -4051,13 +4079,21 @@
               </div>
             </div>
           </div>
-          <button class="panel-toggle" id="panelToggle" title="显示或隐藏右侧产物区" aria-label="显示或隐藏右侧产物区">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-              <path d="M15 4v16"></path>
-              <path d="m11 9-3 3 3 3"></path>
-            </svg>
-          </button>
+          <div class="artifact-panel-controls">
+            <button class="artifact-expand-toggle" id="artifactExpandToggle" type="button" aria-label="放大产物区" aria-pressed="false" aria-controls="artifact" title="放大产物区">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <g class="expand-glyph"><path d="M14 5h5v5"/><path d="M10 19H5v-5"/></g>
+                <g class="restore-glyph"><path d="M19 10h-5V5"/><path d="M5 14h5v5"/></g>
+              </svg>
+            </button>
+            <button class="panel-toggle" id="panelToggle" title="显示或隐藏右侧产物区" aria-label="显示或隐藏右侧产物区">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <path d="M15 4v16"></path>
+                <path d="m11 9-3 3 3 3"></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <section class="share-invalid" id="shareInvalid" hidden aria-labelledby="shareInvalidTitle">
@@ -4867,6 +4903,7 @@
     const toast = document.getElementById('toast');
     const agentResizeHandle = document.getElementById('agentResizeHandle');
     const artifactResizeHandle = document.getElementById('artifactResizeHandle');
+    const artifactExpandToggle = document.getElementById('artifactExpandToggle');
     const chatSearchModal = document.getElementById('chatSearchModal');
     const chatSearchInput = document.getElementById('chatSearchInput');
     const chatSearchResults = document.getElementById('chatSearchResults');
@@ -4916,6 +4953,7 @@
 
     let taskMode = false;
     let artifactVisible = false;
+    let artifactMaximized = false;
     let agentSidebarCollapsed = false;
     let planMode = false;
     let activeTab = 'report';
@@ -5512,10 +5550,20 @@
     }
 
     function setArtifactVisible(on, preserveTitle = false) {
+      if (!on && artifactMaximized) setArtifactMaximized(false);
       artifactVisible = on;
       layout.classList.toggle('with-artifact', on);
       artifact.classList.toggle('open', on);
       if (on) setTaskMode(true, preserveTitle);
+    }
+
+    function setArtifactMaximized(on) {
+      artifactMaximized = Boolean(on && artifactVisible && window.innerWidth > 640);
+      layout.classList.toggle('artifact-maximized', artifactMaximized);
+      artifactExpandToggle.setAttribute('aria-pressed', String(artifactMaximized));
+      artifactExpandToggle.setAttribute('aria-label', artifactMaximized ? '恢复产物区大小' : '放大产物区');
+      artifactExpandToggle.setAttribute('title', artifactMaximized ? '恢复产物区大小' : '放大产物区');
+      artifactResizeHandle.setAttribute('aria-disabled', String(artifactMaximized));
     }
 
     function setAgentSidebarCollapsed(on) {
@@ -5548,7 +5596,7 @@
       }),
       beforeStart: () => {
         if (!artifactVisible) setArtifactVisible(true);
-        return true;
+        return !artifactMaximized;
       }
     });
 
@@ -6831,15 +6879,16 @@
       const safeName = escapeProjectHtml(project.name);
       section.innerHTML = `<div class="conversation-group-header">
         <button class="conversation-group-toggle" type="button" data-group-toggle="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}">
-          <svg class="group-caret icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          <span class="group-folder-icon">${folderIconHtml()}</span>
           <span class="conversation-group-name">${safeName}</span>
+          <svg class="group-caret icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           ${project.pinned ? '<svg class="project-pin-indicator icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>' : ''}
           <span class="conversation-group-count">${rows.length}</span>
         </button>
-        ${isGeneral ? '' : `<span class="project-header-actions">
-          <button class="project-header-action" type="button" data-project-menu="${escapeProjectHtml(project.id)}" aria-label="打开${safeName}的项目操作" aria-haspopup="menu" aria-expanded="false" title="项目操作"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>
-          <button class="project-header-action" type="button" data-project-new="${escapeProjectHtml(project.id)}" aria-label="在${safeName}中新建对话" title="新建对话"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="14" height="16" rx="2"/><path d="m13.5 10.5 5-5a2.1 2.1 0 0 1 3 3l-5 5-4 1Z"/></svg></button>
-        </span>`}
+        <span class="project-header-actions">
+          ${isGeneral ? '' : `<button class="project-header-action" type="button" data-project-menu="${escapeProjectHtml(project.id)}" aria-label="打开${safeName}的项目操作" aria-haspopup="menu" aria-expanded="false" title="项目操作"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>`}
+          <button class="project-header-action" type="button" data-project-new="${isGeneral ? '' : escapeProjectHtml(project.id)}" aria-label="在${safeName}中新建对话" title="新建对话"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="14" height="16" rx="2"/><path d="m13.5 10.5 5-5a2.1 2.1 0 0 1 3 3l-5 5-4 1Z"/></svg></button>
+        </span>
       </div><div class="conversation-group-body"></div>`;
       const body = section.querySelector('.conversation-group-body');
       orderedConversationRows(rows).forEach(row => body.append(row));
@@ -7146,8 +7195,6 @@
     }
 
     function updateHistoryCount() {
-      const count = historyList.querySelectorAll('.history-row').length;
-      document.querySelector('.history-head span:last-child').textContent = String(count);
       projectTotal.textContent = String(projects.length);
     }
 
@@ -8551,11 +8598,16 @@
       else if (projectFormOverlay.classList.contains('open')) closeProjectForm();
       else if (moveConversationMenu.classList.contains('open')) closeMoveConversationMenu();
       else if (projectContextMenu.classList.contains('open')) closeProjectContextMenu();
+      else if (artifactMaximized) setArtifactMaximized(false);
     });
 
     document.getElementById('panelToggle').addEventListener('click', () => {
       setArtifactVisible(!artifactVisible);
       if (artifactVisible) renderArtifact();
+    });
+
+    artifactExpandToggle.addEventListener('click', () => {
+      setArtifactMaximized(!artifactMaximized);
     });
 
     artifactPaneClose.addEventListener('click', () => setArtifactVisible(false));
