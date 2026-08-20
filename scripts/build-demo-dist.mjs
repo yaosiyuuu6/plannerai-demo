@@ -14,7 +14,17 @@ const publishFiles = Object.freeze([
   "images/logo.jpg",
 ]);
 
-const expectedFiles = new Set(publishFiles);
+const publishAliases = Object.freeze([
+  Object.freeze({
+    source: "demo/agent-monitoring-dashboard.html",
+    destination: "dashboard/index.html",
+  }),
+]);
+
+const expectedFiles = new Set([
+  ...publishFiles,
+  ...publishAliases.map(({ destination }) => destination),
+]);
 const blockedExtensions = new Set([".xlsx", ".xls", ".docx"]);
 
 async function listFiles(directory, relativeDirectory = "") {
@@ -71,6 +81,13 @@ async function build() {
   for (const relativePath of publishFiles) {
     const source = path.join(projectRoot, relativePath);
     const destination = path.join(outputDirectory, relativePath);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await cp(source, destination);
+  }
+
+  for (const { source: relativeSource, destination: relativeDestination } of publishAliases) {
+    const source = path.join(projectRoot, relativeSource);
+    const destination = path.join(outputDirectory, relativeDestination);
     await mkdir(path.dirname(destination), { recursive: true });
     await cp(source, destination);
   }
