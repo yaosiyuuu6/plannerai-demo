@@ -6800,6 +6800,7 @@
       const [type, value] = item;
       if (type !== 'table' && type !== 'qa') return value;
       const { primary, secondary } = mentionRowText(item);
+      if (type === 'qa') return secondary ? `${primary} ${secondary}` : primary;
       return secondary ? `${primary} - ${secondary}` : primary;
     }
 
