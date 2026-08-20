@@ -2971,6 +2971,8 @@
     .plan-on .switch::before { transform: translateX(24px); }
 
     .suggest-pop {
+      --suggest-natural-height: 268px;
+      --suggest-available-height: 268px;
       position: absolute;
       left: 0;
       right: 0;
@@ -2985,6 +2987,12 @@
       transform-origin: bottom center;
     }
     .suggest-pop.open { display: block; animation: panelSlideUp .16s ease-out; }
+    .suggest-pop.suggest-below {
+      top: calc(100% + 1px);
+      bottom: auto;
+      transform-origin: top center;
+    }
+    .suggest-pop.open.suggest-below { animation-name: panelSlideDown; }
     .suggest-head {
       height: 42px;
       border-bottom: 1px solid var(--border);
@@ -3017,14 +3025,23 @@
       border-color: var(--line);
       box-shadow: 0 10px 28px rgba(0,0,0,.12);
     }
-    .mention-shell { display: none; }
-    .mention-pop .mention-shell { display: block; }
+    .mention-shell { display: none; min-height: 0; }
+    .mention-pop {
+      height: min(var(--suggest-natural-height), var(--suggest-available-height));
+      min-height: 0;
+    }
+    .mention-pop .mention-shell {
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 42px 46px minmax(0, 1fr);
+    }
     .mention-pop .skill-shell { display: none; }
     .mention-tabs {
-      height: 48px;
+      height: 42px;
       display: flex;
       align-items: stretch;
-      gap: 26px;
+      gap: 24px;
       padding: 0 14px;
       border-bottom: 1px solid var(--border);
     }
@@ -3040,8 +3057,8 @@
       font-size: 14px;
     }
     .mention-tab .icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       color: currentColor;
     }
     .mention-tab.active { color: var(--primary); }
@@ -3057,21 +3074,21 @@
     }
     .mention-search-wrap {
       position: relative;
-      margin: 10px 12px 8px;
+      margin: 7px 12px;
     }
     .mention-search-wrap .icon {
       position: absolute;
       left: 10px;
       top: 50%;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       color: #8c8c8c;
       transform: translateY(-50%);
       pointer-events: none;
     }
     .mention-search {
       width: 100%;
-      height: 34px;
+      height: 32px;
       border: 1px solid var(--line);
       border-radius: 6px;
       outline: 0;
@@ -3085,68 +3102,89 @@
       box-shadow: 0 0 0 2px rgba(22,119,255,.12);
     }
     .mention-results {
-      min-height: 170px;
-      max-height: 264px;
+      min-height: 0;
+      max-height: none;
       overflow-y: auto;
-      padding: 2px 0 8px;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      padding: 2px 0;
     }
     .mention-pop .suggest-row {
-      height: 48px;
-      grid-template-columns: 24px minmax(0,1fr) auto;
+      height: 44px;
+      grid-template-columns: 18px minmax(0,1fr);
+      gap: 8px;
       border-bottom: 0;
-      padding: 0 16px;
+      padding: 0 14px;
     }
     .mention-pop .suggest-row:hover,
     .mention-pop .suggest-row.active { background: var(--primary-bg); }
     .mention-pop .suggest-title strong { color: #262626; font-weight: 500; }
     .mention-pop .suggest-space { color: #8c8c8c; }
-    .mention-pop .icon { width: 16px; height: 16px; color: var(--primary); }
+    .mention-pop .icon { width: 14px; height: 14px; color: var(--primary); }
     .mention-pop .knowledge-row {
-      height: 62px;
-      grid-template-columns: 24px minmax(0, 1fr);
+      height: 44px;
+      grid-template-columns: 18px minmax(0, 1fr);
       gap: 8px;
-      padding: 6px 16px;
+      padding: 0 14px;
     }
-    .knowledge-copy { min-width: 0; align-self: center; }
+    .mention-row-copy,
+    .knowledge-copy {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .mention-row-primary,
     .knowledge-title {
+      flex: 0 1 auto;
+      min-width: 0;
       color: #262626;
       font-size: 13px;
       font-weight: 500;
-      line-height: 1.45;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .mention-row-secondary,
     .knowledge-path {
-      margin-top: 3px;
+      flex: 1 1 auto;
+      min-width: 0;
       color: #8c8c8c;
       font-size: 12px;
-      line-height: 1.35;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .mention-pop .qa-row {
-      height: 64px;
-      grid-template-columns: 40px minmax(0,1fr);
-      gap: 10px;
+    .compact-reference-row[data-ref-type="table"] .mention-row-primary {
+      flex: 0 1 auto;
+      max-width: 42%;
     }
-    .mention-pop .qa-row > .icon { width: 18px; height: 18px; margin-left: 3px; }
-    .qa-content { min-width: 0; }
-    .qa-meta {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .mention-pop .qa-row {
+      height: 44px;
+      grid-template-columns: 18px minmax(0,1fr);
+      gap: 8px;
+    }
+    .mention-pop .qa-row > .icon { width: 14px; height: 14px; margin-left: 0; }
+    .qa-content {
       min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      overflow: hidden;
+      white-space: nowrap;
     }
     .qa-id {
+      flex: 0 0 auto;
       color: #262626;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       white-space: nowrap;
     }
     .mention-empty {
-      min-height: 170px;
+      height: 100%;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -3156,33 +3194,6 @@
       font-size: 13px;
     }
     .mention-empty .icon { width: 36px; height: 36px; color: #d9d9d9; }
-    .mention-footer {
-      min-height: 38px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 6px 12px;
-      color: #8c8c8c;
-      font-size: 11px;
-    }
-    .mention-shortcuts { display: flex; flex-wrap: wrap; gap: 8px; }
-    .mention-shortcuts span { display: inline-flex; align-items: center; gap: 4px; }
-    .mention-shortcuts kbd {
-      min-width: 22px;
-      height: 20px;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
-      background: #fafafa;
-      color: #8c8c8c;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 4px;
-      font: inherit;
-      box-shadow: 0 1px 0 rgba(0,0,0,.04);
-    }
     .composer-reference {
       display: inline-flex;
       align-items: center;
@@ -3205,6 +3216,16 @@
     }
     .composer-reference:hover,
     .composer-reference.selected { background: #e6f4ff; }
+    .composer-reference[data-ref-type="qa"] > span,
+    .inline-reference[data-ref-type="qa"] > span {
+      display: inline-block;
+      min-width: 0;
+      max-width: min(24em, 56vw);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    }
     .composer-url {
       border-radius: 3px;
       color: #0958d9;
@@ -3232,23 +3253,12 @@
       overflow-wrap: anywhere;
     }
     .inline-url:hover { text-decoration: underline; }
-    .qa-tag {
-      height: 20px;
-      border-radius: 5px;
-      background: #f0f1f3;
-      color: #5f6670;
-      padding: 0 6px;
-      display: inline-flex;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
     .qa-title {
-      margin-top: 4px;
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-top: 0;
       color: #8c96a3;
-      font-size: 13px;
-      line-height: 1.35;
+      font-size: 12px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -3277,6 +3287,10 @@
 
     @keyframes panelSlideUp {
       from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes panelSlideDown {
+      from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -4618,15 +4632,6 @@
                   <input class="mention-search" id="mentionSearch" type="search" placeholder="搜索知识库…" autocomplete="off" aria-label="搜索知识库">
                 </div>
                 <div class="mention-results" id="mentionRows" role="listbox" aria-label="知识库搜索结果"></div>
-                <div class="mention-footer">
-                  <div class="mention-shortcuts">
-                    <span><kbd>↑↓</kbd>切换</span>
-                    <span><kbd>Tab</kbd>切换类型</span>
-                    <span><kbd>Enter</kbd>选择</span>
-                    <span><kbd>Esc</kbd>关闭</span>
-                  </div>
-                  <span>默认最多展示 20 条数据</span>
-                </div>
               </div>
               <div class="skill-shell" id="skillShell">
                 <div class="suggest-head" id="suggestHead"></div>
@@ -5076,12 +5081,12 @@
 
     const suggestions = {
       '@': [
-        ['doc', 'STK032 股东明细表录入规则', '股东性质、国籍及标准口径', '股票分部'],
-        ['doc', '港股股权激励披露规则', '授予对象、行权安排和披露要求', '海外分部'],
-        ['doc', 'LR1105 非经常性损益录入规则', '一级科目与其中项加工口径', '财务分部'],
+        ['doc', 'STK032 股东明细表录入规则', 'v1.0.0', '股票分部'],
+        ['doc', '港股股权激励披露规则', 'v1.0.1', '海外分部'],
+        ['doc', 'LR1105 非经常性损益录入规则', 'v1.0.1', '财务分部'],
         ['table', 'STK032 股东明细表', '股东属性、国籍与持股信息', '股票分部'],
-        ['table', '港股激励数据字段映射表', '字段、口径和来源映射', '海外分部'],
-        ['qa', 'ADTD-2706', ['中国大陆', '三板', 'STK217'], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认']
+        ['table', 'PUB000 港股激励数据字段映射表', '字段、口径和来源映射', '海外分部'],
+        ['qa', 'ADTD-2706', [], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认']
       ],
       '/': [
         ['skill', '生成报告', '基于引用材料生成结构化报告', 'Personal'],
@@ -5709,12 +5714,15 @@
         const type = escapeHtml(node.dataset.refType || '');
         const rawValue = node.dataset.refValue || node.textContent;
         const value = escapeHtml(rawValue);
-        const label = escapeHtml(referenceDisplayText(node.dataset.refType, rawValue));
+        const label = escapeHtml(referenceDisplayText(rawValue, {
+          displayText: node.dataset.refDisplayText
+        }));
         const refId = escapeHtml(node.dataset.refId || '');
         const knowledgeBase = escapeHtml(node.dataset.refKnowledgeBase || '');
         const path = escapeHtml(node.dataset.refPath || '');
         const icon = knowledgeBase ? icons.knowledge : (icons[node.dataset.refType] || '');
-        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}"${refId ? ` data-ref-id="${refId}"` : ''}${knowledgeBase ? ` data-ref-knowledge-base="${knowledgeBase}"` : ''}${path ? ` data-ref-path="${path}"` : ''}>${icon}<span>${label}</span></button>`;
+        const fullLabel = node.dataset.refType === 'qa' ? ` title="${label}"` : '';
+        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}"${refId ? ` data-ref-id="${refId}"` : ''}${knowledgeBase ? ` data-ref-knowledge-base="${knowledgeBase}"` : ''}${path ? ` data-ref-path="${path}"` : ''}${fullLabel}>${icon}<span>${label}</span></button>`;
       }
       if (node.classList.contains('composer-url')) {
         const url = escapeHtml(node.dataset.url || node.textContent);
@@ -6693,18 +6701,65 @@
       return items.map((item, index) => {
         const fullPath = `${item.knowledgeBase} / ${item.path}`;
         return `
-          <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
+          <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${item.title}，${fullPath}`)}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
             ${icons.knowledge}
-            <div class="knowledge-copy">
+            <div class="knowledge-copy" title="${escapeHtml(`${item.title} · ${fullPath}`)}">
               <div class="knowledge-title">${escapeHtml(item.title)}</div>
-              <div class="knowledge-path" title="${escapeHtml(fullPath)}">${escapeHtml(fullPath)}</div>
+              <div class="knowledge-path">${escapeHtml(fullPath)}</div>
             </div>
           </div>`;
       }).join('');
     }
 
+    function mentionRowText(item) {
+      const [type, value, meta, space] = item;
+      if (type === 'doc') {
+        const version = String(meta || '').replace(/^版本\s*/i, '');
+        return { primary: value, secondary: version ? `版本 ${version}` : space };
+      }
+      if (type === 'table') {
+        const match = String(value).match(/^([A-Za-z]+[A-Za-z0-9_]*)\s+(.+)$/);
+        return match
+          ? { primary: match[1], secondary: match[2] }
+          : { primary: value, secondary: meta || space };
+      }
+      return { primary: value, secondary: space || meta };
+    }
+
+    function updateMentionPanelNaturalHeight(resultCount) {
+      const resultHeight = resultCount > 0
+        ? Math.min(resultCount, 4) * 44 + 4
+        : 92;
+      suggestPop.style.setProperty('--suggest-natural-height', `${88 + resultHeight}px`);
+    }
+
+    function updateSuggestPanelMetrics() {
+      if (!suggestPop.classList.contains('open')) return;
+      const viewport = window.visualViewport;
+      const viewportTop = viewport?.offsetTop || 0;
+      const viewportBottom = viewportTop + (viewport?.height || window.innerHeight);
+      const composerRect = composer.getBoundingClientRect();
+      const topbarBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || viewportTop;
+      const safeTop = Math.max(viewportTop, topbarBottom);
+      const gap = 8;
+      const spaceAbove = Math.max(0, Math.floor(composerRect.top - safeTop - gap));
+      const spaceBelow = Math.max(0, Math.floor(viewportBottom - composerRect.bottom - gap));
+      const naturalHeight = Number.parseFloat(
+        getComputedStyle(suggestPop).getPropertyValue('--suggest-natural-height')
+      ) || 268;
+      const minimumUsefulHeight = Math.min(naturalHeight, 176);
+      const openBelow = spaceAbove < minimumUsefulHeight && spaceBelow > spaceAbove;
+      suggestPop.classList.toggle('suggest-below', openBelow);
+      suggestPop.style.setProperty(
+        '--suggest-available-height',
+        `${openBelow ? spaceBelow : spaceAbove}px`
+      );
+    }
+
     function renderMentionResults() {
       const items = filteredMentionItems();
+      updateMentionPanelNaturalHeight(items.length);
+      if (suggestPop.classList.contains('open')) requestAnimationFrame(updateSuggestPanelMetrics);
       activeMentionIndex = Math.min(activeMentionIndex, Math.max(items.length - 1, 0));
       if (!items.length) {
         mentionRows.innerHTML = `<div class="mention-empty">
@@ -6721,26 +6776,35 @@
       mentionRows.innerHTML = items.map((item, index) => {
         const [type, value, meta, space] = item;
         if (type === 'qa') {
-          const tags = meta.map(tag => `<span class="qa-tag">${escapeHtml(tag)}</span>`).join('');
-          return `<div class="suggest-row qa-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
+          return `<div class="suggest-row qa-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${value}，${space}`)}" title="${escapeHtml(`${value} · ${space}`)}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
             ${icons[type]}
             <div class="qa-content">
-              <div class="qa-meta"><span class="qa-id">${escapeHtml(value)}</span>${tags}</div>
+              <span class="qa-id">${escapeHtml(value)}</span>
               <div class="qa-title">${escapeHtml(space)}</div>
             </div>
           </div>`;
         }
-        return `<div class="suggest-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
+        const { primary, secondary } = mentionRowText(item);
+        return `<div class="suggest-row compact-reference-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${primary}，${secondary || ''}`)}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
           ${icons[type]}
-          <div class="suggest-title"><strong>${escapeHtml(value)}</strong></div>
-          <div class="suggest-space">${escapeHtml(space)}</div>
+          <div class="mention-row-copy" title="${escapeHtml(`${primary}${secondary ? ` · ${secondary}` : ''}`)}">
+            <span class="mention-row-primary">${escapeHtml(primary)}</span>
+            ${secondary ? `<span class="mention-row-secondary">${escapeHtml(secondary)}</span>` : ''}
+          </div>
         </div>`;
       }).join('');
       mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
     }
 
-    function referenceDisplayText(type, value) {
-      return type === 'qa' ? `人工问答 ${value}` : value;
+    function selectedMentionDisplayText(item) {
+      const [type, value] = item;
+      if (type !== 'table' && type !== 'qa') return value;
+      const { primary, secondary } = mentionRowText(item);
+      return secondary ? `${primary} - ${secondary}` : primary;
+    }
+
+    function referenceDisplayText(value, metadata = null) {
+      return metadata?.displayText || value;
     }
 
     function createComposerReference(type, value, metadata = null) {
@@ -6749,12 +6813,14 @@
       reference.contentEditable = 'false';
       reference.dataset.refType = type;
       reference.dataset.refValue = value;
+      if (metadata?.displayText) reference.dataset.refDisplayText = metadata.displayText;
       if (metadata?.id) reference.dataset.refId = metadata.id;
       if (metadata?.knowledgeBase) reference.dataset.refKnowledgeBase = metadata.knowledgeBase;
       if (metadata?.path) reference.dataset.refPath = metadata.path;
       reference.innerHTML = metadata?.knowledgeBase ? icons.knowledge : (icons[type] || '');
       const label = document.createElement('span');
-      label.textContent = referenceDisplayText(type, value);
+      label.textContent = referenceDisplayText(value, metadata);
+      if (type === 'qa') reference.title = label.textContent;
       reference.append(label);
       return reference;
     }
@@ -6794,7 +6860,11 @@
         insertMentionReference('doc', item.title, '@', item);
         return;
       }
-      insertMentionReference(item[0], item[1]);
+      const [type, value] = item;
+      const metadata = type === 'table' || type === 'qa'
+        ? { displayText: selectedMentionDisplayText(item) }
+        : null;
+      insertMentionReference(type, value, '@', metadata);
     }
 
     function openSuggest(kind) {
@@ -6815,6 +6885,8 @@
         }).join('');
       }
       suggestPop.classList.add('open');
+      updateSuggestPanelMetrics();
+      requestAnimationFrame(updateSuggestPanelMetrics);
       plusMenu.classList.remove('open');
     }
 
@@ -7076,6 +7148,7 @@
 
     function closeOverlays() {
       suggestPop.classList.remove('open');
+      suggestPop.classList.remove('suggest-below');
       plusMenu.classList.remove('open');
       closeConversationActionMenu();
       closeHistoryContextMenu();
@@ -7468,6 +7541,10 @@
       activeMentionIndex = 0;
       renderMentionResults();
     });
+
+    window.addEventListener('resize', updateSuggestPanelMetrics);
+    window.visualViewport?.addEventListener('resize', updateSuggestPanelMetrics);
+    window.visualViewport?.addEventListener('scroll', updateSuggestPanelMetrics);
 
     mentionSearch.addEventListener('keydown', event => {
       const items = filteredMentionItems();
