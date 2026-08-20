@@ -3101,27 +3101,11 @@
     .mention-pop .suggest-title strong { color: #262626; font-weight: 500; }
     .mention-pop .suggest-space { color: #8c8c8c; }
     .mention-pop .icon { width: 16px; height: 16px; color: var(--primary); }
-    .knowledge-group + .knowledge-group { margin-top: 4px; }
-    .knowledge-group-head {
-      min-height: 32px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 16px 3px;
-      color: #595959;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .knowledge-group-head .icon {
-      width: 15px;
-      height: 15px;
-      color: #597ef7;
-    }
     .mention-pop .knowledge-row {
       height: 62px;
       grid-template-columns: 24px minmax(0, 1fr);
       gap: 8px;
-      padding: 6px 16px 6px 28px;
+      padding: 6px 16px;
     }
     .knowledge-copy { min-width: 0; align-self: center; }
     .knowledge-title {
@@ -5108,7 +5092,7 @@
     };
 
     const knowledgeDocuments = Object.freeze([
-      Object.freeze({ type: 'doc', id: 'kb-hk-001', title: '港股股权激励披露规则', knowledgeBase: '港股知识库', path: '01-规则文档 / 股权激励' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-001', title: '港股股权激励披露规则', knowledgeBase: '港股知识库', path: '01-股权文档 / 股权激励' }),
       Object.freeze({ type: 'doc', id: 'kb-hk-002', title: '港股补购研究分享', knowledgeBase: '港股知识库', path: '00-分享资料 / 港股研究' }),
       Object.freeze({ type: 'doc', id: 'kb-hk-003', title: '港股业务数据源链接统计', knowledgeBase: '港股知识库', path: '00-分享资料 / 数据源' }),
       Object.freeze({ type: 'doc', id: 'kb-hk-004', title: '港股股权激励处理方案', knowledgeBase: '港股知识库', path: '02-规划方案 / 股权激励' }),
@@ -6706,23 +6690,17 @@
     }
 
     function renderKnowledgeResults(items) {
-      const groups = new Map();
-      items.forEach((item, index) => {
-        if (!groups.has(item.knowledgeBase)) groups.set(item.knowledgeBase, []);
-        groups.get(item.knowledgeBase).push({ item, index });
-      });
-      return [...groups.entries()].map(([knowledgeBase, documents]) => `
-        <section class="knowledge-group" aria-label="${escapeHtml(knowledgeBase)}">
-          <div class="knowledge-group-head">${icons.knowledge}<span>${escapeHtml(knowledgeBase)}</span></div>
-          ${documents.map(({ item, index }) => `
-            <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
-              ${icons.knowledge}
-              <div class="knowledge-copy">
-                <div class="knowledge-title">${escapeHtml(item.title)}</div>
-                <div class="knowledge-path" title="${escapeHtml(item.path)}">${escapeHtml(item.path)}</div>
-              </div>
-            </div>`).join('')}
-        </section>`).join('');
+      return items.map((item, index) => {
+        const fullPath = `${item.knowledgeBase} / ${item.path}`;
+        return `
+          <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
+            ${icons.knowledge}
+            <div class="knowledge-copy">
+              <div class="knowledge-title">${escapeHtml(item.title)}</div>
+              <div class="knowledge-path" title="${escapeHtml(fullPath)}">${escapeHtml(fullPath)}</div>
+            </div>
+          </div>`;
+      }).join('');
     }
 
     function renderMentionResults() {
