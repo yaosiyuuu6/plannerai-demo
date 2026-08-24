@@ -860,9 +860,13 @@
       align-items: center;
       gap: 4px;
       padding: 0 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    .settings-tabs::-webkit-scrollbar { display: none; }
     .settings-tab {
       height: 34px;
+      flex: 0 0 auto;
       border: 0;
       border-radius: 6px;
       background: transparent;
@@ -876,6 +880,12 @@
     }
     .settings-tab:hover {
       background: #f0f0f0;
+    }
+    .settings-tab:focus-visible,
+    .mcp-action:focus-visible,
+    .mcp-dialog-close:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .35);
+      outline-offset: 2px;
     }
     .settings-tab.active {
       background: var(--primary-bg);
@@ -1065,6 +1075,215 @@
     #addSkillBtn span {
       min-width: 0;
       overflow-wrap: anywhere;
+    }
+    .mcp-list {
+      display: grid;
+      gap: 12px;
+    }
+    .mcp-card {
+      min-height: 156px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 14px;
+      padding: 18px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .mcp-card[data-state="connected"] {
+      border-color: #b7eb8f;
+      box-shadow: 0 4px 14px rgba(56, 158, 13, .07);
+    }
+    .mcp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary-bg);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mcp-icon .icon { width: 22px; height: 22px; stroke-width: 1.8; }
+    .mcp-copy { min-width: 0; }
+    .mcp-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .mcp-name { color: #262626; font-size: 15px; font-weight: 650; }
+    .mcp-protocol {
+      height: 22px;
+      border-radius: 11px;
+      background: #f5f5f5;
+      color: #595959;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+    .mcp-desc {
+      max-width: 680px;
+      margin-top: 7px;
+      color: #595959;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .mcp-capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .mcp-capability {
+      height: 24px;
+      border: 1px solid #e8e8e8;
+      border-radius: 5px;
+      background: #fafafa;
+      color: #595959;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+    .mcp-side {
+      min-width: 94px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .mcp-status {
+      height: 26px;
+      border-radius: 13px;
+      background: #fafafa;
+      color: #8c8c8c;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .mcp-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #bfbfbf;
+    }
+    .mcp-card[data-state="connected"] .mcp-status {
+      background: #f6ffed;
+      color: #389e0d;
+    }
+    .mcp-card[data-state="connected"] .mcp-status::before { background: #52c41a; }
+    .mcp-actions { display: flex; align-items: center; gap: 8px; }
+    .mcp-action {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: #595959;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+    .mcp-action:hover { border-color: #91caff; color: #0958d9; }
+    .mcp-action.primary { border-color: var(--primary); background: var(--primary); color: #fff; }
+    .mcp-action.primary:hover { border-color: #4096ff; background: #4096ff; color: #fff; }
+    .mcp-connection-detail {
+      grid-column: 2 / -1;
+      min-width: 0;
+      border-top: 1px solid var(--border);
+      margin-top: 2px;
+      padding-top: 12px;
+      color: #8c8c8c;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .mcp-connection-detail strong { color: #389e0d; font-weight: 600; }
+    .mcp-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 14px;
+      color: #8c8c8c;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .mcp-note .icon { width: 15px; height: 15px; flex: none; margin-top: 1px; }
+    .mcp-connect-dialog { width: min(520px, 100%); }
+    .mcp-dialog-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .mcp-dialog-head p { margin-top: 5px; color: #8c8c8c; font-size: 13px; }
+    .mcp-dialog-close {
+      width: 36px;
+      height: 36px;
+      flex: none;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #8c8c8c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .mcp-dialog-close:hover { background: #f5f5f5; color: #262626; }
+    .mcp-dialog-close .icon { width: 18px; height: 18px; }
+    .mcp-field { display: block; margin-top: 18px; }
+    .mcp-field-label { display: block; color: #262626; font-size: 13px; font-weight: 600; }
+    .mcp-field-required { margin-left: 3px; color: #cf1322; }
+    .mcp-input {
+      width: 100%;
+      height: 42px;
+      margin-top: 7px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      background: #fff;
+      color: #262626;
+      padding: 0 11px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .mcp-input:focus { border-color: var(--primary); outline: 2px solid rgba(22,119,255,.12); }
+    .mcp-field-help { display: block; margin-top: 6px; color: #8c8c8c; font-size: 12px; line-height: 1.5; }
+    .mcp-form-status {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #595959;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .mcp-form-status.error { color: #cf1322; }
+    .mcp-form-status.success { color: #389e0d; }
+    .mcp-submit[disabled] { border-color: #91caff; background: #91caff; cursor: wait; }
+    .mcp-mock-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 18px;
+      border: 1px solid #bae0ff;
+      border-radius: 8px;
+      background: #f0f8ff;
+      color: #0958d9;
+      padding: 11px 12px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .mcp-mock-banner .icon { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+    @media (max-width: 640px) {
+      .settings-tabs { padding-inline: 12px; }
+      .settings-content { padding: 20px 16px 28px; }
+      .mcp-card { grid-template-columns: 44px minmax(0, 1fr); }
+      .mcp-side { grid-column: 1 / -1; width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+      .mcp-connection-detail { grid-column: 1 / -1; }
     }
     .chat-top {
       flex: 0 0 48px;
@@ -4476,6 +4695,10 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>
               Skill
             </button>
+            <button class="settings-tab" type="button" data-settings-tab="mcps" aria-pressed="false">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="3" width="6" height="6" rx="1.5"/><rect x="9" y="15" width="6" height="6" rx="1.5"/><path d="M9 6h6M6 9v3a3 3 0 0 0 3 3h3M18 9v3a3 3 0 0 1-3 3h-3"/></svg>
+              MCPs
+            </button>
             <button class="settings-tab" type="button" data-settings-tab="tools" aria-pressed="false">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-3-3Z"/></svg>
               工具
@@ -4573,6 +4796,58 @@
                 </div>
               </div>
 
+            </section>
+
+            <section class="settings-panel" id="settingsPanelMcps" data-settings-panel="mcps">
+              <div class="settings-panel-head">
+                <div>
+                  <h2 class="settings-panel-title">MCPs</h2>
+                  <div class="settings-panel-subtitle">连接外部服务，为 Agent 扩展可调用的消息、待办等能力。</div>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-head">
+                  <div>
+                    <div class="settings-section-title">可用连接</div>
+                    <div class="settings-section-note">连接状态仅在当前页面会话中保留。</div>
+                  </div>
+                </div>
+                <div class="mcp-list">
+                  <article class="mcp-card" id="vanishMcpCard" data-state="disconnected">
+                    <span class="mcp-icon" aria-hidden="true">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H9l-5 3v-5a7 7 0 0 1-2-5V8a5 5 0 0 1 5-5h10a5 5 0 0 1 5 5Z"/><path d="M8 10h8M8 14h5"/></svg>
+                    </span>
+                    <div class="mcp-copy">
+                      <div class="mcp-title-row">
+                        <span class="mcp-name">Vanish</span>
+                        <span class="mcp-protocol">HTTP MCP</span>
+                      </div>
+                      <div class="mcp-desc">读取 Vanish 会话、未读消息和待办，并在你明确确认后创建待办。</div>
+                      <div class="mcp-capabilities" aria-label="Vanish 支持的能力">
+                        <span class="mcp-capability">会话与未读</span>
+                        <span class="mcp-capability">消息搜索</span>
+                        <span class="mcp-capability">消息上下文</span>
+                        <span class="mcp-capability">待办</span>
+                        <span class="mcp-capability" id="vanishToolCount">14 项工具</span>
+                      </div>
+                    </div>
+                    <div class="mcp-side">
+                      <span class="mcp-status" id="vanishMcpStatus" role="status">未连接</span>
+                      <div class="mcp-actions">
+                        <button class="mcp-action primary" id="vanishConnectBtn" type="button">连接</button>
+                        <button class="mcp-action" id="vanishDisconnectBtn" type="button" hidden>断开</button>
+                      </div>
+                    </div>
+                    <div class="mcp-connection-detail" id="vanishConnectionDetail" hidden>
+                      已连接到 <strong id="vanishServerName">vanish-mcp-server</strong> · <span id="vanishConnectedEndpoint"></span>
+                    </div>
+                  </article>
+                </div>
+                <div class="mcp-note">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+                  <span>此 Demo 只模拟连接状态，不会向 Vanish 发起请求，也不会读取、上传或保存任何消息、待办和鉴权数据。</span>
+                </div>
+              </div>
             </section>
 
             <section class="settings-panel" id="settingsPanelTools" data-settings-panel="tools">
@@ -4834,6 +5109,34 @@
     </form>
   </div>
 
+  <div class="confirm-overlay" id="vanishConnectionOverlay" role="dialog" aria-modal="true" aria-labelledby="vanishConnectionTitle" aria-hidden="true">
+    <form class="confirm-dialog mcp-connect-dialog" id="vanishConnectionForm">
+      <div class="mcp-dialog-head">
+        <div>
+          <h3 id="vanishConnectionTitle">连接 Vanish</h3>
+          <p>演示通过 HTTP MCP 连接 Vanish 的产品流程。</p>
+        </div>
+        <button class="mcp-dialog-close" id="vanishConnectionClose" type="button" aria-label="关闭连接窗口">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <label class="mcp-field" for="vanishEndpointInput">
+        <span class="mcp-field-label">MCP 地址<span class="mcp-field-required" aria-hidden="true">*</span></span>
+        <input class="mcp-input" id="vanishEndpointInput" type="url" value="http://127.0.0.1:17477/mcp" autocomplete="off" spellcheck="false" required aria-describedby="vanishEndpointHelp">
+        <span class="mcp-field-help" id="vanishEndpointHelp">仅用于界面展示，不会向该地址发起网络请求。</span>
+      </label>
+      <div class="mcp-mock-banner">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <span><strong>Mock 模式：</strong>不需要填写 Bearer Token，不连接真实服务，不使用任何个人数据。</span>
+      </div>
+      <div class="mcp-form-status" id="vanishConnectionStatus" role="status" aria-live="polite"></div>
+      <div class="confirm-actions">
+        <button type="button" id="vanishConnectionCancel">取消</button>
+        <button class="mcp-action primary mcp-submit" id="vanishConnectionSubmit" type="submit">模拟连接</button>
+      </div>
+    </form>
+  </div>
+
   <div class="confirm-overlay" id="deleteProjectConfirm" role="dialog" aria-modal="true" aria-labelledby="deleteProjectTitle" aria-hidden="true">
     <div class="confirm-dialog">
       <h3 id="deleteProjectTitle">删除项目？</h3>
@@ -4908,6 +5211,21 @@
     const settingsTabs = document.querySelectorAll('[data-settings-tab]');
     const settingsPanels = document.querySelectorAll('[data-settings-panel]');
     const addSkillBtn = document.getElementById('addSkillBtn');
+    const vanishMcpCard = document.getElementById('vanishMcpCard');
+    const vanishMcpStatus = document.getElementById('vanishMcpStatus');
+    const vanishConnectBtn = document.getElementById('vanishConnectBtn');
+    const vanishDisconnectBtn = document.getElementById('vanishDisconnectBtn');
+    const vanishConnectionDetail = document.getElementById('vanishConnectionDetail');
+    const vanishConnectedEndpoint = document.getElementById('vanishConnectedEndpoint');
+    const vanishServerName = document.getElementById('vanishServerName');
+    const vanishToolCount = document.getElementById('vanishToolCount');
+    const vanishConnectionOverlay = document.getElementById('vanishConnectionOverlay');
+    const vanishConnectionForm = document.getElementById('vanishConnectionForm');
+    const vanishConnectionClose = document.getElementById('vanishConnectionClose');
+    const vanishConnectionCancel = document.getElementById('vanishConnectionCancel');
+    const vanishConnectionSubmit = document.getElementById('vanishConnectionSubmit');
+    const vanishEndpointInput = document.getElementById('vanishEndpointInput');
+    const vanishConnectionStatus = document.getElementById('vanishConnectionStatus');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
     const openManualBtn = document.getElementById('openManualBtn');
     const artifactMenu = document.getElementById('artifactMenu');
@@ -4971,6 +5289,15 @@
     let activeMentionType = 'doc';
     let activeMentionIndex = 0;
     let mentionTriggerRange = null;
+    let vanishDialogReturnFocus = null;
+    let vanishConnection = {
+      connected: false,
+      connecting: false,
+      endpoint: '',
+      serverName: '',
+      toolCount: 14,
+      timer: null
+    };
     let historyMenuRow = null;
     let pendingDeleteHistoryRow = null;
     let currentConversationState = 'empty';
@@ -5406,6 +5733,108 @@
       settingsPanels.forEach(panel => {
         panel.classList.toggle('active', panel.dataset.settingsPanel === tab);
       });
+    }
+
+    function setVanishFormStatus(message = '', type = '') {
+      vanishConnectionStatus.textContent = message;
+      vanishConnectionStatus.className = 'mcp-form-status';
+      if (type) vanishConnectionStatus.classList.add(type);
+    }
+
+    function setVanishConnecting(connecting) {
+      vanishConnection.connecting = connecting;
+      vanishConnectionSubmit.disabled = connecting;
+      vanishEndpointInput.disabled = connecting;
+      vanishConnectionSubmit.textContent = connecting ? '正在模拟…' : '模拟连接';
+    }
+
+    function updateVanishConnectionUi() {
+      const connected = vanishConnection.connected;
+      vanishMcpCard.dataset.state = connected ? 'connected' : 'disconnected';
+      vanishMcpStatus.textContent = connected ? '已连接' : '未连接';
+      vanishConnectBtn.hidden = connected;
+      vanishDisconnectBtn.hidden = !connected;
+      vanishConnectionDetail.hidden = !connected;
+      vanishToolCount.textContent = `${vanishConnection.toolCount || 14} 项工具`;
+      if (connected) {
+        vanishServerName.textContent = vanishConnection.serverName || 'vanish-mcp-server';
+        vanishConnectedEndpoint.textContent = vanishConnection.endpoint;
+      }
+    }
+
+    function openVanishConnectionDialog() {
+      vanishDialogReturnFocus = document.activeElement;
+      vanishEndpointInput.value = vanishConnection.endpoint || 'http://127.0.0.1:17477/mcp';
+      setVanishFormStatus();
+      vanishConnectionOverlay.classList.add('open');
+      vanishConnectionOverlay.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => {
+        vanishEndpointInput.focus();
+        vanishEndpointInput.select();
+      });
+    }
+
+    function closeVanishConnectionDialog() {
+      if (vanishConnection.timer) clearTimeout(vanishConnection.timer);
+      vanishConnection.timer = null;
+      vanishConnectionOverlay.classList.remove('open');
+      vanishConnectionOverlay.setAttribute('aria-hidden', 'true');
+      setVanishConnecting(false);
+      if (vanishDialogReturnFocus?.isConnected) vanishDialogReturnFocus.focus();
+      vanishDialogReturnFocus = null;
+    }
+
+    function connectVanish(event) {
+      event.preventDefault();
+      if (!vanishConnectionForm.reportValidity()) return;
+      const endpoint = vanishEndpointInput.value.trim();
+      let parsedEndpoint;
+      try {
+        parsedEndpoint = new URL(endpoint);
+      } catch (error) {
+        setVanishFormStatus('请输入有效的 MCP 地址。', 'error');
+        vanishEndpointInput.focus();
+        return;
+      }
+      if (!['http:', 'https:'].includes(parsedEndpoint.protocol)) {
+        setVanishFormStatus('MCP 地址仅支持 HTTP 或 HTTPS。', 'error');
+        vanishEndpointInput.focus();
+        return;
+      }
+
+      setVanishConnecting(true);
+      setVanishFormStatus('正在模拟验证服务与工具清单…');
+      vanishConnection.timer = setTimeout(() => {
+        vanishConnection = {
+          connected: true,
+          connecting: false,
+          endpoint,
+          serverName: 'Vanish Mock',
+          toolCount: 14,
+          timer: null
+        };
+        updateVanishConnectionUi();
+        setVanishFormStatus('模拟连接成功，已展示 14 项工具。', 'success');
+        showToast('Vanish 模拟连接已建立 · 14 项工具');
+        setTimeout(() => {
+          if (vanishConnectionOverlay.classList.contains('open')) closeVanishConnectionDialog();
+        }, 450);
+      }, 700);
+    }
+
+    function disconnectVanish() {
+      const current = { ...vanishConnection };
+      if (current.timer) clearTimeout(current.timer);
+      vanishConnection = {
+        connected: false,
+        connecting: false,
+        endpoint: current.endpoint,
+        serverName: '',
+        toolCount: 14,
+        timer: null
+      };
+      updateVanishConnectionUi();
+      showToast('Vanish 模拟连接已断开');
     }
 
     function openSettings() {
@@ -7458,6 +7887,14 @@
       setSettingsTab(tab.dataset.settingsTab);
     }));
     addSkillBtn.addEventListener('click', startCustomSkillChat);
+    vanishConnectBtn.addEventListener('click', openVanishConnectionDialog);
+    vanishDisconnectBtn.addEventListener('click', disconnectVanish);
+    vanishConnectionForm.addEventListener('submit', connectVanish);
+    vanishConnectionClose.addEventListener('click', closeVanishConnectionDialog);
+    vanishConnectionCancel.addEventListener('click', closeVanishConnectionDialog);
+    vanishConnectionOverlay.addEventListener('click', event => {
+      if (event.target === vanishConnectionOverlay) closeVanishConnectionDialog();
+    });
 
     planToggle.addEventListener('click', () => {
       planMode = !planMode;
@@ -8650,7 +9087,8 @@
     });
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      if (deleteProjectConfirm.classList.contains('open')) closeDeleteProject();
+      if (vanishConnectionOverlay.classList.contains('open')) closeVanishConnectionDialog();
+      else if (deleteProjectConfirm.classList.contains('open')) closeDeleteProject();
       else if (projectFormOverlay.classList.contains('open')) closeProjectForm();
       else if (moveConversationMenu.classList.contains('open')) closeMoveConversationMenu();
       else if (projectContextMenu.classList.contains('open')) closeProjectContextMenu();
@@ -8729,6 +9167,7 @@
 
     renderProjectSidebar();
     renderProjectGrid('');
+    updateVanishConnectionUi();
     renderManualIssueList();
     renderManualIssueDetail();
     renderArtifact();
