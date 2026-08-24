@@ -4843,10 +4843,39 @@
                       已连接到 <strong id="vanishServerName">vanish-mcp-server</strong> · <span id="vanishConnectedEndpoint"></span>
                     </div>
                   </article>
+                  <article class="mcp-card" id="atlassianMcpCard" data-state="disconnected">
+                    <span class="mcp-icon" aria-hidden="true">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M7 3h10a2 2 0 0 1 2 2v14l-7-4-7 4V5a2 2 0 0 1 2-2Z"/><path d="M9 8h6M9 11h4"/></svg>
+                    </span>
+                    <div class="mcp-copy">
+                      <div class="mcp-title-row">
+                        <span class="mcp-name">Atlassian</span>
+                        <span class="mcp-protocol">HTTP MCP</span>
+                      </div>
+                      <div class="mcp-desc">模拟搜索 Jira 工作项、读取 Confluence 页面，并演示创建问题和评论。</div>
+                      <div class="mcp-capabilities" aria-label="Atlassian 支持的模拟能力">
+                        <span class="mcp-capability">Jira 工作项</span>
+                        <span class="mcp-capability">Confluence 页面</span>
+                        <span class="mcp-capability">统一搜索</span>
+                        <span class="mcp-capability">创建与评论</span>
+                        <span class="mcp-capability">Mock 工具集</span>
+                      </div>
+                    </div>
+                    <div class="mcp-side">
+                      <span class="mcp-status" id="atlassianMcpStatus" role="status">未连接</span>
+                      <div class="mcp-actions">
+                        <button class="mcp-action primary" id="atlassianConnectBtn" type="button">连接</button>
+                        <button class="mcp-action" id="atlassianDisconnectBtn" type="button" hidden>断开</button>
+                      </div>
+                    </div>
+                    <div class="mcp-connection-detail" id="atlassianConnectionDetail" hidden>
+                      已连接到 <strong id="atlassianServerName">Atlassian Mock</strong> · <span id="atlassianConnectedEndpoint"></span>
+                    </div>
+                  </article>
                 </div>
                 <div class="mcp-note">
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-                  <span>此 Demo 只模拟连接状态，不会向 Vanish 发起请求，也不会读取、上传或保存任何消息、待办和鉴权数据。</span>
+                  <span>此 Demo 只模拟连接状态，不会向 Vanish 或 Atlassian 发起请求，也不会读取、上传或保存任何消息、项目、文档和鉴权数据。</span>
                 </div>
               </div>
             </section>
@@ -5138,6 +5167,34 @@
     </form>
   </div>
 
+  <div class="confirm-overlay" id="atlassianConnectionOverlay" role="dialog" aria-modal="true" aria-labelledby="atlassianConnectionTitle" aria-hidden="true">
+    <form class="confirm-dialog mcp-connect-dialog" id="atlassianConnectionForm">
+      <div class="mcp-dialog-head">
+        <div>
+          <h3 id="atlassianConnectionTitle">连接 Atlassian</h3>
+          <p>演示通过 HTTP MCP 连接 Jira 与 Confluence 的产品流程。</p>
+        </div>
+        <button class="mcp-dialog-close" id="atlassianConnectionClose" type="button" aria-label="关闭 Atlassian 连接窗口">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <label class="mcp-field" for="atlassianEndpointInput">
+        <span class="mcp-field-label">MCP 地址<span class="mcp-field-required" aria-hidden="true">*</span></span>
+        <input class="mcp-input" id="atlassianEndpointInput" type="url" value="https://atlassian.example/mcp" autocomplete="off" spellcheck="false" required aria-describedby="atlassianEndpointHelp">
+        <span class="mcp-field-help" id="atlassianEndpointHelp">使用 .example 演示地址，不会发起任何网络请求。</span>
+      </label>
+      <div class="mcp-mock-banner">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <span><strong>Mock 模式：</strong>不需要 Atlassian 账号或 Token，不连接 Jira、Confluence，不使用任何真实项目数据。</span>
+      </div>
+      <div class="mcp-form-status" id="atlassianConnectionStatus" role="status" aria-live="polite"></div>
+      <div class="confirm-actions">
+        <button type="button" id="atlassianConnectionCancel">取消</button>
+        <button class="mcp-action primary mcp-submit" id="atlassianConnectionSubmit" type="submit">模拟连接</button>
+      </div>
+    </form>
+  </div>
+
   <div class="confirm-overlay" id="deleteProjectConfirm" role="dialog" aria-modal="true" aria-labelledby="deleteProjectTitle" aria-hidden="true">
     <div class="confirm-dialog">
       <h3 id="deleteProjectTitle">删除项目？</h3>
@@ -5227,6 +5284,20 @@
     const vanishConnectionSubmit = document.getElementById('vanishConnectionSubmit');
     const vanishEndpointInput = document.getElementById('vanishEndpointInput');
     const vanishConnectionStatus = document.getElementById('vanishConnectionStatus');
+    const atlassianMcpCard = document.getElementById('atlassianMcpCard');
+    const atlassianMcpStatus = document.getElementById('atlassianMcpStatus');
+    const atlassianConnectBtn = document.getElementById('atlassianConnectBtn');
+    const atlassianDisconnectBtn = document.getElementById('atlassianDisconnectBtn');
+    const atlassianConnectionDetail = document.getElementById('atlassianConnectionDetail');
+    const atlassianConnectedEndpoint = document.getElementById('atlassianConnectedEndpoint');
+    const atlassianServerName = document.getElementById('atlassianServerName');
+    const atlassianConnectionOverlay = document.getElementById('atlassianConnectionOverlay');
+    const atlassianConnectionForm = document.getElementById('atlassianConnectionForm');
+    const atlassianConnectionClose = document.getElementById('atlassianConnectionClose');
+    const atlassianConnectionCancel = document.getElementById('atlassianConnectionCancel');
+    const atlassianConnectionSubmit = document.getElementById('atlassianConnectionSubmit');
+    const atlassianEndpointInput = document.getElementById('atlassianEndpointInput');
+    const atlassianConnectionStatus = document.getElementById('atlassianConnectionStatus');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
     const openManualBtn = document.getElementById('openManualBtn');
     const artifactMenu = document.getElementById('artifactMenu');
@@ -5297,6 +5368,14 @@
       endpoint: '',
       serverName: '',
       toolCount: 14,
+      timer: null
+    };
+    let atlassianDialogReturnFocus = null;
+    let atlassianConnection = {
+      connected: false,
+      connecting: false,
+      endpoint: '',
+      serverName: '',
       timer: null
     };
     let historyMenuRow = null;
@@ -5836,6 +5915,105 @@
       };
       updateVanishConnectionUi();
       showToast('Vanish 模拟连接已断开');
+    }
+
+    function setAtlassianFormStatus(message = '', type = '') {
+      atlassianConnectionStatus.textContent = message;
+      atlassianConnectionStatus.className = 'mcp-form-status';
+      if (type) atlassianConnectionStatus.classList.add(type);
+    }
+
+    function setAtlassianConnecting(connecting) {
+      atlassianConnection.connecting = connecting;
+      atlassianConnectionSubmit.disabled = connecting;
+      atlassianEndpointInput.disabled = connecting;
+      atlassianConnectionSubmit.textContent = connecting ? '正在模拟…' : '模拟连接';
+    }
+
+    function updateAtlassianConnectionUi() {
+      const connected = atlassianConnection.connected;
+      atlassianMcpCard.dataset.state = connected ? 'connected' : 'disconnected';
+      atlassianMcpStatus.textContent = connected ? '已连接' : '未连接';
+      atlassianConnectBtn.hidden = connected;
+      atlassianDisconnectBtn.hidden = !connected;
+      atlassianConnectionDetail.hidden = !connected;
+      if (connected) {
+        atlassianServerName.textContent = atlassianConnection.serverName || 'Atlassian Mock';
+        atlassianConnectedEndpoint.textContent = atlassianConnection.endpoint;
+      }
+    }
+
+    function openAtlassianConnectionDialog() {
+      atlassianDialogReturnFocus = document.activeElement;
+      atlassianEndpointInput.value = atlassianConnection.endpoint || 'https://atlassian.example/mcp';
+      setAtlassianFormStatus();
+      atlassianConnectionOverlay.classList.add('open');
+      atlassianConnectionOverlay.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => {
+        atlassianEndpointInput.focus();
+        atlassianEndpointInput.select();
+      });
+    }
+
+    function closeAtlassianConnectionDialog() {
+      if (atlassianConnection.timer) clearTimeout(atlassianConnection.timer);
+      atlassianConnection.timer = null;
+      atlassianConnectionOverlay.classList.remove('open');
+      atlassianConnectionOverlay.setAttribute('aria-hidden', 'true');
+      setAtlassianConnecting(false);
+      if (atlassianDialogReturnFocus?.isConnected) atlassianDialogReturnFocus.focus();
+      atlassianDialogReturnFocus = null;
+    }
+
+    function connectAtlassian(event) {
+      event.preventDefault();
+      if (!atlassianConnectionForm.reportValidity()) return;
+      const endpoint = atlassianEndpointInput.value.trim();
+      let parsedEndpoint;
+      try {
+        parsedEndpoint = new URL(endpoint);
+      } catch (error) {
+        setAtlassianFormStatus('请输入有效的 MCP 地址。', 'error');
+        atlassianEndpointInput.focus();
+        return;
+      }
+      if (!['http:', 'https:'].includes(parsedEndpoint.protocol)) {
+        setAtlassianFormStatus('MCP 地址仅支持 HTTP 或 HTTPS。', 'error');
+        atlassianEndpointInput.focus();
+        return;
+      }
+
+      setAtlassianConnecting(true);
+      setAtlassianFormStatus('正在模拟验证 Jira、Confluence 与工具清单…');
+      atlassianConnection.timer = setTimeout(() => {
+        atlassianConnection = {
+          connected: true,
+          connecting: false,
+          endpoint,
+          serverName: 'Atlassian Mock',
+          timer: null
+        };
+        updateAtlassianConnectionUi();
+        setAtlassianFormStatus('模拟连接成功，Jira 与 Confluence 能力已就绪。', 'success');
+        showToast('Atlassian 模拟连接已建立');
+        setTimeout(() => {
+          if (atlassianConnectionOverlay.classList.contains('open')) closeAtlassianConnectionDialog();
+        }, 450);
+      }, 700);
+    }
+
+    function disconnectAtlassian() {
+      const current = { ...atlassianConnection };
+      if (current.timer) clearTimeout(current.timer);
+      atlassianConnection = {
+        connected: false,
+        connecting: false,
+        endpoint: current.endpoint,
+        serverName: '',
+        timer: null
+      };
+      updateAtlassianConnectionUi();
+      showToast('Atlassian 模拟连接已断开');
     }
 
     function openSettings() {
@@ -7910,6 +8088,14 @@
     vanishConnectionOverlay.addEventListener('click', event => {
       if (event.target === vanishConnectionOverlay) closeVanishConnectionDialog();
     });
+    atlassianConnectBtn.addEventListener('click', openAtlassianConnectionDialog);
+    atlassianDisconnectBtn.addEventListener('click', disconnectAtlassian);
+    atlassianConnectionForm.addEventListener('submit', connectAtlassian);
+    atlassianConnectionClose.addEventListener('click', closeAtlassianConnectionDialog);
+    atlassianConnectionCancel.addEventListener('click', closeAtlassianConnectionDialog);
+    atlassianConnectionOverlay.addEventListener('click', event => {
+      if (event.target === atlassianConnectionOverlay) closeAtlassianConnectionDialog();
+    });
 
     planToggle.addEventListener('click', () => {
       planMode = !planMode;
@@ -9102,7 +9288,8 @@
     });
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      if (vanishConnectionOverlay.classList.contains('open')) closeVanishConnectionDialog();
+      if (atlassianConnectionOverlay.classList.contains('open')) closeAtlassianConnectionDialog();
+      else if (vanishConnectionOverlay.classList.contains('open')) closeVanishConnectionDialog();
       else if (deleteProjectConfirm.classList.contains('open')) closeDeleteProject();
       else if (projectFormOverlay.classList.contains('open')) closeProjectForm();
       else if (moveConversationMenu.classList.contains('open')) closeMoveConversationMenu();
@@ -9183,6 +9370,7 @@
     renderProjectSidebar();
     renderProjectGrid('');
     updateVanishConnectionUi();
+    updateAtlassianConnectionUi();
     renderManualIssueList();
     renderManualIssueDetail();
     renderArtifact();
