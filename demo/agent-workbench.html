@@ -421,7 +421,7 @@
       padding: 0 4px 0 7px;
       color: #8c8c8c;
     }
-    .conversation-group-toggle {
+    .conversation-group-open {
       min-width: 0;
       height: 34px;
       border: 0;
@@ -436,16 +436,11 @@
       font: inherit;
       cursor: pointer;
     }
-    .conversation-group-toggle:focus-visible,
+    .conversation-group-open:focus-visible,
     .project-header-action:focus-visible { outline: 2px solid rgba(22,119,255,.35); outline-offset: 1px; }
-    .group-caret { width: 14px; height: 14px; opacity: 0; transition: opacity .14s ease, transform .18s ease; }
-    .conversation-group-header:hover .group-caret,
-    .conversation-group-header:focus-within .group-caret { opacity: 1; }
-    .conversation-group.collapsed .group-caret { transform: rotate(-90deg); }
     .group-folder-icon { width: 16px; height: 16px; color: #8c8c8c; display: inline-flex; flex: none; }
     .group-folder-icon .icon { width: 16px; height: 16px; }
     .conversation-group-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
-    .project-pin-indicator { width: 12px; height: 12px; color: #8c8c8c; flex: none; }
     .project-header-actions { position: absolute; right: 4px; top: 2px; display: flex; align-items: center; gap: 2px; opacity: 0; pointer-events: none; }
     .conversation-group-header:hover .project-header-actions,
     .conversation-group-header:focus-within .project-header-actions { opacity: 1; pointer-events: auto; }
@@ -608,9 +603,7 @@
       display: none;
     }
     .move-conversation-menu.open { display: block; }
-    .move-project-search { width: 100%; height: 34px; border: 1px solid #d9d9d9; border-radius: 7px; padding: 0 10px; font: inherit; }
-    .move-project-search:focus { border-color: #1677ff; outline: 2px solid rgba(22,119,255,.12); }
-    .move-project-list { max-height: 220px; overflow: auto; margin-top: 5px; }
+    .move-project-list { max-height: 220px; overflow: auto; }
     .move-project-option {
       width: 100%; min-height: 36px; border: 0; border-radius: 6px; background: transparent; color: #262626;
       display: flex; align-items: center; gap: 9px; padding: 7px 9px; text-align: left; font-size: 13px; cursor: pointer;
@@ -829,7 +822,7 @@
       .project-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .group-caret, .project-card { transition: none; }
+      .project-card { transition: none; }
     }
     @media (hover: none) {
       .project-header-actions, .project-card-actions { opacity: 1; pointer-events: auto; }
@@ -4694,29 +4687,15 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 0;
+      padding: 0 68px 0 0;
       flex: 1;
       text-align: left;
       font: inherit;
       cursor: pointer;
     }
     .conversation-group-open:hover .conversation-group-name { color: #0958d9; }
-    .conversation-group-toggle {
-      width: 28px;
-      min-width: 28px;
-      height: 28px;
-      flex: none;
-      justify-content: center;
-      border-radius: 7px;
-    }
-    .conversation-group-toggle:hover { background: #e9e9e9; color: #262626; }
-    .conversation-group-toggle .group-caret {
-      opacity: 1;
-      transform: none;
-    }
-    .conversation-group.collapsed .conversation-group-toggle .group-caret { transform: rotate(-90deg); }
     .conversation-group-name { font-size: 13px; font-weight: 600; }
-    .project-header-actions { right: 34px; top: 3px; }
+    .project-header-actions { right: 4px; top: 3px; }
     .conversation-group-body { min-height: 4px; padding: 0 0 1px; }
     .history-row {
       margin-left: 18px;
@@ -5088,10 +5067,6 @@
       cursor: pointer;
     }
     .conversation-location-field .location-caret { width: 13px; height: 13px; margin-left: -22px; pointer-events: none; }
-    .conversation-location-context { display: inline-flex; align-items: center; gap: 6px; color: #8c8c8c; font-size: 12px; }
-    .conversation-location-context .icon { width: 15px; height: 15px; }
-    .conversation-location-context.project-active { color: #237804; }
-
     .mention-tab[hidden] { display: none; }
     .mention-shell.project-asset-mode .mention-search-wrap { display: none; }
     .mention-shell.project-asset-mode .mention-results { padding-top: 6px; }
@@ -5205,7 +5180,6 @@
       .asset-table th:nth-child(4), .asset-table td:nth-child(4) { display: none; }
       .asset-table th:first-child { width: auto; }
       .composer-location-strip { align-items: flex-start; flex-direction: column; gap: 2px; padding-block: 7px; }
-      .conversation-location-context { padding-left: 7px; }
       .artifact-save-project span { display: none; }
       .project-automation-row {
         grid-template-columns: 36px minmax(0, 1fr);
@@ -6284,10 +6258,6 @@
                 <select id="conversationLocationSelect" aria-label="选择当前对话位置"></select>
                 <svg class="location-caret icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
               </label>
-              <span class="conversation-location-context" id="conversationLocationContext">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 12 2.5 2.5L16 9"/><path d="M12 3 5 6v5c0 4.6 2.8 8.1 7 10 4.2-1.9 7-5.4 7-10V6Z"/></svg>
-                <span>普通对话，不应用项目指令</span>
-              </span>
             </div>
           </div>
         </div>
@@ -6426,10 +6396,6 @@
       移动到项目
       <svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
     </button>
-    <button class="history-menu-item" type="button" role="menuitem" data-history-action="move-out" hidden>
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/><path d="m15 12-3 3-3-3"/></svg>
-      移出项目
-    </button>
     <button class="history-menu-item" type="button" role="menuitem" data-history-action="rename">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
       改名
@@ -6441,9 +6407,17 @@
   </div>
 
   <div class="history-context-menu project-context-menu" id="projectContextMenu" role="menu" aria-hidden="true">
-    <button class="history-menu-item" type="button" role="menuitem" data-project-menu-action="manage">
+    <button class="history-menu-item" type="button" role="menuitem" data-project-menu-action="view">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>
-      项目管理
+      查看项目
+    </button>
+    <button class="history-menu-item" type="button" role="menuitem" data-project-menu-action="rename">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+      重命名
+    </button>
+    <button class="history-menu-item danger" type="button" role="menuitem" data-project-menu-action="delete">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 15H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
+      删除
     </button>
   </div>
 
@@ -6468,7 +6442,6 @@
   </div>
 
   <div class="move-conversation-menu" id="moveConversationMenu" role="menu" aria-hidden="true">
-    <input class="move-project-search" id="moveProjectSearch" type="search" placeholder="搜索项目" aria-label="搜索要移入的项目" autocomplete="off">
     <div class="move-project-list" id="moveProjectList"></div>
   </div>
 
@@ -6808,7 +6781,6 @@
     const deleteProjectName = document.getElementById('deleteProjectName');
     const deleteProjectConversationCount = document.getElementById('deleteProjectConversationCount');
     const moveConversationMenu = document.getElementById('moveConversationMenu');
-    const moveProjectSearch = document.getElementById('moveProjectSearch');
     const moveProjectList = document.getElementById('moveProjectList');
     const conversationMoveConfirm = document.getElementById('conversationMoveConfirm');
     const conversationMoveTitle = document.getElementById('conversationMoveTitle');
@@ -6817,7 +6789,6 @@
     const conversationMoveSubmit = document.getElementById('conversationMoveSubmit');
     const conversationLocationStrip = document.getElementById('conversationLocationStrip');
     const conversationLocationSelect = document.getElementById('conversationLocationSelect');
-    const conversationLocationContext = document.getElementById('conversationLocationContext');
     const projectAssetMentionTab = document.getElementById('projectAssetMentionTab');
     const mentionShell = document.getElementById('mentionShell');
     const assetActionOverlay = document.getElementById('assetActionOverlay');
@@ -6979,8 +6950,8 @@
     let automationRepeatValue = 'daily';
     let automationDirty = false;
     let projects = [
-      { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false, pinned: false, instruction: '# 项目目标\n\n你是 2027 产品规划项目的协作 Agent。\n\n- 回答前先检查项目资产中的规划文档与会议材料。\n- 明确区分已确认决策、待验证假设和下一步行动。\n- 新产物优先使用可评审的结构化格式。' },
-      { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, pinned: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' }
+      { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false, instruction: '# 项目目标\n\n你是 2027 产品规划项目的协作 Agent。\n\n- 回答前先检查项目资产中的规划文档与会议材料。\n- 明确区分已确认决策、待验证假设和下一步行动。\n- 新产物优先使用可评审的结构化格式。' },
+      { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' }
     ];
     let projectAssets = [
       { id: 'asset-planning-system', projectId: 'project-planning', parentId: '', kind: 'folder', name: '系统文件', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 3 },
@@ -7035,10 +7006,6 @@
           return (aIndex < 0 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex < 0 ? Number.MAX_SAFE_INTEGER : bIndex);
         });
       }
-    } catch (error) {}
-    try {
-      const pinnedProjectIds = JSON.parse(localStorage.getItem('plannerai-project-pinned') || '[]');
-      if (Array.isArray(pinnedProjectIds)) projects.forEach(project => { project.pinned = pinnedProjectIds.includes(project.id); });
     } catch (error) {}
     const financialQuestions = Object.freeze([
       Object.freeze({
@@ -9765,7 +9732,7 @@
       section.dataset.groupId = project.id;
       const safeName = escapeProjectHtml(project.name);
       section.innerHTML = `<div class="conversation-group-header" data-drop-project="${escapeProjectHtml(project.id)}">
-        <button class="conversation-group-open" type="button" data-group-open="${escapeProjectHtml(project.id)}" aria-label="打开项目 ${safeName}">
+        <button class="conversation-group-open" type="button" data-group-open="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}" aria-label="${project.collapsed ? '展开' : '收起'}项目 ${safeName}">
           <span class="group-folder-icon">${folderIconHtml()}</span>
           <span class="conversation-group-name">${safeName}</span>
         </button>
@@ -9773,9 +9740,6 @@
           <button class="project-header-action" type="button" data-project-menu="${escapeProjectHtml(project.id)}" aria-label="打开${safeName}的项目操作" aria-haspopup="menu" aria-expanded="false" title="项目操作"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>
           <button class="project-header-action" type="button" data-project-new="${escapeProjectHtml(project.id)}" aria-label="在${safeName}中新建对话" title="新建对话"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="14" height="16" rx="2"/><path d="m13.5 10.5 5-5a2.1 2.1 0 0 1 3 3l-5 5-4 1Z"/></svg></button>
         </span>
-        <button class="conversation-group-toggle" type="button" data-group-toggle="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}" aria-label="${project.collapsed ? '展开' : '收起'}${safeName}">
-          <svg class="group-caret icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
       </div><div class="conversation-group-body" data-drop-project="${escapeProjectHtml(project.id)}"></div>`;
       const body = section.querySelector('.conversation-group-body');
       orderedConversationRows(rows).forEach(row => body.append(prepareConversationRow(row)));
@@ -10208,10 +10172,6 @@
       try { localStorage.setItem('plannerai-project-order', JSON.stringify(projects.map(project => project.id))); } catch (error) {}
     }
 
-    function saveProjectPinnedState() {
-      try { localStorage.setItem('plannerai-project-pinned', JSON.stringify(projects.filter(project => project.pinned).map(project => project.id))); } catch (error) {}
-    }
-
     function reorderProject(sourceId, targetId, placeAfter = false) {
       if (!sourceId || !targetId || sourceId === targetId) return false;
       const sourceIndex = projects.findIndex(project => project.id === sourceId);
@@ -10234,7 +10194,7 @@
       const targetId = projects[targetIndex].id;
       if (reorderProject(projectId, targetId, delta > 0)) {
         requestAnimationFrame(() => {
-          historyList.querySelector(`[data-group-id="${CSS.escape(projectId)}"] [data-group-toggle]`)?.focus();
+          historyList.querySelector(`[data-group-id="${CSS.escape(projectId)}"] [data-group-open]`)?.focus();
           projectGrid.querySelector(`[data-project-card="${CSS.escape(projectId)}"]`)?.focus();
         });
       }
@@ -10339,11 +10299,6 @@
       conversationLocationStrip.hidden = !isNewConversation;
       const projectId = row?.dataset.projectId || '';
       if (isNewConversation) renderConversationLocationOptions(projectId);
-      const project = projects.find(item => item.id === projectId);
-      conversationLocationContext.classList.toggle('project-active', Boolean(project));
-      conversationLocationContext.querySelector('span').textContent = project
-        ? `将应用“${project.name}”的 Agent.md 与项目资产`
-        : '普通对话，不应用项目指令';
       syncProjectAssetMentionTab();
     }
 
@@ -10363,19 +10318,17 @@
       syncConversationLocationUi();
     }
 
-    function renderMoveProjectOptions(query = '') {
+    function renderMoveProjectOptions() {
       const currentId = moveMenuRow?.dataset.projectId || '';
-      const normalized = query.trim().toLocaleLowerCase();
-      const items = projects.filter(project => !normalized || project.name.toLocaleLowerCase().includes(normalized));
-      moveProjectList.innerHTML = items.length ? items.map(project => `<button class="move-project-option" type="button" role="menuitem" data-move-project="${escapeProjectHtml(project.id)}" ${project.id === currentId ? 'disabled' : ''}>${folderIconHtml()}<span>${escapeProjectHtml(project.name)}</span>${project.id === currentId ? '<span style="margin-left:auto">当前</span>' : ''}</button>`).join('') : '<div class="conversation-group-empty">没有匹配的项目</div>';
+      const destinations = [{ id: '', name: '对话' }, ...projects];
+      moveProjectList.innerHTML = destinations.map(destination => `<button class="move-project-option" type="button" role="menuitem" data-move-project="${escapeProjectHtml(destination.id)}" ${destination.id === currentId ? 'disabled' : ''}>${folderIconHtml()}<span>${escapeProjectHtml(destination.name)}</span>${destination.id === currentId ? '<span style="margin-left:auto">当前</span>' : ''}</button>`).join('');
     }
 
     function openMoveConversationMenu(row, trigger) {
       moveMenuRow = row;
       const triggerRect = trigger.getBoundingClientRect();
       const parentRect = historyContextMenu.getBoundingClientRect();
-      renderMoveProjectOptions('');
-      moveProjectSearch.value = '';
+      renderMoveProjectOptions();
       moveConversationMenu.classList.add('open');
       moveConversationMenu.setAttribute('aria-hidden', 'false');
       const width = 224;
@@ -10385,7 +10338,7 @@
       const top = Math.max(8, Math.min(triggerRect.top - 6, window.innerHeight - 300));
       moveConversationMenu.style.left = `${left}px`;
       moveConversationMenu.style.top = `${top}px`;
-      requestAnimationFrame(() => moveProjectSearch.focus());
+      requestAnimationFrame(() => moveProjectList.querySelector('.move-project-option:not(:disabled)')?.focus());
     }
 
     function closeMoveConversationMenu() {
@@ -10632,7 +10585,7 @@
       projectContextMenu.setAttribute('aria-hidden', 'false');
       const rect = button.getBoundingClientRect();
       const menuWidth = 176;
-      const menuHeight = 48;
+      const menuHeight = 120;
       const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8));
       const top = rect.bottom + menuHeight + 8 > window.innerHeight
         ? Math.max(8, rect.top - menuHeight - 4)
@@ -10640,23 +10593,6 @@
       projectContextMenu.style.left = `${left}px`;
       projectContextMenu.style.top = `${top}px`;
       requestAnimationFrame(() => projectContextMenu.querySelector('[role="menuitem"]')?.focus());
-    }
-
-    function toggleProjectPinned(projectId) {
-      const index = projects.findIndex(project => project.id === projectId);
-      if (index < 0) return;
-      const project = projects[index];
-      project.pinned = !project.pinned;
-      if (project.pinned) {
-        projects.splice(index, 1);
-        projects.unshift(project);
-      }
-      closeProjectContextMenu();
-      saveProjectPinnedState();
-      saveProjectOrder();
-      renderProjectSidebar();
-      renderProjectGrid(projectSearch.value);
-      showToast(project.pinned ? `已 Pin“${project.name}”` : `已取消 Pin“${project.name}”`);
     }
 
     function closeHistoryContextMenu() {
@@ -10680,7 +10616,6 @@
       const pinned = row.classList.contains('pinned');
       const pinLabel = historyContextMenu.querySelector('[data-history-pin-label]');
       pinLabel.textContent = pinned ? '取消置顶' : '置顶';
-      historyContextMenu.querySelector('[data-history-action="move-out"]').hidden = !row.dataset.projectId;
       historyContextMenu.classList.add('open');
       historyContextMenu.setAttribute('aria-hidden', 'false');
       const rect = button.getBoundingClientRect();
@@ -11826,15 +11761,11 @@
       }
       const groupOpen = event.target.closest('[data-group-open]');
       if (groupOpen) {
-        openProjectManager(groupOpen.dataset.groupOpen);
-        return;
-      }
-      const groupToggle = event.target.closest('[data-group-toggle]');
-      if (groupToggle) {
-        const groupId = groupToggle.dataset.groupToggle;
+        const groupId = groupOpen.dataset.groupOpen;
         const project = projects.find(item => item.id === groupId);
         if (project) project.collapsed = !project.collapsed;
         renderProjectSidebar();
+        requestAnimationFrame(() => historyList.querySelector(`[data-group-id="${CSS.escape(groupId)}"] [data-group-open]`)?.focus());
         return;
       }
       const row = event.target.closest('.history-row');
@@ -11947,10 +11878,6 @@
       if (action === 'rename') startHistoryRename(row);
       if (action === 'delete') openDeleteHistoryConfirm(row);
       if (action === 'move') openMoveConversationMenu(row, item);
-      if (action === 'move-out') {
-        closeHistoryContextMenu();
-        requestConversationMove(row, '');
-      }
     });
 
     projectContextMenu.addEventListener('click', event => {
@@ -11959,13 +11886,20 @@
       const projectId = projectMenuProjectId;
       if (!action || !projectId) return;
       event.stopPropagation();
-      if (action === 'manage') {
+      if (action === 'view') {
         closeProjectContextMenu();
         openProjectManager(projectId);
       }
+      if (action === 'rename') {
+        closeProjectContextMenu();
+        openProjectForm('rename', projectId);
+      }
+      if (action === 'delete') {
+        closeProjectContextMenu();
+        openDeleteProject(projectId);
+      }
     });
 
-    moveProjectSearch.addEventListener('input', () => renderMoveProjectOptions(moveProjectSearch.value));
     moveProjectList.addEventListener('click', event => {
       const option = event.target.closest('[data-move-project]');
       if (!option || option.disabled || !moveMenuRow) return;
@@ -12247,7 +12181,7 @@
         return;
       }
       if (projectFormMode === 'create') {
-        const project = { id: `project-${Date.now().toString(36)}`, name: result.name, createdAt: Date.now(), lastActive: Date.now(), collapsed: false, pinned: false, instruction: '# 项目指令\n\n描述 Agent 在此项目中需要持续遵循的目标、边界和输出规范。' };
+        const project = { id: `project-${Date.now().toString(36)}`, name: result.name, createdAt: Date.now(), lastActive: Date.now(), collapsed: false, instruction: '# 项目指令\n\n描述 Agent 在此项目中需要持续遵循的目标、边界和输出规范。' };
         projects.unshift(project);
         saveProjectOrder();
         highlightedProjectId = project.id;
@@ -12281,7 +12215,6 @@
       projectAssets = projectAssets.filter(item => item.projectId !== project.id);
       automationTasks.forEach(task => { if (task.location === project.id) task.location = 'conversation'; });
       projects = projects.filter(item => item.id !== project.id);
-      saveProjectPinnedState();
       saveProjectOrder();
       closeDeleteProject();
       renderProjectSidebar();
