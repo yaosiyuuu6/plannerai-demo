@@ -411,7 +411,8 @@
     .conversation-group { margin: 6px 0 10px; }
     .conversation-group[data-project-draggable="true"] .conversation-group-header { cursor: grab; }
     .conversation-group[data-project-draggable="true"].dragging { opacity: .45; }
-    .conversation-group[data-project-draggable="true"].drag-over { border-radius: 8px; box-shadow: 0 -2px 0 #1677ff; }
+    .conversation-group[data-project-draggable="true"].drag-before { border-radius: 8px; box-shadow: 0 -2px 0 #1677ff; }
+    .conversation-group[data-project-draggable="true"].drag-after { border-radius: 8px; box-shadow: 0 2px 0 #1677ff; }
     .conversation-group-header {
       position: relative;
       min-height: 34px;
@@ -793,7 +794,8 @@
     .project-card:hover, .project-card.highlight { border-color: #b7d5ff; box-shadow: 0 8px 24px rgba(31,35,41,.07); }
     .project-card[draggable="true"] { cursor: grab; }
     .project-card.dragging { opacity: .5; }
-    .project-card.drag-over { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.12); }
+    .project-card.drag-before { border-color: #1677ff; box-shadow: 0 -2px 0 #1677ff; }
+    .project-card.drag-after { border-color: #1677ff; box-shadow: 0 2px 0 #1677ff; }
     .project-card-icon { width: 48px; height: 48px; border-radius: 11px; background: #f5f6f7; color: #6b7280; display: grid; place-items: center; }
     .project-card-icon .icon { width: 22px; height: 22px; }
     .project-card-title { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 650; color: #202124; }
@@ -9730,9 +9732,11 @@
       const section = document.createElement('section');
       section.className = `conversation-group${project.collapsed ? ' collapsed' : ''}`;
       section.dataset.groupId = project.id;
+      section.dataset.projectDraggable = 'true';
+      section.draggable = true;
       const safeName = escapeProjectHtml(project.name);
       section.innerHTML = `<div class="conversation-group-header" data-drop-project="${escapeProjectHtml(project.id)}">
-        <button class="conversation-group-open" type="button" data-group-open="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}" aria-label="${project.collapsed ? '展开' : '收起'}项目 ${safeName}">
+        <button class="conversation-group-open" type="button" data-group-open="${escapeProjectHtml(project.id)}" aria-expanded="${!project.collapsed}" aria-label="${project.collapsed ? '展开' : '收起'}项目 ${safeName}，按 Alt 加上下方向键调整顺序" title="拖动调整项目顺序">
           <span class="group-folder-icon">${folderIconHtml()}</span>
           <span class="conversation-group-name">${safeName}</span>
         </button>
@@ -9797,7 +9801,7 @@
       projectGrid.innerHTML = visible.map(project => {
         const count = projectRows(project.id).length;
         const created = new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' }).format(new Date(project.createdAt));
-        return `<article class="project-card${highlightedProjectId === project.id ? ' highlight' : ''}" data-project-card="${escapeProjectHtml(project.id)}" tabindex="0" role="button" aria-label="打开项目 ${escapeProjectHtml(project.name)}">
+        return `<article class="project-card${highlightedProjectId === project.id ? ' highlight' : ''}" data-project-card="${escapeProjectHtml(project.id)}" draggable="${!normalized}" tabindex="0" role="button" aria-label="打开项目 ${escapeProjectHtml(project.name)}${normalized ? '' : '，按 Alt 加上下方向键调整顺序'}" title="${normalized ? '清除搜索后可拖动排序' : '拖动调整项目顺序'}">
           <div class="project-card-icon">${folderIconHtml()}</div>
           <div><h3 class="project-card-title">${escapeProjectHtml(project.name)}</h3><div class="project-card-meta">${count} 个对话 · 创建于 ${created}</div></div>
           <div class="project-card-actions">
@@ -10187,15 +10191,16 @@
       return true;
     }
 
-    function moveProjectByDelta(projectId, delta) {
+    function moveProjectByDelta(projectId, delta, focusTarget = 'sidebar') {
       const index = projects.findIndex(project => project.id === projectId);
       const targetIndex = index + delta;
       if (index < 0 || targetIndex < 0 || targetIndex >= projects.length) return;
       const targetId = projects[targetIndex].id;
       if (reorderProject(projectId, targetId, delta > 0)) {
         requestAnimationFrame(() => {
-          historyList.querySelector(`[data-group-id="${CSS.escape(projectId)}"] [data-group-open]`)?.focus();
-          projectGrid.querySelector(`[data-project-card="${CSS.escape(projectId)}"]`)?.focus();
+          const selector = `[data-project-card="${CSS.escape(projectId)}"]`;
+          if (focusTarget === 'grid') projectGrid.querySelector(selector)?.focus();
+          else historyList.querySelector(`[data-group-id="${CSS.escape(projectId)}"] [data-group-open]`)?.focus();
         });
       }
     }
@@ -11738,6 +11743,12 @@
       historyList.querySelectorAll('.drag-before, .drag-after, .drag-over').forEach(item => item.classList.remove('drag-before', 'drag-after', 'drag-over'));
     }
 
+    function clearProjectDragUi() {
+      draggedProjectId = null;
+      historyList.querySelectorAll('.conversation-group.dragging, .conversation-group.drag-before, .conversation-group.drag-after').forEach(item => item.classList.remove('dragging', 'drag-before', 'drag-after'));
+      projectGrid.querySelectorAll('.project-card.dragging, .project-card.drag-before, .project-card.drag-after').forEach(item => item.classList.remove('dragging', 'drag-before', 'drag-after'));
+    }
+
     historyList.addEventListener('click', event => {
       const sectionToggle = event.target.closest('[data-sidebar-section-toggle]');
       if (sectionToggle) {
@@ -11781,6 +11792,12 @@
     });
 
     historyList.addEventListener('keydown', event => {
+      const projectOpen = event.target.closest('[data-group-open]');
+      if (projectOpen && event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        moveProjectByDelta(projectOpen.dataset.groupOpen, event.key === 'ArrowUp' ? -1 : 1, 'sidebar');
+        return;
+      }
       const row = event.target.closest('.history-row');
       if (!row || event.target.closest('button, input')) return;
       if (event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -11800,6 +11817,16 @@
     });
 
     historyList.addEventListener('dragstart', event => {
+      const projectGroup = event.target.closest('.conversation-group[data-project-draggable="true"]');
+      if (projectGroup && !event.target.closest('.history-row, .project-header-action')) {
+        draggedProjectId = projectGroup.dataset.groupId;
+        projectGroup.classList.add('dragging');
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.setData('text/plain', draggedProjectId);
+        }
+        return;
+      }
       const row = event.target.closest('.history-row[draggable="true"]');
       if (!row || event.target.closest('.history-more, input')) { event.preventDefault(); return; }
       draggedConversationRow = row;
@@ -11810,6 +11837,16 @@
       }
     });
     historyList.addEventListener('dragover', event => {
+      if (draggedProjectId) {
+        const targetGroup = event.target.closest('.conversation-group[data-project-draggable="true"]');
+        if (!targetGroup || targetGroup.dataset.groupId === draggedProjectId) return;
+        event.preventDefault();
+        historyList.querySelectorAll('.conversation-group.drag-before, .conversation-group.drag-after').forEach(item => item.classList.remove('drag-before', 'drag-after'));
+        const rect = targetGroup.getBoundingClientRect();
+        targetGroup.classList.add(event.clientY > rect.top + rect.height / 2 ? 'drag-after' : 'drag-before');
+        if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+        return;
+      }
       if (!draggedConversationRow) return;
       const targetRow = event.target.closest('.history-row');
       const dropBody = event.target.closest('[data-drop-project], [data-drop-pinned]');
@@ -11824,6 +11861,16 @@
       if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
     });
     historyList.addEventListener('drop', event => {
+      if (draggedProjectId) {
+        const targetGroup = event.target.closest('.conversation-group[data-project-draggable="true"]');
+        if (!targetGroup || targetGroup.dataset.groupId === draggedProjectId) return;
+        event.preventDefault();
+        const rect = targetGroup.getBoundingClientRect();
+        const sourceId = draggedProjectId;
+        clearProjectDragUi();
+        reorderProject(sourceId, targetGroup.dataset.groupId, event.clientY > rect.top + rect.height / 2);
+        return;
+      }
       const source = draggedConversationRow;
       if (!source) return;
       const targetRow = event.target.closest('.history-row');
@@ -11862,6 +11909,7 @@
       });
     });
     historyList.addEventListener('dragend', () => {
+      clearProjectDragUi();
       clearConversationDragUi();
     });
 
@@ -12135,6 +12183,11 @@
     projectGrid.addEventListener('keydown', event => {
       const card = event.target.closest('[data-project-card]');
       if (!card) return;
+      if (!projectSearch.value.trim() && event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        moveProjectByDelta(card.dataset.projectCard, event.key === 'ArrowUp' ? -1 : 1, 'grid');
+        return;
+      }
       if (['Enter', ' '].includes(event.key) && !event.target.closest('button')) {
         event.preventDefault();
         openProjectDetail(card.dataset.projectCard);
@@ -12154,8 +12207,9 @@
       const card = event.target.closest('[data-project-card][draggable="true"]');
       if (!card || !draggedProjectId || card.dataset.projectCard === draggedProjectId) return;
       event.preventDefault();
-      projectGrid.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
-      card.classList.add('drag-over');
+      projectGrid.querySelectorAll('.drag-before, .drag-after').forEach(item => item.classList.remove('drag-before', 'drag-after'));
+      const rect = card.getBoundingClientRect();
+      card.classList.add(event.clientY > rect.top + rect.height / 2 ? 'drag-after' : 'drag-before');
       if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
     });
     projectGrid.addEventListener('drop', event => {
@@ -12164,12 +12218,11 @@
       event.preventDefault();
       const rect = card.getBoundingClientRect();
       const sourceId = draggedProjectId;
-      draggedProjectId = null;
+      clearProjectDragUi();
       reorderProject(sourceId, card.dataset.projectCard, event.clientY > rect.top + rect.height / 2);
     });
     projectGrid.addEventListener('dragend', () => {
-      draggedProjectId = null;
-      projectGrid.querySelectorAll('.dragging, .drag-over').forEach(item => item.classList.remove('dragging', 'drag-over'));
+      clearProjectDragUi();
     });
     projectForm.addEventListener('submit', event => {
       event.preventDefault();
