@@ -1674,8 +1674,6 @@
     }
     .automation-editor-actions { display: flex; align-items: center; gap: 8px; }
     .automation-confirm-summary { margin: 16px 0 4px; border-radius: 8px; background: #f7f8fa; color: #475467; padding: 11px 12px; font-size: 12px; line-height: 1.6; }
-    .automation-confirm-acknowledge { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; color: #475467; font-size: 12px; line-height: 1.55; cursor: pointer; }
-    .automation-confirm-acknowledge input { margin: 2px 0 0; accent-color: #1677ff; }
     .automation-confirm-primary { border-color: #1677ff !important; background: #1677ff !important; color: #fff !important; }
     .automation-confirm-primary:disabled { opacity: .45; cursor: not-allowed; }
     .automation-confirm-dialog .automation-confirm-primary.danger { border-color: #ff4d4f !important; background: #ff4d4f !important; color: #fff !important; }
@@ -3794,98 +3792,45 @@
       height: 100%;
       min-height: 0;
       display: grid;
-      grid-template-rows: 42px 46px minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
     }
     .mention-pop .skill-shell { display: none; }
-    .mention-tabs {
-      height: 42px;
-      display: flex;
-      align-items: stretch;
-      gap: 24px;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mention-tab {
-      position: relative;
-      border: 0;
-      background: transparent;
-      color: #262626;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 0 1px;
-      font-size: 14px;
-    }
-    .mention-tab .icon {
-      width: 14px;
-      height: 14px;
-      color: currentColor;
-    }
-    .mention-tab.active { color: var(--primary); }
-    .mention-tab.active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 2px;
-      border-radius: 2px 2px 0 0;
-      background: var(--primary);
-    }
-    .mention-search-wrap {
-      position: relative;
-      margin: 7px 12px;
-    }
-    .mention-search-wrap .icon {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      width: 14px;
-      height: 14px;
-      color: #8c8c8c;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-    .mention-search {
-      width: 100%;
-      height: 32px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      outline: 0;
-      padding: 0 10px 0 32px;
-      color: #262626;
-      background: #fff;
-      font-size: 13px;
-    }
-    .mention-search:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(22,119,255,.12);
-    }
     .mention-results {
       min-height: 0;
       max-height: none;
       overflow-y: auto;
       overscroll-behavior: contain;
       scrollbar-gutter: stable;
-      padding: 2px 0;
+      padding: 6px 8px 8px;
+    }
+    .mention-group + .mention-group { margin-top: 4px; }
+    .mention-group-title {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 5px 8px 3px;
+      color: #8c8c8c;
+      font-size: 12px;
+      font-weight: 500;
     }
     .mention-pop .suggest-row {
       height: 44px;
       grid-template-columns: 18px minmax(0,1fr);
       gap: 8px;
       border-bottom: 0;
-      padding: 0 14px;
+      border-radius: 6px;
+      padding: 0 8px;
     }
     .mention-pop .suggest-row:hover,
     .mention-pop .suggest-row.active { background: var(--primary-bg); }
     .mention-pop .suggest-title strong { color: #262626; font-weight: 500; }
     .mention-pop .suggest-space { color: #8c8c8c; }
-    .mention-pop .icon { width: 14px; height: 14px; color: var(--primary); }
+    .mention-pop .icon { width: 15px; height: 15px; color: #737373; }
     .mention-pop .knowledge-row {
       height: 44px;
       grid-template-columns: 18px minmax(0, 1fr);
       gap: 8px;
-      padding: 0 14px;
+      padding: 0 8px;
     }
     .mention-row-copy,
     .knowledge-copy {
@@ -3926,7 +3871,15 @@
       grid-template-columns: 18px minmax(0,1fr);
       gap: 8px;
     }
-    .mention-pop .qa-row > .icon { width: 14px; height: 14px; margin-left: 0; }
+    .mention-pop .knowledge-row > .icon,
+    .mention-pop .compact-reference-row[data-ref-type="doc"] > .icon { color: #1677ff; }
+    .mention-pop .compact-reference-row[data-ref-type="table"] > .icon { color: #16a34a; }
+    .mention-pop .qa-row > .icon {
+      width: 14px;
+      height: 14px;
+      margin-left: 0;
+      color: #8b5cf6;
+    }
     .qa-content {
       min-width: 0;
       display: flex;
@@ -3944,16 +3897,15 @@
     }
     .mention-empty {
       height: 100%;
-      min-height: 0;
+      min-height: 96px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      color: #bfbfbf;
+      color: #8c8c8c;
       font-size: 13px;
     }
-    .mention-empty .icon { width: 36px; height: 36px; color: #d9d9d9; }
+    .mention-pop .mention-pdf-icon { color: #f5222d; }
     .composer-reference {
       display: inline-flex;
       align-items: center;
@@ -3974,6 +3926,12 @@
       color: currentColor;
       stroke-width: 1.8;
     }
+    .composer-reference .mention-pdf-icon,
+    .inline-reference .mention-pdf-icon { color: #f5222d; }
+    .composer-reference[data-ref-type="table"] > .icon,
+    .inline-reference[data-ref-type="table"] > .icon { color: #16a34a; }
+    .composer-reference[data-ref-type="qa"] > .icon,
+    .inline-reference[data-ref-type="qa"] > .icon { color: #8b5cf6; }
     .composer-reference:hover,
     .composer-reference.selected { background: #e6f4ff; }
     .composer-reference[data-ref-type="qa"] > span,
@@ -4843,7 +4801,7 @@
     .project-conversation-name { min-width: 0; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #262626; font-size: 14px; font-weight: 600; }
     .project-conversation-meta { display: block; color: #8c8c8c; font-size: 12px; line-height: 1.4; }
     .project-conversation-row > .project-conversation-meta { white-space: nowrap; }
-    .project-conversation-pin { color: #595959; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
+    .project-conversation-pin { width: 28px; height: 28px; color: #595959; display: inline-flex; align-items: center; justify-content: center; }
     .project-conversation-pin .icon { width: 14px; height: 14px; }
     .project-empty-inline {
       border: 1px dashed #d9d9d9;
@@ -4941,16 +4899,22 @@
     .asset-kind-icon {
       width: 30px;
       height: 30px;
-      border-radius: 7px;
-      background: #f1f5f9;
-      color: #64748b;
+      border-radius: 0;
+      background: transparent;
+      color: #1677ff;
       display: grid;
       place-items: center;
       flex: none;
     }
-    .asset-kind-icon.folder { background: #eaf4ff; color: #1677ff; }
-    .asset-kind-icon.pdf { background: #fff1f0; color: #cf1322; }
-    .asset-kind-icon.sheet { background: #f0f9eb; color: #389e0d; }
+    .asset-kind-icon.folder,
+    .asset-kind-icon.document,
+    .asset-kind-icon.markdown,
+    .asset-kind-icon.text,
+    .asset-kind-icon.code,
+    .asset-kind-icon.image { color: #1677ff; }
+    .asset-kind-icon.pdf,
+    .asset-kind-icon.presentation { color: #f5222d; }
+    .asset-kind-icon.sheet { color: #16a34a; }
     .asset-kind-icon .icon { width: 17px; height: 17px; }
     .asset-cell-muted { color: #737373; font-size: 12px; }
     .asset-more { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 7px; display: grid; place-items: center; background: transparent; color: #737373; }
@@ -5069,10 +5033,30 @@
       cursor: pointer;
     }
     .conversation-location-field .location-caret { width: 13px; height: 13px; margin-left: -22px; pointer-events: none; }
-    .mention-tab[hidden] { display: none; }
-    .mention-shell.project-asset-mode .mention-search-wrap { display: none; }
-    .mention-shell.project-asset-mode .mention-results { padding-top: 6px; }
-    .project-asset-mention-row .asset-kind-icon { width: 28px; height: 28px; }
+    .project-asset-mention-row .asset-kind-icon,
+    .composer-reference .asset-kind-icon,
+    .inline-reference .asset-kind-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 0;
+      background: transparent;
+      display: inline-grid;
+      color: #1677ff;
+    }
+    .composer-reference .asset-kind-icon,
+    .inline-reference .asset-kind-icon { width: 14px; height: 14px; }
+    .project-asset-mention-row .asset-kind-icon.pdf,
+    .project-asset-mention-row .asset-kind-icon.presentation,
+    .composer-reference .asset-kind-icon.pdf,
+    .composer-reference .asset-kind-icon.presentation,
+    .inline-reference .asset-kind-icon.pdf,
+    .inline-reference .asset-kind-icon.presentation { color: #f5222d; }
+    .project-asset-mention-row .asset-kind-icon.sheet,
+    .composer-reference .asset-kind-icon.sheet,
+    .inline-reference .asset-kind-icon.sheet { color: #16a34a; }
+    .project-asset-mention-row .asset-kind-icon .icon { width: 15px; height: 15px; color: inherit; }
+    .composer-reference .asset-kind-icon .icon,
+    .inline-reference .asset-kind-icon .icon { width: 14px; height: 14px; }
     .project-asset-path { overflow: hidden; color: #8c8c8c; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
 
     .artifact-save-project {
@@ -5126,7 +5110,117 @@
     .asset-action-dialog select.form-input { appearance: auto; }
     .asset-action-dialog .form-label[hidden],
     .asset-action-dialog .form-input[hidden] { display: none; }
+    .asset-action-dialog.move-mode { width: min(760px, 100%); }
+    .asset-move-browser[hidden] { display: none; }
+    .asset-move-browser {
+      min-height: 340px;
+      max-height: min(52vh, 430px);
+      margin-top: 18px;
+      border: 1px solid #d9d9d9;
+      border-radius: 9px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .asset-move-project-pane,
+    .asset-move-folder-pane {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .asset-move-project-pane { border-right: 1px solid #e8e8e8; background: #fafafa; padding: 12px; }
+    .asset-move-folder-pane { padding: 12px; }
+    .asset-move-pane-title {
+      min-height: 32px;
+      color: #737373;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .asset-move-pane-title strong {
+      min-width: 0;
+      overflow: hidden;
+      color: #262626;
+      font-size: 12px;
+      font-weight: 500;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .asset-move-project-list { min-height: 0; overflow: auto; display: grid; align-content: start; gap: 4px; }
+    .asset-move-project-option {
+      width: 100%;
+      min-height: 42px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #262626;
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      padding: 0 10px;
+      font: inherit;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color .16s ease, color .16s ease;
+    }
+    .asset-move-project-option:hover { background: #f0f0f0; }
+    .asset-move-project-option.selected { background: #e6f4ff; color: #0958d9; }
+    .asset-move-project-option:focus-visible { outline: 2px solid #1677ff; outline-offset: -2px; }
+    .asset-move-project-option .icon { width: 18px; height: 18px; }
+    .asset-move-project-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .asset-folder-tree[hidden] { display: none; }
+    .asset-folder-tree {
+      max-height: 320px;
+      overflow: auto;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      background: #fff;
+      padding: 6px;
+    }
+    .asset-folder-tree-row {
+      --folder-depth: 0;
+      width: 100%;
+      min-height: 40px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #262626;
+      display: grid;
+      grid-template-columns: 18px 20px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px 0 calc(8px + var(--folder-depth) * 22px);
+      font: inherit;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color .16s ease, color .16s ease;
+    }
+    .asset-folder-tree-row:hover { background: #f5f5f5; }
+    .asset-folder-tree-row.selected { background: #e6f4ff; color: #0958d9; }
+    .asset-folder-tree-row:focus-visible { outline: 2px solid #1677ff; outline-offset: -2px; }
+    .asset-folder-tree-row .icon { width: 18px; height: 18px; }
+    .asset-folder-tree-caret {
+      width: 18px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: #8c8c8c;
+    }
+    .asset-folder-tree-caret .icon { width: 14px; height: 14px; transition: transform .16s ease; }
+    .asset-folder-tree-row[aria-expanded="true"] .asset-folder-tree-caret .icon { transform: rotate(90deg); }
+    .asset-folder-tree-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .asset-move-folder-pane .asset-folder-tree { min-height: 0; max-height: none; flex: 1; border: 0; border-radius: 0; padding: 0; }
     .asset-action-dialog .confirm-actions .project-primary { border-color: #202124; }
+    .asset-action-dialog .confirm-actions .project-primary:disabled { opacity: .42; cursor: not-allowed; }
     .asset-preview-dialog { width: min(720px, 100%); padding: 0; overflow: hidden; }
     .asset-preview-head { padding: 16px 18px; border-bottom: 1px solid #ececec; }
     .asset-preview-head h3 { margin: 0; }
@@ -5175,6 +5269,11 @@
       .asset-table th:first-child { width: 50%; }
     }
     @media (max-width: 640px) {
+      .asset-action-dialog.move-mode { padding: 16px; }
+      .asset-move-browser { grid-template-columns: 132px minmax(0, 1fr); }
+      .asset-move-project-pane,
+      .asset-move-folder-pane { padding: 8px; }
+      .asset-move-project-option { padding-inline: 7px; }
       .project-detail-head > .project-primary { width: 100%; }
       .project-asset-actions { width: 100%; }
       .project-asset-actions .project-secondary { flex: 1; }
@@ -5875,7 +5974,7 @@
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 14v5h14v-5"/></svg>
                     上传文件
                   </button>
-                  <input id="projectUploadInput" type="file" multiple hidden>
+                  <input id="projectUploadInput" type="file" accept=".pdf,.docx,.md,.txt,.xlsx,.csv,.tsv,.pptx,.json,.png,.jpg,.jpeg,.webp" multiple hidden>
                 </div>
                 <div class="project-asset-summary">
                   <div class="project-storage-copy"><span>项目空间</span><strong id="projectAssetSummary">0 KB / 5 GB</strong></div>
@@ -6175,29 +6274,7 @@
           <div class="composer" id="composer">
             <div class="suggest-pop" id="suggestPop">
               <div class="mention-shell" id="mentionShell">
-                <div class="mention-tabs" role="tablist" aria-label="引用类型">
-                  <button class="mention-tab" id="projectAssetMentionTab" type="button" role="tab" aria-selected="false" data-mention-type="project-asset" hidden>
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>
-                    项目资产
-                  </button>
-                  <button class="mention-tab active" type="button" role="tab" aria-selected="true" data-mention-type="doc">
-                    <span id="primaryMentionIcon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l-2 7H1Z"/><path d="M14 3h6l3 7h-7Z"/><path d="M12 14h7l2 7h-7Z"/></svg></span>
-                    <span id="primaryMentionLabel">知识库</span>
-                  </button>
-                  <button class="mention-tab" type="button" role="tab" aria-selected="false" data-mention-type="table">
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>
-                    涉及表
-                  </button>
-                  <button class="mention-tab" type="button" role="tab" aria-selected="false" data-mention-type="qa">
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="M22 8v10a2 2 0 0 1-2 2H10"/></svg>
-                    人工问答
-                  </button>
-                </div>
-                <div class="mention-search-wrap">
-                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
-                  <input class="mention-search" id="mentionSearch" type="search" placeholder="搜索知识库…" autocomplete="off" aria-label="搜索知识库">
-                </div>
-                <div class="mention-results" id="mentionRows" role="listbox" aria-label="知识库搜索结果"></div>
+                <div class="mention-results" id="mentionRows" role="listbox" aria-label="引用搜索结果"></div>
               </div>
               <div class="skill-shell" id="skillShell">
                 <div class="suggest-head" id="suggestHead"></div>
@@ -6209,7 +6286,7 @@
               <button class="menu-row plan-row" id="planToggle"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h5"/><path d="M4 17h5"/><path d="m14 6 2 2 4-4"/><path d="M14 17h6"/><circle cx="6.5" cy="12" r="1.5"/></svg>Plan mode<span class="switch"></span></button>
             </div>
             <div class="launch-context" id="launchContext" hidden aria-label="已带入的上下文"></div>
-            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill"></div>
+            <div class="composer-input" id="composerInput" contenteditable="true" data-placeholder="Shift + Enter 换行，支持粘贴上传附件；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div>
             <div class="composer-bar">
               <div class="composer-left">
                 <button class="round-btn" id="plusBtn" aria-label="打开附件菜单">＋</button>
@@ -6424,6 +6501,10 @@
   </div>
 
   <div class="history-context-menu" id="assetContextMenu" role="menu" aria-label="资产操作" aria-hidden="true">
+    <button class="history-menu-item" data-asset-menu-action="download" type="button" role="menuitem" tabindex="-1">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 21h16"/></svg>
+      下载
+    </button>
     <button class="history-menu-item" data-asset-menu-action="copy" type="button" role="menuitem" tabindex="-1">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg>
       复制
@@ -6497,8 +6578,18 @@
       <input class="form-input" id="assetNameInput" maxlength="80" autocomplete="off">
       <label class="form-label" id="assetProjectLabel" for="assetProjectSelect" hidden>目标项目</label>
       <select class="form-input" id="assetProjectSelect" hidden></select>
-      <label class="form-label" id="assetFolderLabel" for="assetFolderSelect" hidden>目标文件夹</label>
-      <select class="form-input" id="assetFolderSelect" hidden></select>
+      <div class="form-label" id="assetFolderLabel" hidden>目标文件夹</div>
+      <select class="form-input" id="assetFolderSelect" aria-labelledby="assetFolderLabel" hidden></select>
+      <div class="asset-move-browser" id="assetMoveBrowser" hidden>
+        <section class="asset-move-project-pane" aria-labelledby="assetMoveProjectTitle">
+          <div class="asset-move-pane-title" id="assetMoveProjectTitle">项目</div>
+          <div class="asset-move-project-list" id="assetMoveProjectList" role="listbox" aria-label="目标项目"></div>
+        </section>
+        <section class="asset-move-folder-pane" aria-labelledby="assetMoveFolderTitle">
+          <div class="asset-move-pane-title" id="assetMoveFolderTitle"><span>项目资产</span><strong id="assetMoveProjectName"></strong></div>
+          <div class="asset-folder-tree" id="assetFolderTree" role="tree" aria-labelledby="assetMoveFolderTitle"></div>
+        </section>
+      </div>
       <p class="form-help" id="assetActionHelp" role="alert"></p>
       <div class="confirm-actions">
         <button type="button" id="assetActionCancel">取消</button>
@@ -6621,10 +6712,6 @@
         <div><span>运行位置</span><strong id="automationConfirmLocation">对话</strong></div>
         <div><span>结果</span><strong id="automationConfirmOutcome">不保存、不激活</strong></div>
       </div>
-      <label class="automation-confirm-acknowledge" id="automationConfirmAcknowledge">
-        <input id="automationConfirmCheck" type="checkbox">
-        <span id="automationConfirmCheckText">我了解本次操作会真实运行。</span>
-      </label>
       <div class="confirm-actions">
         <button type="button" id="automationConfirmCancel">取消</button>
         <button class="automation-confirm-primary" id="automationConfirmSubmit" type="button">确认</button>
@@ -6662,9 +6749,7 @@
     const suggestPop = document.getElementById('suggestPop');
     const suggestHead = document.getElementById('suggestHead');
     const suggestRows = document.getElementById('suggestRows');
-    const mentionSearch = document.getElementById('mentionSearch');
     const mentionRows = document.getElementById('mentionRows');
-    const mentionTabs = document.querySelectorAll('[data-mention-type]');
     const planToggle = document.getElementById('planToggle');
     const conversationTitle = document.getElementById('conversationTitle');
     const conversationMeta = document.getElementById('conversationMeta');
@@ -6685,8 +6770,6 @@
     const identityToggle = document.getElementById('identityToggle');
     const identityMenu = document.getElementById('identityMenu');
     const currentIdentityLabel = document.getElementById('currentIdentity');
-    const primaryMentionIcon = document.getElementById('primaryMentionIcon');
-    const primaryMentionLabel = document.getElementById('primaryMentionLabel');
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsTabs = document.querySelectorAll('[data-settings-tab]');
     const settingsPanels = document.querySelectorAll('[data-settings-panel]');
@@ -6791,8 +6874,6 @@
     const conversationMoveSubmit = document.getElementById('conversationMoveSubmit');
     const conversationLocationStrip = document.getElementById('conversationLocationStrip');
     const conversationLocationSelect = document.getElementById('conversationLocationSelect');
-    const projectAssetMentionTab = document.getElementById('projectAssetMentionTab');
-    const mentionShell = document.getElementById('mentionShell');
     const assetActionOverlay = document.getElementById('assetActionOverlay');
     const assetContextMenu = document.getElementById('assetContextMenu');
     const assetActionForm = document.getElementById('assetActionForm');
@@ -6804,6 +6885,10 @@
     const assetProjectSelect = document.getElementById('assetProjectSelect');
     const assetFolderLabel = document.getElementById('assetFolderLabel');
     const assetFolderSelect = document.getElementById('assetFolderSelect');
+    const assetMoveBrowser = document.getElementById('assetMoveBrowser');
+    const assetMoveProjectList = document.getElementById('assetMoveProjectList');
+    const assetMoveProjectName = document.getElementById('assetMoveProjectName');
+    const assetFolderTree = document.getElementById('assetFolderTree');
     const assetActionHelp = document.getElementById('assetActionHelp');
     const assetActionCancel = document.getElementById('assetActionCancel');
     const assetActionSubmit = document.getElementById('assetActionSubmit');
@@ -6850,9 +6935,6 @@
     const automationConfirmTask = document.getElementById('automationConfirmTask');
     const automationConfirmLocation = document.getElementById('automationConfirmLocation');
     const automationConfirmOutcome = document.getElementById('automationConfirmOutcome');
-    const automationConfirmAcknowledge = document.getElementById('automationConfirmAcknowledge');
-    const automationConfirmCheck = document.getElementById('automationConfirmCheck');
-    const automationConfirmCheckText = document.getElementById('automationConfirmCheckText');
     const automationConfirmCancel = document.getElementById('automationConfirmCancel');
     const automationConfirmSubmit = document.getElementById('automationConfirmSubmit');
 
@@ -6884,7 +6966,7 @@
     let planningQueueTimers = [];
     let planningQueueItemSequence = 0;
     let currentIdentity = 'planning';
-    let activeMentionType = 'doc';
+    let currentMentionQuery = '';
     let activeMentionIndex = 0;
     let mentionTriggerRange = null;
     let vanishDialogReturnFocus = null;
@@ -6942,6 +7024,7 @@
     let assetMenuTrigger = null;
     let assetCopySequence = 0;
     const expandedAssetFolderIds = new Set();
+    const expandedMoveFolderIds = new Set();
     let assetActionMode = '';
     let assetActionTargetId = null;
     let assetActionPayload = null;
@@ -6956,13 +7039,21 @@
       { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' }
     ];
     let projectAssets = [
-      { id: 'asset-planning-system', projectId: 'project-planning', parentId: '', kind: 'folder', name: '系统文件', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 3 },
-      { id: 'asset-planning-research', projectId: 'project-planning', parentId: '', kind: 'folder', name: '调研资料', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 2 },
-      { id: 'asset-planning-roadmap', projectId: 'project-planning', parentId: '', kind: 'doc', name: '2027 产品路线图.md', type: 'Markdown', size: '48 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 7200000, content: '路线图围绕上下文管理、自动化运行与产物沉淀三个阶段推进。' },
-      { id: 'asset-planning-notes', projectId: 'project-planning', parentId: 'asset-planning-research', kind: 'doc', name: '用户访谈纪要.docx', type: 'Word', size: '126 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000, content: '用户希望项目既能整理对话，也能持续提供稳定、可控的上下文。' },
       { id: 'asset-finance-system', projectId: 'project-finance', parentId: '', kind: 'folder', name: '系统文件', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 3 },
+      { id: 'asset-finance-reports', projectId: 'project-finance', parentId: '', kind: 'folder', name: '分析报告', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 2 },
+      { id: 'asset-finance-source-data', projectId: 'project-finance', parentId: 'asset-finance-reports', kind: 'folder', name: '市场数据', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 },
+      { id: 'asset-finance-monthly', projectId: 'project-finance', parentId: '', kind: 'doc', name: '黄金市场月报.md', type: 'Markdown', size: '48 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 7200000, content: '黄金市场月报围绕价格变化、央行购金、ETF 持仓和供需数据展开。' },
+      { id: 'asset-finance-notes', projectId: 'project-finance', parentId: '', kind: 'doc', name: '研究会议纪要.docx', type: 'Word', size: '126 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000, content: '研究会议纪要记录黄金价格驱动因素、风险假设和后续数据任务。' },
+      { id: 'asset-finance-readme', projectId: 'project-finance', parentId: '', kind: 'doc', name: '数据口径说明.txt', type: '文本', size: '12 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 10800000, content: '数据口径说明包含指标定义、统计周期和来源优先级。' },
       { id: 'asset-finance-guide', projectId: 'project-finance', parentId: '', kind: 'pdf', name: '资产库使用指南.pdf', type: 'PDF', size: '1.7 MB', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 3, content: '项目资产可被项目内所有对话引用。移动对话前请检查已有资产引用。' },
-      { id: 'asset-finance-map', projectId: 'project-finance', parentId: '', kind: 'sheet', name: '财务字段映射.xlsx', type: 'Excel', size: '386 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 14400000, content: '字段映射表包含字段名称、数据来源、核验状态和更新频率。' }
+      { id: 'asset-finance-map', projectId: 'project-finance', parentId: '', kind: 'sheet', name: '财务字段映射.xlsx', type: 'Excel', size: '386 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 14400000, content: '字段映射表包含字段名称、数据来源、核验状态和更新频率。' },
+      { id: 'asset-finance-trades', projectId: 'project-finance', parentId: '', kind: 'sheet', name: '黄金交易明细.csv', type: 'CSV', size: '94 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 28800000, content: '黄金交易明细包含交易日、市场、价格、成交量和币种。' },
+      { id: 'asset-finance-import', projectId: 'project-finance', parentId: '', kind: 'sheet', name: '市场数据导入模板.tsv', type: 'TSV', size: '36 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 32400000, content: '市场数据导入模板使用制表符分隔字段。' },
+      { id: 'asset-finance-review', projectId: 'project-finance', parentId: '', kind: 'presentation', name: '月度黄金分析报告.pptx', type: 'PowerPoint', size: '6.8 MB', updatedBy: '姚晨恺', updatedAt: Date.now() - 36000000, content: '月度黄金分析报告用于展示行情、供需、机构持仓与风险提示。' },
+      { id: 'asset-finance-config', projectId: 'project-finance', parentId: '', kind: 'code', name: '数据源配置.json', type: 'JSON', size: '8 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 39600000, content: '{"project":"财务数据工作台","status":"active"}' },
+      { id: 'asset-finance-chart', projectId: 'project-finance', parentId: '', kind: 'image', name: '黄金走势.png', type: 'PNG 图片', size: '842 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 43200000, content: '黄金走势图展示价格、均线和主要市场事件。' },
+      { id: 'asset-finance-workshop', projectId: 'project-finance', parentId: '', kind: 'image', name: '市场研讨会.jpg', type: 'JPG 图片', size: '1.9 MB', updatedBy: '姚晨恺', updatedAt: Date.now() - 46800000, content: '市场研讨会照片记录研究讨论和结论确认过程。' },
+      { id: 'asset-finance-cover', projectId: 'project-finance', parentId: '', kind: 'image', name: '报告封面.webp', type: 'WEBP 图片', size: '524 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 50400000, content: '报告封面用于月度黄金分析报告的视觉展示。' }
     ];
     let automationTasks = [
       {
@@ -7115,9 +7206,16 @@
     ]);
 
     const icons = {
-      doc: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+      doc: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+      pdf: '<svg class="icon mention-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4"/><path d="M5 18h1.5a1.5 1.5 0 0 0 0-3H5v6"/><path d="M17 18h2"/><path d="M20 15h-3v6"/><path d="M11 15v6h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-1"/></svg>',
+      text: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5H3"/><path d="M15 12H3"/><path d="M17 19H3"/></svg>',
+      markdown: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="m17 12 3-2v8"/></svg>',
       knowledge: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l-2 7H1Z"/><path d="M14 3h6l3 7h-7Z"/><path d="M12 14h7l2 7h-7Z"/></svg>',
       table: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>',
+      presentation: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h20"/><path d="M4 3v13h16V3"/><path d="m8 21 4-5 4 5"/></svg>',
+      braces: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>',
+      image: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>',
+      paperclip: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
       qa: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="M22 8v10a2 2 0 0 1-2 2H10"/></svg>',
       'project-asset': '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>',
       skill: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>'
@@ -7252,7 +7350,7 @@
       workspace.classList.remove('shared-mode', 'share-invalid-mode');
       shareInvalid.hidden = true;
       composerInput.contentEditable = 'true';
-      composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill';
+      composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 搜索并引用内容，输入 / 调用 Skill';
       [plusBtn, manualQaBtn, sendBtn].forEach(button => { button.disabled = false; });
       messages.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = false; });
       artifact.querySelectorAll('button, input, textarea, select').forEach(control => { control.disabled = false; });
@@ -7321,12 +7419,8 @@
         option.classList.toggle('active', active);
         option.setAttribute('aria-selected', String(active));
       });
-      primaryMentionLabel.textContent = planning ? '知识库' : '规则文档';
-      primaryMentionIcon.innerHTML = planning ? icons.knowledge : icons.doc;
-      composerInput.dataset.placeholder = planning
-        ? 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill'
-        : 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索规则文档/表/人工问答，输入 / 调用 Skill';
-      setMentionType('doc', false);
+      composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 搜索并引用内容，输入 / 调用 Skill';
+      if (suggestPop.classList.contains('mention-pop') && suggestPop.classList.contains('open')) renderMentionResults();
     }
 
     function setIdentity(identity) {
@@ -7336,7 +7430,7 @@
         return;
       }
       currentIdentity = identity;
-      activeMentionType = 'doc';
+      currentMentionQuery = '';
       activeMentionIndex = 0;
       mentionTriggerRange = null;
       const emptyRow = historyList.querySelector('[data-history-state="empty"]');
@@ -8343,19 +8437,15 @@
     function openAutomationConfirm(type, task) {
       automationConfirmAction = { type, task };
       automationConfirmSubmit.classList.remove('danger');
-      automationConfirmCheck.checked = false;
-      automationConfirmAcknowledge.hidden = type === 'delete';
-      automationConfirmSubmit.disabled = type !== 'delete';
+      automationConfirmSubmit.disabled = false;
       if (type === 'create') {
         automationConfirmTitle.textContent = '确认创建并激活？';
         automationConfirmCopy.textContent = '创建后任务将按计划无人值守运行，并可执行当前指令中的外部操作。';
-        automationConfirmCheckText.textContent = '我同意该自动化后续按当前指令无人值守运行。';
         automationConfirmSubmit.textContent = '创建并激活';
         automationConfirmOutcome.textContent = '保存并默认激活';
       } else if (type === 'test') {
         automationConfirmTitle.textContent = '确认测试？';
         automationConfirmCopy.textContent = '测试会立即新建对话并真实执行当前指令，可能产生外部操作。';
-        automationConfirmCheckText.textContent = '我了解本次测试是真实运行。';
         automationConfirmSubmit.textContent = '确认测试';
         automationConfirmOutcome.textContent = '真实运行，不改变激活状态';
       } else {
@@ -8369,7 +8459,7 @@
       automationConfirmLocation.textContent = automationLocationLabel(task.location);
       automationConfirm.classList.add('open');
       automationConfirm.setAttribute('aria-hidden', 'false');
-      requestAnimationFrame(() => (type === 'delete' ? automationConfirmSubmit : automationConfirmCheck).focus());
+      requestAnimationFrame(() => automationConfirmSubmit.focus());
     }
 
     function saveAutomationDraft(draft, create = false) {
@@ -8471,9 +8561,12 @@
         const refId = escapeHtml(node.dataset.refId || '');
         const knowledgeBase = escapeHtml(node.dataset.refKnowledgeBase || '');
         const path = escapeHtml(node.dataset.refPath || '');
-        const icon = knowledgeBase ? icons.knowledge : (icons[node.dataset.refType] || '');
+        const assetKind = escapeHtml(node.dataset.refAssetKind || '');
+        const icon = assetKind
+          ? mentionAssetIconHtml({ name: rawValue, kind: assetKind })
+          : knowledgeBase ? icons.knowledge : (icons[node.dataset.refType] || '');
         const fullLabel = node.dataset.refType === 'qa' ? ` title="${label}"` : '';
-        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}"${refId ? ` data-ref-id="${refId}"` : ''}${knowledgeBase ? ` data-ref-knowledge-base="${knowledgeBase}"` : ''}${path ? ` data-ref-path="${path}"` : ''}${fullLabel}>${icon}<span>${label}</span></button>`;
+        return `<button class="inline-reference" type="button" data-ref-type="${type}" data-ref-value="${value}"${refId ? ` data-ref-id="${refId}"` : ''}${knowledgeBase ? ` data-ref-knowledge-base="${knowledgeBase}"` : ''}${path ? ` data-ref-path="${path}"` : ''}${assetKind ? ` data-ref-asset-kind="${assetKind}"` : ''}${fullLabel}>${icon}<span>${label}</span></button>`;
       }
       if (node.classList.contains('composer-url')) {
         const url = escapeHtml(node.dataset.url || node.textContent);
@@ -9239,7 +9332,7 @@
       planningControlBtn.hidden = true;
       sendBtn.hidden = false;
       workspace.classList.remove('planning-queue-mode', 'planning-queue-paused');
-      if (!sharedSnapshotMode) composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 检索知识库/文档/表/人工问答，输入 / 调用 Skill';
+      if (!sharedSnapshotMode) composerInput.dataset.placeholder = 'Shift + Enter 换行，支持粘贴上传附件；输入 @ 搜索并引用内容，输入 / 调用 Skill';
     }
 
     function loadPlanningSummaryConversation() {
@@ -9416,14 +9509,6 @@
         </div>`;
     }
 
-    const mentionTypes = Object.freeze(['project-asset', 'doc', 'table', 'qa']);
-
-    function mentionTypeLabel(type) {
-      if (type === 'project-asset') return '项目资产';
-      if (type === 'doc') return currentIdentity === 'planning' ? '知识库' : '规则文档';
-      return type === 'table' ? '涉及表' : '人工问答';
-    }
-
     function saveMentionTriggerRange() {
       const selection = window.getSelection();
       if (!selection || !selection.rangeCount) return;
@@ -9431,57 +9516,93 @@
       if (composerInput.contains(range.startContainer)) mentionTriggerRange = range.cloneRange();
     }
 
-    function setMentionType(type, focusSearch = true) {
-      if (!mentionTypes.includes(type)) return;
-      activeMentionType = type;
-      activeMentionIndex = 0;
-      mentionTabs.forEach(tab => {
-        const active = tab.dataset.mentionType === type;
-        tab.classList.toggle('active', active);
-        tab.setAttribute('aria-selected', String(active));
-      });
-      mentionShell.classList.toggle('project-asset-mode', type === 'project-asset');
-      const label = mentionTypeLabel(type);
-      mentionSearch.value = '';
-      mentionSearch.placeholder = `搜索${label}…`;
-      mentionSearch.setAttribute('aria-label', `搜索${label}`);
-      mentionRows.setAttribute('aria-label', `${label}搜索结果`);
-      renderMentionResults();
-      if (focusSearch && type !== 'project-asset') requestAnimationFrame(() => mentionSearch.focus());
+    function composerMentionContext() {
+      const selection = window.getSelection();
+      if (!selection || !selection.isCollapsed || !selection.rangeCount) return null;
+      const caret = selection.getRangeAt(0);
+      const node = caret.startContainer;
+      if (!composerInput.contains(node) || node.nodeType !== Node.TEXT_NODE) return null;
+      const beforeCaret = node.textContent.slice(0, caret.startOffset);
+      const triggerIndex = beforeCaret.lastIndexOf('@');
+      if (triggerIndex < 0) return null;
+      const query = beforeCaret.slice(triggerIndex + 1);
+      if (query.includes('\n')) return null;
+      const range = document.createRange();
+      range.setStart(node, triggerIndex);
+      range.setEnd(node, caret.startOffset);
+      return { query, range };
+    }
+
+    function mentionMatches(query, ...values) {
+      if (!query) return true;
+      return values.flat(2).join(' ').toLocaleLowerCase().includes(query);
+    }
+
+    function suggestionMentionResult(item) {
+      const [type, value] = item;
+      const { primary, secondary } = mentionRowText(item);
+      return {
+        type,
+        value,
+        source: item,
+        primary,
+        secondary,
+        metadata: type === 'table' || type === 'qa'
+          ? { displayText: secondary ? `${primary}${type === 'table' ? ' - ' : ' '}${secondary}` : primary }
+          : null
+      };
+    }
+
+    function mentionResultGroups() {
+      const query = currentMentionQuery.trim().toLocaleLowerCase();
+      const projectId = currentConversationProjectId();
+      const projectItems = projectId
+        ? projectAssetItems(projectId)
+          .filter(item => item.kind !== 'folder')
+          .map(item => ({
+            type: 'project-asset',
+            value: item.name,
+            item,
+            pathLabel: assetPath(item.parentId, projectId).map(folder => folder.name).join(' / ') || '项目根目录',
+            metadata: { id: item.id, displayText: item.name, assetKind: item.kind }
+          }))
+          .filter(result => mentionMatches(query, result.value, result.pathLabel, result.item.type))
+        : [];
+
+      if (!query) {
+        return projectItems.length ? [{ type: 'project-asset', label: '项目资产', items: projectItems }] : [];
+      }
+
+      const groups = [];
+      if (projectItems.length) groups.push({ type: 'project-asset', label: '项目资产', items: projectItems.slice(0, 20) });
+
+      const documentItems = currentIdentity === 'planning'
+        ? knowledgeDocuments
+          .filter(item => mentionMatches(query, item.title, item.knowledgeBase, item.path))
+          .slice(0, 20)
+          .map(item => ({ type: 'doc', value: item.title, item, kind: 'knowledge', metadata: item }))
+        : suggestions['@']
+          .filter(item => item[0] === 'doc' && mentionMatches(query, item))
+          .slice(0, 20)
+          .map(suggestionMentionResult);
+      if (documentItems.length) groups.push({ type: 'doc', label: currentIdentity === 'planning' ? '知识库' : '规则文档', items: documentItems });
+
+      const tableItems = suggestions['@']
+        .filter(item => item[0] === 'table' && mentionMatches(query, item))
+        .slice(0, 20)
+        .map(suggestionMentionResult);
+      if (tableItems.length) groups.push({ type: 'table', label: '涉及表', items: tableItems });
+
+      const qaItems = suggestions['@']
+        .filter(item => item[0] === 'qa' && mentionMatches(query, item))
+        .slice(0, 20)
+        .map(suggestionMentionResult);
+      if (qaItems.length) groups.push({ type: 'qa', label: '人工问答', items: qaItems });
+      return groups;
     }
 
     function filteredMentionItems() {
-      const query = mentionSearch.value.trim().toLowerCase();
-      if (activeMentionType === 'project-asset') {
-        const projectId = currentConversationProjectId();
-        return projectAssetItems(projectId)
-          .filter(item => item.kind !== 'folder')
-          .map(item => ({ ...item, pathLabel: assetPath(item.parentId, projectId).map(folder => folder.name).join(' / ') || '项目根目录' }));
-      }
-      if (activeMentionType === 'doc' && currentIdentity === 'planning') {
-        return knowledgeDocuments.filter(item => {
-          const searchable = `${item.title} ${item.knowledgeBase} ${item.path}`.toLowerCase();
-          return !query || searchable.includes(query);
-        }).slice(0, 20);
-      }
-      return suggestions['@'].filter(item => {
-        if (item[0] !== activeMentionType) return false;
-        return !query || item.flat(2).join(' ').toLowerCase().includes(query);
-      }).slice(0, 20);
-    }
-
-    function renderKnowledgeResults(items) {
-      return items.map((item, index) => {
-        const fullPath = `${item.knowledgeBase} / ${item.path}`;
-        return `
-          <div class="suggest-row knowledge-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${item.title}，${fullPath}`)}" data-mention-index="${index}" data-ref-type="doc" data-ref-value="${escapeHtml(item.title)}" data-ref-id="${escapeHtml(item.id)}" data-ref-knowledge-base="${escapeHtml(item.knowledgeBase)}" data-ref-path="${escapeHtml(item.path)}">
-            ${icons.knowledge}
-            <div class="knowledge-copy" title="${escapeHtml(`${item.title} · ${fullPath}`)}">
-              <div class="knowledge-title">${escapeHtml(item.title)}</div>
-              <div class="knowledge-path">${escapeHtml(fullPath)}</div>
-            </div>
-          </div>`;
-      }).join('');
+      return mentionResultGroups().flatMap(group => group.items);
     }
 
     function mentionRowText(item) {
@@ -9499,11 +9620,11 @@
       return { primary: value, secondary: space || meta };
     }
 
-    function updateMentionPanelNaturalHeight(resultCount) {
+    function updateMentionPanelNaturalHeight(resultCount, groupCount = 0) {
       const resultHeight = resultCount > 0
-        ? Math.min(resultCount, 4) * 44 + 4
-        : 92;
-      suggestPop.style.setProperty('--suggest-natural-height', `${88 + resultHeight}px`);
+        ? Math.min(resultCount, 6) * 44 + groupCount * 28 + 12
+        : 108;
+      suggestPop.style.setProperty('--suggest-natural-height', `${resultHeight}px`);
     }
 
     function updateSuggestPanelMetrics() {
@@ -9529,60 +9650,95 @@
       );
     }
 
+    function assetVisual(item) {
+      const extension = item.name.split('.').pop()?.toLocaleLowerCase() || '';
+      if (item.kind === 'folder') return { className: 'folder', icon: folderIconHtml() };
+      if (extension === 'pdf') return { className: 'pdf', icon: icons.pdf };
+      if (['docx', 'md', 'txt'].includes(extension)) return { className: 'document', icon: icons.doc };
+      if (['xlsx', 'csv', 'tsv'].includes(extension)) return { className: 'sheet', icon: icons.table };
+      if (extension === 'pptx') return { className: 'presentation', icon: icons.presentation };
+      if (extension === 'json') return { className: 'code', icon: icons.braces };
+      if (['png', 'jpg', 'jpeg', 'webp'].includes(extension)) return { className: 'image', icon: icons.image };
+      return { className: 'document', icon: icons.paperclip };
+    }
+
+    function assetKindFromExtension(extension) {
+      if (extension === 'pdf') return 'pdf';
+      if (['xls', 'xlsx', 'csv', 'tsv'].includes(extension)) return 'sheet';
+      if (extension === 'pptx') return 'presentation';
+      if (extension === 'json') return 'code';
+      if (['png', 'jpg', 'jpeg', 'webp'].includes(extension)) return 'image';
+      return 'doc';
+    }
+
+    function assetTypeFromExtension(extension) {
+      const labels = {
+        pdf: 'PDF',
+        docx: 'Word',
+        md: 'Markdown',
+        txt: '文本',
+        xls: 'Excel',
+        xlsx: 'Excel',
+        csv: 'CSV',
+        tsv: 'TSV',
+        pptx: 'PowerPoint',
+        json: 'JSON',
+        png: 'PNG 图片',
+        jpg: 'JPG 图片',
+        jpeg: 'JPG 图片',
+        webp: 'WEBP 图片'
+      };
+      return labels[extension] || (extension ? extension.toUpperCase() : '文件');
+    }
+
+    function mentionAssetIconHtml(item) {
+      const visual = assetVisual(item);
+      return `<span class="asset-kind-icon ${visual.className}" aria-hidden="true">${visual.icon}</span>`;
+    }
+
+    function renderMentionResult(result, index) {
+      const active = index === activeMentionIndex;
+      if (result.type === 'project-asset') {
+        return `<div class="suggest-row project-asset-mention-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="${escapeHtml(`${result.value}，${result.pathLabel}`)}" data-mention-index="${index}">
+          ${mentionAssetIconHtml(result.item)}
+          <div class="mention-row-copy" title="${escapeHtml(`${result.value} · ${result.pathLabel}`)}"><span class="mention-row-primary">${escapeHtml(result.value)}</span><span class="project-asset-path">${escapeHtml(result.pathLabel)}</span></div>
+        </div>`;
+      }
+      if (result.kind === 'knowledge') {
+        const fullPath = `${result.item.knowledgeBase} / ${result.item.path}`;
+        return `<div class="suggest-row knowledge-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="${escapeHtml(`${result.value}，${fullPath}`)}" data-mention-index="${index}">
+          ${icons.knowledge}
+          <div class="knowledge-copy" title="${escapeHtml(`${result.value} · ${fullPath}`)}"><span class="knowledge-title">${escapeHtml(result.value)}</span><span class="knowledge-path">${escapeHtml(fullPath)}</span></div>
+        </div>`;
+      }
+      if (result.type === 'qa') {
+        return `<div class="suggest-row qa-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="${escapeHtml(`${result.primary}，${result.secondary || ''}`)}" title="${escapeHtml(`${result.primary} · ${result.secondary || ''}`)}" data-mention-index="${index}">
+          ${icons.qa}
+          <div class="qa-content"><span class="qa-id">${escapeHtml(result.primary)}</span><span class="qa-title">${escapeHtml(result.secondary || '')}</span></div>
+        </div>`;
+      }
+      return `<div class="suggest-row compact-reference-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="${escapeHtml(`${result.primary}，${result.secondary || ''}`)}" data-mention-index="${index}" data-ref-type="${result.type}">
+        ${icons[result.type]}
+        <div class="mention-row-copy" title="${escapeHtml(`${result.primary}${result.secondary ? ` · ${result.secondary}` : ''}`)}"><span class="mention-row-primary">${escapeHtml(result.primary)}</span>${result.secondary ? `<span class="mention-row-secondary">${escapeHtml(result.secondary)}</span>` : ''}</div>
+      </div>`;
+    }
+
     function renderMentionResults() {
-      const items = filteredMentionItems();
-      updateMentionPanelNaturalHeight(items.length);
+      const groups = mentionResultGroups();
+      const items = groups.flatMap(group => group.items);
+      updateMentionPanelNaturalHeight(items.length, groups.length);
       if (suggestPop.classList.contains('open')) requestAnimationFrame(updateSuggestPanelMetrics);
       activeMentionIndex = Math.min(activeMentionIndex, Math.max(items.length - 1, 0));
       if (!items.length) {
-        mentionRows.innerHTML = `<div class="mention-empty">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v12H4z"/><path d="M7 7V5h10v2"/><path d="M9 12h6"/></svg>
-          <span>没有匹配的${mentionTypeLabel(activeMentionType)}</span>
-        </div>`;
+        mentionRows.innerHTML = `<div class="mention-empty"><span>${currentMentionQuery.trim() ? '没有匹配的内容' : '请输入关键词搜索'}</span></div>`;
         return;
       }
-      if (activeMentionType === 'project-asset') {
-        mentionRows.innerHTML = items.map((item, index) => `<div class="suggest-row project-asset-mention-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" data-mention-index="${index}" data-ref-type="project-asset" data-ref-value="${escapeHtml(item.name)}" data-ref-id="${escapeHtml(item.id)}">
-          ${assetKindIconHtml(item)}
-          <div class="mention-row-copy" title="${escapeHtml(`${item.name} · ${item.pathLabel}`)}"><span class="mention-row-primary">${escapeHtml(item.name)}</span><span class="project-asset-path">${escapeHtml(item.pathLabel)}</span></div>
-        </div>`).join('');
-        mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
-        return;
-      }
-      if (activeMentionType === 'doc' && currentIdentity === 'planning') {
-        mentionRows.innerHTML = renderKnowledgeResults(items);
-        mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
-        return;
-      }
-      mentionRows.innerHTML = items.map((item, index) => {
-        const [type, value, meta, space] = item;
-        if (type === 'qa') {
-          return `<div class="suggest-row qa-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${value}，${space}`)}" title="${escapeHtml(`${value} · ${space}`)}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
-            ${icons[type]}
-            <div class="qa-content">
-              <span class="qa-id">${escapeHtml(value)}</span>
-              <div class="qa-title">${escapeHtml(space)}</div>
-            </div>
-          </div>`;
-        }
-        const { primary, secondary } = mentionRowText(item);
-        return `<div class="suggest-row compact-reference-row${index === activeMentionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeMentionIndex}" aria-label="${escapeHtml(`${primary}，${secondary || ''}`)}" data-mention-index="${index}" data-ref-type="${type}" data-ref-value="${escapeHtml(value)}">
-          ${icons[type]}
-          <div class="mention-row-copy" title="${escapeHtml(`${primary}${secondary ? ` · ${secondary}` : ''}`)}">
-            <span class="mention-row-primary">${escapeHtml(primary)}</span>
-            ${secondary ? `<span class="mention-row-secondary">${escapeHtml(secondary)}</span>` : ''}
-          </div>
-        </div>`;
-      }).join('');
+      let index = 0;
+      mentionRows.innerHTML = groups.map(group => `<div class="mention-group" role="group" aria-label="${escapeHtml(group.label)}">
+        <div class="mention-group-title" role="presentation">${escapeHtml(group.label)}</div>
+        ${group.items.map(result => renderMentionResult(result, index++)).join('')}
+      </div>`).join('');
       mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
-    }
-
-    function selectedMentionDisplayText(item) {
-      const [type, value] = item;
-      if (type !== 'table' && type !== 'qa') return value;
-      const { primary, secondary } = mentionRowText(item);
-      if (type === 'qa') return secondary ? `${primary} ${secondary}` : primary;
-      return secondary ? `${primary} - ${secondary}` : primary;
     }
 
     function referenceDisplayText(value, metadata = null) {
@@ -9599,7 +9755,10 @@
       if (metadata?.id) reference.dataset.refId = metadata.id;
       if (metadata?.knowledgeBase) reference.dataset.refKnowledgeBase = metadata.knowledgeBase;
       if (metadata?.path) reference.dataset.refPath = metadata.path;
-      reference.innerHTML = metadata?.knowledgeBase ? icons.knowledge : (icons[type] || '');
+      if (metadata?.assetKind) reference.dataset.refAssetKind = metadata.assetKind;
+      reference.innerHTML = metadata?.assetKind
+        ? mentionAssetIconHtml({ name: value, kind: metadata.assetKind })
+        : metadata?.knowledgeBase ? icons.knowledge : (icons[type] || '');
       const label = document.createElement('span');
       label.textContent = referenceDisplayText(value, metadata);
       if (type === 'qa') reference.title = label.textContent;
@@ -9630,36 +9789,25 @@
         selection.addRange(range);
       }
       mentionTriggerRange = null;
+      currentMentionQuery = '';
       closeOverlays();
       setTaskMode(true);
     }
 
     function selectActiveMention() {
       const items = filteredMentionItems();
-      const item = items[activeMentionIndex];
-      if (!item) return;
-      if (item.type && activeMentionType === 'project-asset') {
-        insertMentionReference('project-asset', item.name, '@', { id: item.id, displayText: item.name, path: item.pathLabel });
-        return;
-      }
-      if (item.type === 'doc' && item.knowledgeBase) {
-        insertMentionReference('doc', item.title, '@', item);
-        return;
-      }
-      const [type, value] = item;
-      const metadata = type === 'table' || type === 'qa'
-        ? { displayText: selectedMentionDisplayText(item) }
-        : null;
-      insertMentionReference(type, value, '@', metadata);
+      const result = items[activeMentionIndex];
+      if (!result) return;
+      insertMentionReference(result.type, result.value, '@', result.metadata);
     }
 
     function openSuggest(kind) {
       suggestPop.classList.toggle('mention-pop', kind === '@');
       suggestPop.classList.toggle('skill-pop', kind === '/');
-      saveMentionTriggerRange();
       if (kind === '@') {
-        setMentionType(activeMentionType);
+        renderMentionResults();
       } else {
+        saveMentionTriggerRange();
         suggestHead.innerHTML = '<strong style="color:#595959">Skills</strong><span style="margin-left:auto">内置 · 已按权限过滤</span>';
         suggestRows.innerHTML = suggestions[kind].map((item, idx) => {
           const [type, title, , space] = item;
@@ -9849,10 +9997,8 @@
     }
 
     function assetKindIconHtml(item) {
-      if (item.kind === 'folder') return `<span class="asset-kind-icon folder">${folderIconHtml()}</span>`;
-      if (item.kind === 'pdf') return '<span class="asset-kind-icon pdf"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 15h8M8 11h3"/></svg></span>';
-      if (item.kind === 'sheet') return '<span class="asset-kind-icon sheet"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg></span>';
-      return '<span class="asset-kind-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/></svg></span>';
+      const visual = assetVisual(item);
+      return `<span class="asset-kind-icon ${visual.className}" aria-hidden="true">${visual.icon}</span>`;
     }
 
     function formatProjectTime(timestamp) {
@@ -9873,7 +10019,7 @@
         return `<article class="project-conversation-row" data-project-conversation="${escapeProjectHtml(row.dataset.conversationId || '')}" tabindex="0" role="button" aria-label="打开对话 ${escapeProjectHtml(title)}">
           <span class="project-conversation-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg></span>
           <span class="project-conversation-copy"><span class="project-conversation-name">${escapeProjectHtml(title)}</span><span class="project-conversation-meta">${state}</span></span>
-          ${pinned ? '<span class="project-conversation-pin"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>全局置顶</span>' : '<span class="project-conversation-meta">打开</span>'}
+          ${pinned ? '<span class="project-conversation-pin" aria-label="全局置顶" title="全局置顶"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg></span>' : ''}
         </article>`;
       }).join('') : '<div class="project-empty-inline">此项目还没有对话，点击右上角“新建对话”开始。</div>';
     }
@@ -10026,36 +10172,49 @@
       currentAssetFolderId = item.kind === 'folder' ? selectedAssetId : item.parentId || '';
       revealAssetFolder(item.parentId || '');
       renderProjectAssets();
-      syncProjectAssetMentionTab();
+      syncMentionPanelContext();
       focusProjectAsset(selectedAssetId);
       showToast(`已创建副本“${name}”`);
       return copies.find(copy => copy.id === selectedAssetId);
     }
 
-    function assetMoveError(assetId, parentId) {
-      const item = projectAssetItems().find(asset => asset.id === assetId);
-      if (!item) return '资产不存在或不属于当前项目。';
-      const folder = parentId ? projectAssetItems().find(asset => asset.id === parentId && asset.kind === 'folder') : null;
-      if (parentId && !folder) return '只能移动到当前项目的文件夹中。';
+    function assetMoveError(assetId, parentId, projectId = '') {
+      const item = projectAssets.find(asset => asset.id === assetId);
+      if (!item) return '资产不存在。';
+      const targetProjectId = projectId || item.projectId;
+      if (!projects.some(project => project.id === targetProjectId)) return '目标项目不存在。';
+      const folder = parentId ? projectAssets.find(asset => asset.id === parentId && asset.projectId === targetProjectId && asset.kind === 'folder') : null;
+      if (parentId && !folder) return '只能移动到目标项目的文件夹中。';
       if (item.kind === 'folder' && assetDescendantIds(item.id).has(parentId)) return '不能将文件夹移入自身或其子文件夹。';
-      if (assetNameExists(item.projectId, parentId, item.name, item.id)) return '目标文件夹已有同名资产，请先重命名。';
+      if (assetNameExists(targetProjectId, parentId, item.name, item.id)) return '目标文件夹已有同名资产，请先重命名。';
       return '';
     }
 
-    function moveProjectAsset(assetId, parentId) {
-      const error = assetMoveError(assetId, parentId);
+    function moveProjectAsset(assetId, parentId, projectId = '') {
+      const item = projectAssets.find(asset => asset.id === assetId);
+      if (!item) return false;
+      const targetProjectId = projectId || item.projectId;
+      const error = assetMoveError(assetId, parentId, targetProjectId);
       if (error) { showToast(error); return false; }
-      const item = projectAssetItems().find(asset => asset.id === assetId);
-      if ((item.parentId || '') === parentId) return false;
+      if (item.projectId === targetProjectId && (item.parentId || '') === parentId) return false;
+      const movedIds = item.kind === 'folder' ? assetDescendantIds(item.id) : new Set([item.id]);
+      projectAssets.forEach(asset => {
+        if (!movedIds.has(asset.id)) return;
+        asset.projectId = targetProjectId;
+        asset.updatedAt = Date.now();
+      });
       item.parentId = parentId;
-      item.updatedAt = Date.now();
-      selectedAssetId = item.id;
-      currentAssetFolderId = item.kind === 'folder' ? item.id : parentId;
-      revealAssetFolder(parentId);
+      const visibleInCurrentProject = currentProjectDetailId === targetProjectId;
+      selectedAssetId = visibleInCurrentProject ? item.id : '';
+      currentAssetFolderId = visibleInCurrentProject ? (item.kind === 'folder' ? item.id : parentId) : '';
+      if (visibleInCurrentProject) revealAssetFolder(parentId, targetProjectId);
+      const destinationProject = projects.find(project => project.id === targetProjectId);
+      if (destinationProject) destinationProject.lastActive = Date.now();
       renderProjectAssets();
-      syncProjectAssetMentionTab();
-      focusProjectAsset(item.id);
-      showToast('资产已移动');
+      syncMentionPanelContext();
+      if (visibleInCurrentProject) focusProjectAsset(item.id);
+      const folder = parentId ? projectAssets.find(asset => asset.id === parentId) : null;
+      showToast(`已移动到“${destinationProject?.name || '目标项目'}${folder ? ` / ${folder.name}` : ''}”`);
       return true;
     }
 
@@ -10120,7 +10279,7 @@
             <span class="project-automation-copy"><span class="project-automation-name">${escapeProjectHtml(task.name)}</span><span class="project-automation-meta">${escapeProjectHtml(task.schedule || automationSchedule(task))}<br>下次运行 ${escapeProjectHtml(automationNextRun(task))}</span></span>
             <span class="automation-status ${statusClass}">${escapeProjectHtml(status)}</span>
           </button>
-          ${automationTaskActionsHtml(task, true)}
+          ${automationTaskActionsHtml(task)}
         </article>`;
       }).join('') : '<div class="project-empty-inline">暂未绑定自动化。创建时运行位置会默认选择当前项目。</div>';
     }
@@ -10289,13 +10448,10 @@
       conversationLocationSelect.value = projects.some(project => project.id === selected) ? selected : '';
     }
 
-    function syncProjectAssetMentionTab() {
-      const projectId = currentConversationProjectId();
-      const visible = Boolean(projectId && projects.some(project => project.id === projectId));
-      projectAssetMentionTab.hidden = !visible;
-      if (!visible && activeMentionType === 'project-asset') setMentionType('doc', false);
-      if (visible && currentConversationState === 'empty' && activeMentionType === 'doc') setMentionType('project-asset', false);
-      else if (visible && activeMentionType === 'project-asset') renderMentionResults();
+    function syncMentionPanelContext() {
+      if (!suggestPop.classList.contains('open') || !suggestPop.classList.contains('mention-pop')) return;
+      activeMentionIndex = 0;
+      renderMentionResults();
     }
 
     function syncConversationLocationUi() {
@@ -10304,7 +10460,7 @@
       conversationLocationStrip.hidden = !isNewConversation;
       const projectId = row?.dataset.projectId || '';
       if (isNewConversation) renderConversationLocationOptions(projectId);
-      syncProjectAssetMentionTab();
+      syncMentionPanelContext();
     }
 
     function lockConversationLocation(firstMessage = '') {
@@ -10438,6 +10594,84 @@
       assetFolderSelect.value = options.some(option => option.id === selected) ? selected : '';
     }
 
+    function renderAssetMoveProjects(selectedProjectId) {
+      const selectedProject = projects.find(project => project.id === selectedProjectId) || projects[0];
+      const resolvedProjectId = selectedProject?.id || '';
+      assetProjectSelect.value = resolvedProjectId;
+      assetMoveProjectName.textContent = selectedProject?.name || '';
+      assetMoveProjectList.innerHTML = projects.map(project => {
+        const selected = project.id === resolvedProjectId;
+        return `<button class="asset-move-project-option${selected ? ' selected' : ''}" type="button" role="option" aria-selected="${selected}" data-asset-move-project="${escapeProjectHtml(project.id)}">
+          <span aria-hidden="true">${folderIconHtml()}</span><span class="asset-move-project-name">${escapeProjectHtml(project.name)}</span>
+        </button>`;
+      }).join('');
+      return resolvedProjectId;
+    }
+
+    function renderAssetDestination(projectId, selectedFolderId = '', resetExpansion = false) {
+      const target = assetActionTargetId ? projectAssets.find(item => item.id === assetActionTargetId) : null;
+      const resolvedProjectId = renderAssetMoveProjects(projectId);
+      const excludeId = target?.kind === 'folder' ? target.id : '';
+      renderAssetFolderOptions(resolvedProjectId, selectedFolderId, excludeId);
+      if (resetExpansion) {
+        expandedMoveFolderIds.clear();
+        assetPath(assetFolderSelect.value, resolvedProjectId).forEach(folder => expandedMoveFolderIds.add(folder.id));
+        projectAssets
+          .filter(folder => folder.projectId === resolvedProjectId && folder.kind === 'folder' && !folder.parentId)
+          .filter(folder => projectAssets.some(child => child.projectId === resolvedProjectId && child.kind === 'folder' && child.parentId === folder.id))
+          .forEach(folder => expandedMoveFolderIds.add(folder.id));
+      }
+      renderAssetFolderTree(resolvedProjectId, assetFolderSelect.value, excludeId);
+    }
+
+    function renderAssetFolderTree(projectId, selected = '', excludeId = '') {
+      const folders = projectAssets.filter(item => item.projectId === projectId && item.kind === 'folder');
+      const excluded = excludeId ? assetDescendantIds(excludeId) : new Set();
+      const availableFolders = folders.filter(folder => !excluded.has(folder.id));
+      const validSelection = selected && availableFolders.some(folder => folder.id === selected) ? selected : '';
+      const childrenByParent = new Map();
+      availableFolders.forEach(folder => {
+        const parentId = folder.parentId || '';
+        if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
+        childrenByParent.get(parentId).push(folder);
+      });
+      childrenByParent.forEach(children => children.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')));
+      assetFolderSelect.value = validSelection;
+      const rows = [];
+      const rowHtml = (folder, depth, parentId = '') => {
+        const folderId = folder?.id || '';
+        const name = folder?.name || '项目根目录';
+        const children = childrenByParent.get(folderId) || [];
+        const hasChildren = Boolean(folder && children.length);
+        const expanded = hasChildren && expandedMoveFolderIds.has(folderId);
+        const expansion = hasChildren ? ` aria-expanded="${expanded}"` : '';
+        const caret = hasChildren
+          ? `<span class="asset-folder-tree-caret" data-asset-folder-toggle="${escapeProjectHtml(folderId)}" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></span>`
+          : '<span class="asset-folder-tree-caret" aria-hidden="true"></span>';
+        return `<button class="asset-folder-tree-row${folderId === validSelection ? ' selected' : ''}" type="button" role="treeitem" aria-level="${depth + 1}" aria-selected="${folderId === validSelection}"${expansion} data-asset-folder-select="${escapeProjectHtml(folderId)}" data-asset-folder-parent="${escapeProjectHtml(parentId)}" style="--folder-depth:${depth}">
+          ${caret}<span aria-hidden="true">${folderIconHtml()}</span><span class="asset-folder-tree-name">${escapeProjectHtml(name)}</span>
+        </button>`;
+      };
+      rows.push(rowHtml(null, 0));
+      function appendChildren(parentId, depth) {
+        (childrenByParent.get(parentId) || []).forEach(folder => {
+          rows.push(rowHtml(folder, depth, parentId));
+          if (expandedMoveFolderIds.has(folder.id)) appendChildren(folder.id, depth + 1);
+        });
+      }
+      appendChildren('', 1);
+      assetFolderTree.innerHTML = rows.join('');
+      if (assetActionMode === 'move') {
+        const target = assetActionTargetId ? projectAssets.find(item => item.id === assetActionTargetId) : null;
+        const error = target ? assetMoveError(target.id, validSelection, projectId) : '资产不存在。';
+        assetActionSubmit.disabled = Boolean(error) || (target?.projectId === projectId && (target.parentId || '') === validSelection);
+      }
+    }
+
+    function focusAssetFolderTreeItem(folderId) {
+      assetFolderTree.querySelector(`[data-asset-folder-select="${CSS.escape(folderId)}"]`)?.focus({ preventScroll: true });
+    }
+
     function setAssetDialogField(element, label, visible) {
       element.hidden = !visible;
       label.hidden = !visible;
@@ -10452,7 +10686,12 @@
       assetActionPayload = null;
       assetActionHelp.textContent = '';
       assetActionSubmit.classList.remove('danger');
-      requestAnimationFrame(() => focusProjectAsset(projectAssetItems().some(item => item.id === returnFocusId) ? returnFocusId : selectedAssetId));
+      assetActionSubmit.disabled = false;
+      requestAnimationFrame(() => {
+        const focusId = projectAssetItems().some(item => item.id === returnFocusId) ? returnFocusId : selectedAssetId;
+        if (focusId) focusProjectAsset(focusId);
+        else projectUploadFile.focus({ preventScroll: true });
+      });
     }
 
     function openAssetAction(mode, targetId = null, payload = null) {
@@ -10463,11 +10702,15 @@
       assetActionPayload = payload;
       assetActionHelp.textContent = '';
       assetNameInput.value = '';
+      const destinationMode = ['move', 'save-artifact'].includes(mode);
+      assetActionForm.classList.toggle('move-mode', destinationMode);
       assetProjectSelect.innerHTML = projects.map(project => `<option value="${escapeProjectHtml(project.id)}">${escapeProjectHtml(project.name)}</option>`).join('');
       setAssetDialogField(assetNameInput, assetNameLabel, ['new-folder', 'rename', 'save-artifact'].includes(mode));
-      setAssetDialogField(assetProjectSelect, assetProjectLabel, mode === 'save-artifact' && !currentConversationProjectId());
-      setAssetDialogField(assetFolderSelect, assetFolderLabel, ['new-folder', 'move', 'save-artifact'].includes(mode));
+      setAssetDialogField(assetProjectSelect, assetProjectLabel, false);
+      setAssetDialogField(assetFolderSelect, assetFolderLabel, mode === 'new-folder');
+      assetMoveBrowser.hidden = !destinationMode;
       assetActionSubmit.className = 'project-primary';
+      assetActionSubmit.disabled = false;
       if (mode === 'new-folder') {
         assetActionTitle.textContent = '新建文件夹';
         assetActionCopy.textContent = '为文件夹命名，并选择保存位置。';
@@ -10482,10 +10725,9 @@
         assetNameInput.value = target.name;
         assetActionSubmit.textContent = '保存';
       } else if (mode === 'move' && target) {
-        assetActionTitle.textContent = `移动“${target.name}”`;
-        assetActionCopy.textContent = '选择当前项目中的目标文件夹。';
-        assetFolderLabel.textContent = '目标文件夹';
-        renderAssetFolderOptions(target.projectId, target.parentId || '', target.kind === 'folder' ? target.id : '');
+        assetActionTitle.textContent = `将“${target.name}”移动到`;
+        assetActionCopy.textContent = '在左侧选择项目，再从右侧选择项目资产中的目标文件夹。';
+        renderAssetDestination(target.projectId, target.parentId || '', true);
         assetActionSubmit.textContent = '移动';
       } else if (mode === 'delete' && target) {
         const descendants = target.kind === 'folder' ? assetDescendantIds(target.id).size - 1 : 0;
@@ -10500,16 +10742,16 @@
         assetActionTitle.textContent = '保存到项目资产';
         assetActionCopy.textContent = '保存后，项目内其他对话也可以引用此文件；当前对话中的产物保持不变。';
         assetNameLabel.textContent = '文件名称';
-        assetFolderLabel.textContent = '目标文件夹';
         assetNameInput.value = payload?.name || artifactTitle.textContent.trim() || '未命名产物';
-        assetProjectSelect.value = projectId;
-        renderAssetFolderOptions(projectId, '');
+        renderAssetDestination(projectId, '', true);
         assetActionSubmit.textContent = '保存到项目';
       }
       assetActionOverlay.classList.add('open');
       assetActionOverlay.setAttribute('aria-hidden', 'false');
       requestAnimationFrame(() => {
         if (mode === 'delete') assetActionCancel.focus();
+        else if (mode === 'save-artifact') assetNameInput.focus();
+        else if (!assetMoveBrowser.hidden) assetMoveProjectList.querySelector('[aria-selected="true"]')?.focus();
         else (assetNameInput.hidden ? assetFolderSelect : assetNameInput).focus();
         if (mode === 'rename') assetNameInput.select();
       });
@@ -10523,10 +10765,39 @@
       if (!item || item.kind === 'folder') return;
       assetPreviewTitle.textContent = item.name;
       assetPreviewMeta.textContent = `${item.type || '文件'}${item.size ? ` · ${item.size}` : ''} · ${item.updatedBy || '姚晨恺'}更新`;
-      assetPreviewBody.innerHTML = `<article class="asset-preview-paper"><h4>${escapeProjectHtml(item.name)}</h4><p>${escapeProjectHtml(item.content || '这是上传文件的演示预览。实际产品将在此按文件类型展示可访问内容。')}</p><p>该文件已属于项目资产，可从项目内对话的“项目资产”Tab 中引用。</p></article>`;
+      assetPreviewBody.innerHTML = `<article class="asset-preview-paper"><h4>${escapeProjectHtml(item.name)}</h4><p>${escapeProjectHtml(item.content || '这是上传文件的演示预览。实际产品将在此按文件类型展示可访问内容。')}</p><p>该文件已属于项目资产，可在项目内对话中输入 @ 后引用。</p></article>`;
       assetPreviewOverlay.classList.add('open');
       assetPreviewOverlay.setAttribute('aria-hidden', 'false');
       requestAnimationFrame(() => assetPreviewClose.focus());
+    }
+
+    function downloadProjectAsset(assetId) {
+      const item = projectAssetItems().find(asset => asset.id === assetId);
+      if (!item) return;
+      let fileName = item.name;
+      let content = item.content || `“${item.name}”的演示文件内容。`;
+      if (item.kind === 'folder') {
+        const descendants = assetDescendantIds(item.id);
+        const entries = projectAssetItems(item.projectId)
+          .filter(asset => asset.id !== item.id && descendants.has(asset.id))
+          .sort((a, b) => assetPath(a.id, item.projectId).map(node => node.name).join('/').localeCompare(assetPath(b.id, item.projectId).map(node => node.name).join('/'), 'zh-CN'));
+        fileName = `${item.name}-文件清单.txt`;
+        content = [`${item.name}/`, ...entries.map(asset => {
+          const path = assetPath(asset.id, item.projectId);
+          const rootIndex = path.findIndex(node => node.id === item.id);
+          const relativePath = path.slice(rootIndex + 1).map(node => node.name).join('/');
+          return `${relativePath}${asset.kind === 'folder' ? '/' : ''}`;
+        })].join('\n');
+      }
+      const url = URL.createObjectURL(new Blob([`\uFEFF${content}`], { type: 'text/plain;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast(`已开始下载“${item.name}”`);
     }
 
     function closeAssetPreview() {
@@ -10913,9 +11184,20 @@
       promoteTrailingComposerUrl();
       const text = composerInput.textContent.trim();
       updatePlanningComposerActions();
-      if (text.endsWith('@')) openSuggest('@');
-      else if (text.endsWith('/')) openSuggest('/');
-      else suggestPop.classList.remove('open');
+      const mentionContext = composerMentionContext();
+      if (mentionContext) {
+        const queryChanged = currentMentionQuery !== mentionContext.query;
+        currentMentionQuery = mentionContext.query;
+        mentionTriggerRange = mentionContext.range;
+        if (queryChanged) activeMentionIndex = 0;
+        openSuggest('@');
+      } else if (text.endsWith('/')) {
+        openSuggest('/');
+      } else {
+        currentMentionQuery = '';
+        mentionTriggerRange = null;
+        suggestPop.classList.remove('open');
+      }
     });
 
     composerInput.addEventListener('keydown', event => {
@@ -10936,6 +11218,29 @@
           }
         }
       }
+      if (suggestPop.classList.contains('open') && suggestPop.classList.contains('mention-pop')) {
+        const items = filteredMentionItems();
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (!items.length) return;
+          const direction = event.key === 'ArrowDown' ? 1 : -1;
+          activeMentionIndex = (activeMentionIndex + direction + items.length) % items.length;
+          renderMentionResults();
+          return;
+        }
+        if ((event.key === 'Enter' || event.key === 'Tab') && items.length) {
+          event.preventDefault();
+          selectActiveMention();
+          return;
+        }
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          currentMentionQuery = '';
+          mentionTriggerRange = null;
+          closeOverlays();
+          return;
+        }
+      }
       if (event.key !== 'Enter' || event.shiftKey) return;
       event.preventDefault();
       sendBtn.click();
@@ -10947,44 +11252,9 @@
       if (reference) reference.classList.add('selected');
     });
 
-    mentionTabs.forEach(tab => tab.addEventListener('click', () => {
-      setMentionType(tab.dataset.mentionType);
-    }));
-
-    mentionSearch.addEventListener('input', () => {
-      activeMentionIndex = 0;
-      renderMentionResults();
-    });
-
     window.addEventListener('resize', updateSuggestPanelMetrics);
     window.visualViewport?.addEventListener('resize', updateSuggestPanelMetrics);
     window.visualViewport?.addEventListener('scroll', updateSuggestPanelMetrics);
-
-    mentionSearch.addEventListener('keydown', event => {
-      const items = filteredMentionItems();
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        if (!items.length) return;
-        const direction = event.key === 'ArrowDown' ? 1 : -1;
-        activeMentionIndex = (activeMentionIndex + direction + items.length) % items.length;
-        renderMentionResults();
-      } else if (event.key === 'Tab') {
-        event.preventDefault();
-        event.stopPropagation();
-        const types = [...mentionTabs].filter(tab => !tab.hidden).map(tab => tab.dataset.mentionType);
-        const current = types.indexOf(activeMentionType);
-        const direction = event.shiftKey ? -1 : 1;
-        setMentionType(types[(current + direction + types.length) % types.length]);
-      } else if (event.key === 'Enter') {
-        event.preventDefault();
-        selectActiveMention();
-      } else if (event.key === 'Escape') {
-        event.preventDefault();
-        event.stopPropagation();
-        closeOverlays();
-        composerInput.focus();
-      }
-    });
 
     mentionRows.addEventListener('mousemove', event => {
       const row = event.target.closest('[data-mention-index]');
@@ -12140,9 +12410,6 @@
       }
     });
     automationConfirmCancel.addEventListener('click', closeAutomationConfirm);
-    automationConfirmCheck.addEventListener('change', () => {
-      automationConfirmSubmit.disabled = !automationConfirmCheck.checked;
-    });
     automationConfirm.addEventListener('click', event => {
       if (event.target === automationConfirm) closeAutomationConfirm();
     });
@@ -12320,7 +12587,7 @@
       if (!files.length) return;
       files.forEach((file, index) => {
         const extension = file.name.split('.').pop()?.toLowerCase() || '';
-        const kind = extension === 'pdf' ? 'pdf' : ['xls', 'xlsx', 'csv'].includes(extension) ? 'sheet' : 'doc';
+        const kind = assetKindFromExtension(extension);
         let name = file.name;
         let copyIndex = 2;
         while (assetNameExists(currentProjectDetailId, currentAssetFolderId, name)) {
@@ -12329,13 +12596,13 @@
           copyIndex += 1;
         }
         const size = file.size >= 1048576 ? `${(file.size / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(file.size / 1024))} KB`;
-        projectAssets.push({ id: `asset-upload-${Date.now().toString(36)}-${index}`, projectId: currentProjectDetailId, parentId: currentAssetFolderId, kind, name, type: extension ? extension.toUpperCase() : '文件', size, sizeBytes: file.size, updatedBy: '姚晨恺', updatedAt: Date.now(), content: '这是本次选择上传的本地文件。Demo 仅保存文件名称和元数据，不会上传到服务器。' });
+        projectAssets.push({ id: `asset-upload-${Date.now().toString(36)}-${index}`, projectId: currentProjectDetailId, parentId: currentAssetFolderId, kind, name, type: assetTypeFromExtension(extension), size, sizeBytes: file.size, updatedBy: '姚晨恺', updatedAt: Date.now(), content: '这是本次选择上传的本地文件。Demo 仅保存文件名称和元数据，不会上传到服务器。' });
       });
       projectUploadInput.value = '';
       selectedAssetId = projectAssets[projectAssets.length - 1].id;
       revealAssetFolder(currentAssetFolderId);
       renderProjectAssets();
-      syncProjectAssetMentionTab();
+      syncMentionPanelContext();
       showToast(`已上传 ${files.length} 个文件`);
     });
     projectAssetTableWrap.addEventListener('click', event => {
@@ -12448,8 +12715,11 @@
       event.stopPropagation();
       const action = event.target.closest('[data-asset-menu-action]')?.dataset.assetMenuAction;
       const assetId = assetMenuAssetId;
-      if (!assetId || !['copy', 'move', 'rename', 'delete'].includes(action)) return;
-      if (action === 'copy') {
+      if (!assetId || !['download', 'copy', 'move', 'rename', 'delete'].includes(action)) return;
+      if (action === 'download') {
+        closeAssetContextMenu();
+        downloadProjectAsset(assetId);
+      } else if (action === 'copy') {
         closeAssetContextMenu();
         copyProjectAsset(assetId);
       } else openAssetAction(action, assetId);
@@ -12474,6 +12744,88 @@
     window.addEventListener('resize', () => closeAssetContextMenu());
     document.addEventListener('contextmenu', () => closeAssetContextMenu());
 
+    assetMoveProjectList.addEventListener('click', event => {
+      const option = event.target.closest('[data-asset-move-project]');
+      if (!option || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      const projectId = option.dataset.assetMoveProject;
+      renderAssetDestination(projectId, '', true);
+      assetActionHelp.textContent = '';
+      requestAnimationFrame(() => assetMoveProjectList.querySelector(`[data-asset-move-project="${CSS.escape(projectId)}"]`)?.focus({ preventScroll: true }));
+    });
+    assetMoveProjectList.addEventListener('keydown', event => {
+      const option = event.target.closest('[data-asset-move-project]');
+      if (!option || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      const options = [...assetMoveProjectList.querySelectorAll('[data-asset-move-project]')];
+      const index = options.indexOf(option);
+      if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+        event.preventDefault();
+        const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1 : Math.max(0, Math.min(options.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
+        options[nextIndex]?.focus();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        assetFolderTree.querySelector('[aria-selected="true"]')?.focus();
+      }
+    });
+    assetFolderTree.addEventListener('click', event => {
+      const row = event.target.closest('[data-asset-folder-select]');
+      if (!row || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      const folderId = row.dataset.assetFolderSelect || '';
+      const toggle = event.target.closest('[data-asset-folder-toggle]');
+      if (toggle) {
+        event.preventDefault();
+        if (expandedMoveFolderIds.has(folderId)) expandedMoveFolderIds.delete(folderId);
+        else expandedMoveFolderIds.add(folderId);
+      } else {
+        assetFolderSelect.value = folderId;
+        assetActionHelp.textContent = '';
+      }
+      const target = assetActionTargetId ? projectAssets.find(item => item.id === assetActionTargetId) : null;
+      const projectId = assetProjectSelect.value || target?.projectId;
+      if (!projectId) return;
+      renderAssetFolderTree(projectId, assetFolderSelect.value, target?.kind === 'folder' ? target.id : '');
+      requestAnimationFrame(() => focusAssetFolderTreeItem(folderId));
+    });
+    assetFolderTree.addEventListener('keydown', event => {
+      const row = event.target.closest('[data-asset-folder-select]');
+      if (!row || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      const rows = [...assetFolderTree.querySelectorAll('[data-asset-folder-select]')];
+      const index = rows.indexOf(row);
+      if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+        event.preventDefault();
+        const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? rows.length - 1 : Math.max(0, Math.min(rows.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
+        rows[nextIndex]?.focus();
+        return;
+      }
+      const folderId = row.dataset.assetFolderSelect || '';
+      if (event.key === 'ArrowRight' && row.hasAttribute('aria-expanded')) {
+        event.preventDefault();
+        if (row.getAttribute('aria-expanded') === 'false') {
+          expandedMoveFolderIds.add(folderId);
+          const target = projectAssets.find(item => item.id === assetActionTargetId);
+          const projectId = assetProjectSelect.value || target?.projectId;
+          if (projectId) renderAssetFolderTree(projectId, assetFolderSelect.value, target?.kind === 'folder' ? target.id : '');
+          requestAnimationFrame(() => focusAssetFolderTreeItem(folderId));
+        } else {
+          rows[index + 1]?.focus();
+        }
+      } else if (event.key === 'ArrowLeft') {
+        const target = projectAssets.find(item => item.id === assetActionTargetId);
+        const projectId = assetProjectSelect.value || target?.projectId;
+        if (!projectId) return;
+        if (row.getAttribute('aria-expanded') === 'true') {
+          event.preventDefault();
+          expandedMoveFolderIds.delete(folderId);
+          renderAssetFolderTree(projectId, assetFolderSelect.value, target?.kind === 'folder' ? target.id : '');
+          requestAnimationFrame(() => focusAssetFolderTreeItem(folderId));
+        } else if (folderId) {
+          event.preventDefault();
+          focusAssetFolderTreeItem(row.dataset.assetFolderParent || '');
+        } else {
+          event.preventDefault();
+          assetMoveProjectList.querySelector('[aria-selected="true"]')?.focus();
+        }
+      }
+    });
     assetProjectSelect.addEventListener('change', () => renderAssetFolderOptions(assetProjectSelect.value, ''));
     assetActionCancel.addEventListener('click', closeAssetAction);
     assetActionOverlay.addEventListener('click', event => { if (event.target === assetActionOverlay) closeAssetAction(); });
@@ -12514,13 +12866,14 @@
         return;
       }
       if (assetActionMode === 'move' && target) {
+        const targetProjectId = assetProjectSelect.value || target.projectId;
         const nextParentId = assetFolderSelect.value;
-        const error = assetMoveError(target.id, nextParentId);
+        const error = assetMoveError(target.id, nextParentId, targetProjectId);
         if (error) {
           assetActionHelp.textContent = error;
           return;
         }
-        moveProjectAsset(target.id, nextParentId);
+        moveProjectAsset(target.id, nextParentId, targetProjectId);
         closeAssetAction();
         return;
       }
@@ -12536,7 +12889,7 @@
         return;
       }
       if (assetActionMode === 'save-artifact') {
-        const projectId = currentConversationProjectId() || assetProjectSelect.value;
+        const projectId = assetProjectSelect.value || currentConversationProjectId();
         const folderId = assetFolderSelect.value;
         if (!projectId) {
           assetActionHelp.textContent = '请先选择目标项目。';
