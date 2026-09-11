@@ -4107,20 +4107,6 @@
       align-items: center;
       flex: none;
     }
-    .artifact-open-manual {
-      width: 36px;
-      height: 32px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      color: #595959;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-    .artifact-open-manual:hover { background: #f0f0f0; color: #262626; }
-    .artifact-open-manual .icon { width: 18px; height: 18px; stroke-width: 2; }
     .artifact-menu-toggle {
       width: 36px;
       height: 32px;
@@ -6388,9 +6374,6 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/><path d="M15 12v5M12.5 14.5h5"/></svg>
               <span>保存</span>
             </button>
-            <button class="artifact-open-manual" id="openManualBtn" type="button" aria-label="在人工问答中打开" title="在人工问答中打开" hidden>
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
-            </button>
             <button class="artifact-menu-toggle" id="artifactMenuToggle" type="button" aria-label="打开产物操作菜单" aria-expanded="false" aria-controls="artifactMenu" title="更多操作">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
             </button>
@@ -6848,7 +6831,6 @@
     const foxmailConnectionStatus = document.getElementById('foxmailConnectionStatus');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
     const artifactSaveProject = document.getElementById('artifactSaveProject');
-    const openManualBtn = document.getElementById('openManualBtn');
     const artifactMenu = document.getElementById('artifactMenu');
     const artifactPaneClose = document.getElementById('artifactPaneClose');
     const manualIssueList = document.getElementById('manualIssueList');
@@ -7496,9 +7478,7 @@
 
     function runArtifactAction(action) {
       closeArtifactMenu();
-      if (action === 'open-manual') {
-        setApplicationView('manual-qa');
-      } else if (activeTab === 'manualQa') {
+      if (activeTab === 'manualQa') {
         return;
       } else if (action === 'download') {
         showToast('已模拟导出产物');
@@ -7515,7 +7495,6 @@
         item.disabled = !isAgentFile;
         item.setAttribute('aria-disabled', String(!isAgentFile));
       });
-      openManualBtn.hidden = activeTab !== 'manualQa';
     }
 
     function setModel(option) {
@@ -11237,8 +11216,6 @@
       artifactMenuToggle.classList.toggle('open', open);
       artifactMenuToggle.setAttribute('aria-expanded', String(open));
     });
-    openManualBtn.addEventListener('click', () => runArtifactAction('open-manual'));
-
     artifactMenu.addEventListener('click', event => {
       const item = event.target.closest('[data-artifact-action]');
       if (!item || item.disabled) return;
