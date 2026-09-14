@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agent 运行中消息队列交互 Demo">
+  <title>Agent 消息队列 Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #2563eb;
+      --primary-strong: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --text: #0f172a;
+      --text-2: #475569;
+      --text-3: #64748b;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --surface-3: #f1f5f9;
+      --border: #dfe7f2;
+      --border-strong: #cbd5e1;
+      --danger: #dc2626;
+      --success: #047857;
+      --warning: #a16207;
+      --shadow: 0 18px 50px rgba(15, 23, 42, .08);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 11px;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(37, 99, 235, .08), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
+      overflow: hidden;
+    }
+    button, textarea { font: inherit; }
+    button { cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, textarea:focus-visible, [draggable="true"]:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .28);
+      outline-offset: 2px;
+    }
+
+    .app {
+      height: 100dvh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      padding: 24px 18px;
+      border-right: 1px solid rgba(203, 213, 225, .75);
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(18px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 8px 26px;
+      font-weight: 750;
+      letter-spacing: -.02em;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      color: #fff;
+      background: var(--text);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .18);
+    }
+    .new-task {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: var(--surface);
+      box-shadow: 0 3px 10px rgba(15, 23, 42, .04);
+    }
+    .nav-label {
+      margin: 26px 10px 10px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .task-item {
+      width: 100%;
+      min-height: 50px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 12px;
+      text-align: left;
+      color: var(--text);
+      background: #eaf1ff;
+    }
+    .task-item strong { display: block; font-size: 14px; }
+    .task-item span { display: block; margin-top: 3px; color: var(--text-3); font-size: 12px; }
+    .sidebar-note {
+      margin-top: auto;
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+    .sidebar-inner { min-height: 100%; display: flex; flex-direction: column; }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+    .topbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid rgba(203, 213, 225, .65);
+      background: rgba(255, 255, 255, .62);
+      backdrop-filter: blur(18px);
+    }
+    .title-wrap { min-width: 0; }
+    .title-wrap h1 { margin: 0; font-size: 17px; letter-spacing: -.015em; }
+    .title-wrap p { margin: 4px 0 0; color: var(--text-3); font-size: 12px; }
+    .status-pill {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 13px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-2);
+      background: rgba(255, 255, 255, .88);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(4, 120, 87, .12);
+    }
+    .status-pill.ending .status-dot { background: var(--warning); box-shadow: 0 0 0 4px rgba(161, 98, 7, .12); }
+    .status-pill.stopped .status-dot { background: var(--danger); box-shadow: 0 0 0 4px rgba(220, 38, 38, .1); }
+    .status-pill.idle .status-dot { background: var(--text-3); box-shadow: none; }
+
+    .conversation {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 30px max(24px, calc((100% - 880px) / 2)) 36px;
+      scroll-behavior: smooth;
+    }
+    .welcome {
+      margin-bottom: 28px;
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, .62);
+      color: var(--text-2);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .message {
+      display: flex;
+      gap: 12px;
+      margin: 0 0 26px;
+      animation: message-in .24s ease-out;
+    }
+    .message.user { justify-content: flex-end; }
+    .message-body { max-width: min(78%, 680px); }
+    .message.user .message-body { display: flex; flex-direction: column; align-items: flex-end; }
+    .speaker {
+      margin: 0 0 7px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .bubble {
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px 16px 16px 5px;
+      background: var(--surface);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, .04);
+      line-height: 1.68;
+      white-space: pre-wrap;
+    }
+    .user .bubble {
+      border-color: #d8e5ff;
+      border-radius: 16px 16px 5px 16px;
+      background: #eaf2ff;
+    }
+    .message-actions {
+      min-height: 44px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .history-edit {
+      min-height: 36px;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--text-2);
+      background: transparent;
+      font-size: 12px;
+    }
+    body.is-stopped .message.user.latest .history-edit { display: inline-flex; }
+    .history-edit:hover { color: var(--primary-strong); background: var(--primary-soft); }
+    .avatar {
+      width: 30px;
+      height: 30px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .run-log {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-left: 2px solid #bfdbfe;
+      color: var(--text-3);
+      background: var(--surface-2);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .run-log div + div { margin-top: 2px; }
+    .run-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 11px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .run-state::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    .run-state.stopped::before { background: var(--danger); }
+    .run-state.done::before { background: var(--primary); }
+    .typing {
+      display: inline-flex;
+      gap: 4px;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+    .typing i {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #94a3b8;
+      animation: blink 1.2s infinite ease-in-out;
+    }
+    .typing i:nth-child(2) { animation-delay: .15s; }
+    .typing i:nth-child(3) { animation-delay: .3s; }
+
+    .composer-area {
+      padding: 0 clamp(18px, 4vw, 48px) 24px;
+      background: linear-gradient(180deg, rgba(244, 247, 251, 0), #f4f7fb 20%);
+    }
+    .composer-stack {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .queue-panel {
+      display: none;
+      background: var(--surface-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .queue-panel.has-items { display: block; }
+    .queue-header {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .queue-hint { font-weight: 400; }
+    .queue-list { margin: 0; padding: 0 10px 10px; list-style: none; }
+    .queue-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      min-height: 62px;
+      border-top: 1px solid var(--border);
+      background: transparent;
+      transition: transform .18s ease, opacity .18s ease, background .18s ease;
+    }
+    .queue-item:first-child { border-top: 0; }
+    .queue-item.dragging { opacity: .45; }
+    .queue-item.drag-over { background: #e8f0ff; transform: translateY(2px); }
+    .drag-handle {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      color: var(--text-3);
+      background: transparent;
+      cursor: grab;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .queue-copy {
+      min-width: 0;
+      padding: 11px 8px 11px 0;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 560;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .queue-edit-input {
+      width: calc(100% - 8px);
+      min-height: 44px;
+      margin: 8px 8px 8px 0;
+      padding: 10px 12px;
+      resize: vertical;
+      border: 1px solid #93b4f5;
+      border-radius: 10px;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.45;
+    }
+    .queue-actions { display: flex; align-items: center; gap: 2px; }
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 10px;
+      color: var(--text-2);
+      background: transparent;
+      transition: color .18s ease, background .18s ease, opacity .18s ease;
+    }
+    .icon-button:hover { color: var(--primary-strong); background: rgba(255, 255, 255, .88); }
+    .icon-button.danger:hover { color: var(--danger); background: #fef2f2; }
+    .icon-button:disabled { cursor: not-allowed; opacity: .35; }
+    .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .edit-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 46px;
+      padding: 0 16px;
+      border-bottom: 1px solid #bfdbfe;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .edit-banner.active { display: flex; }
+    .text-button {
+      min-height: 36px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 9px;
+      color: inherit;
+      background: transparent;
+    }
+    .text-button:hover { background: rgba(255, 255, 255, .75); }
+    .composer { padding: 16px 18px 14px; }
+    .composer label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    #composerInput {
+      width: 100%;
+      min-height: 74px;
+      max-height: 180px;
+      padding: 0;
+      resize: none;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      background: transparent;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    #composerInput::placeholder { color: #94a3b8; }
+    .composer-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .send-mode {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-3);
+      font-size: 12px;
+    }
+    .send-mode svg { color: var(--primary); }
+    .composer-actions { display: flex; align-items: center; gap: 9px; }
+    .send-button {
+      min-width: 82px;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--text);
+      font-weight: 700;
+      transition: transform .16s ease, background .16s ease, opacity .16s ease;
+    }
+    .send-button:hover { background: #1e293b; }
+    .send-button:active { transform: scale(.98); }
+    .send-button:disabled { cursor: not-allowed; opacity: .38; }
+    .run-button {
+      min-width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--text);
+      font-weight: 700;
+      transition: transform .16s ease, background .16s ease;
+    }
+    .run-button:hover { background: #1e293b; }
+    .run-button:active { transform: scale(.97); }
+    .run-button.continue { min-width: 76px; background: var(--primary); }
+    .run-button.continue:hover { background: var(--primary-strong); }
+    .stop-square { width: 14px; height: 14px; border-radius: 3px; background: currentColor; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      z-index: 50;
+      max-width: calc(100vw - 32px);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 14px;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      color: #fff;
+      background: #172033;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, .24);
+      font-size: 13px;
+      transform: translate(-50%, 90px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .24s ease, opacity .24s ease;
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+    .toast button { min-height: 36px; border: 0; color: #93c5fd; background: transparent; font-weight: 700; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes blink { 0%, 70%, 100% { opacity: .25; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-2px); } }
+    @keyframes message-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .topbar { min-height: 64px; padding: 10px 16px; }
+      .title-wrap p { display: none; }
+      .conversation { padding: 22px 16px 28px; }
+      .composer-area { padding: 0 10px 10px; }
+      .composer-stack { border-radius: 20px; }
+      .queue-item { grid-template-columns: 40px minmax(0, 1fr); padding-right: 4px; }
+      .queue-actions { grid-column: 2; justify-content: flex-end; padding-bottom: 6px; }
+      .message-body { max-width: 88%; }
+      .queue-hint { display: none; }
+      .send-mode span { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="任务导航">
+      <div class="sidebar-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">P</span>
+          <span>PlannerAI</span>
+        </div>
+        <button class="new-task" type="button" id="newTaskButton">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          新建任务
+        </button>
+        <div class="nav-label">最近任务</div>
+        <button class="task-item" type="button">
+          <strong>撰写年度规划文档</strong>
+          <span>正在运行 · 3 条待发送</span>
+        </button>
+        <p class="sidebar-note">交互 Demo<br>消息队列 · 立即发送 · 停止与编辑</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1>撰写年度规划文档</h1>
+          <p>运行中的指令可排队管理，也可以优先发送</p>
+        </div>
+        <div class="status-pill" id="statusPill" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">Agent 运行中</span>
+        </div>
+      </header>
+
+      <section class="conversation" id="conversation" aria-label="对话记录">
+        <div class="welcome">这是一个交互演示。Agent 正在生成规划文档；你可以继续发送消息、调整队列顺序，或尝试“立即发送”“停止”和“编辑最近消息”。</div>
+        <article class="message user latest" data-message-id="initial-user">
+          <div class="message-body">
+            <div class="speaker">你</div>
+            <div class="bubble user-copy">请写一篇 2027 年产品规划文档，重点覆盖增长策略、关键项目和季度里程碑。</div>
+            <div class="message-actions">
+              <button class="history-edit" type="button" aria-label="编辑最近一条消息">
+                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                编辑最近消息
+              </button>
+            </div>
+          </div>
+        </article>
+        <article class="message agent active-run" data-run-id="initial-run">
+          <div class="avatar" aria-hidden="true">AI</div>
+          <div class="message-body">
+            <div class="speaker">PlannerAI</div>
+            <div class="bubble agent-output">我会先梳理规划目标，再形成完整文档结构。</div>
+            <div class="run-log" aria-label="Agent 运行日志">
+              <div>✓ 已识别目标：增长策略、关键项目、季度里程碑</div>
+              <div class="dynamic-log">正在搭建规划框架…</div>
+            </div>
+            <div class="run-state">生成中 <span class="typing" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="composer-area" aria-label="消息输入">
+        <div class="composer-stack">
+          <div class="queue-panel has-items" id="queuePanel">
+            <div class="queue-header">
+              <span>待发送 <span id="queueCount">3</span></span>
+              <span class="queue-hint">拖动调整执行顺序</span>
+            </div>
+            <ol class="queue-list" id="queueList" aria-label="待发送消息列表"></ol>
+          </div>
+
+          <div class="edit-banner" id="editBanner" role="status">
+            <span>正在修改最近一条消息，发送后将重新生成本轮回复</span>
+            <button class="text-button" type="button" id="cancelHistoryEdit">取消</button>
+          </div>
+
+          <div class="composer">
+            <label for="composerInput">发送消息</label>
+            <textarea id="composerInput" rows="3" placeholder="输入后续要求；Agent 运行中发送将加入待发送区"></textarea>
+            <div class="composer-footer">
+              <div class="send-mode">
+                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></svg>
+                <span id="sendModeText">当前发送将加入待发送区</span>
+              </div>
+              <div class="composer-actions">
+                <button class="send-button" id="sendButton" type="button">发送</button>
+                <button class="run-button" id="runButton" type="button" aria-label="停止整个对话" title="停止整个对话">
+                  <span class="stop-square" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toastText"></span>
+    <button type="button" id="toastAction" hidden>撤销</button>
+  </div>
+
+  <script>
+    const icons = {
+      drag: '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="8" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="17" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="1" fill="currentColor" stroke="none"/></svg>',
+      immediate: '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/><path d="M5 21h14"/></svg>',
+      edit: '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>',
+      delete: '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>'
+    };
+
+    const state = {
+      queue: [
+        { id: crypto.randomUUID(), text: '补充一页核心指标，给出每个季度的目标值。' },
+        { id: crypto.randomUUID(), text: '增长策略不要只写获客，也要覆盖留存和商业化。' },
+        { id: crypto.randomUUID(), text: '最后增加风险与资源依赖，整体控制在 2500 字以内。' }
+      ],
+      running: true,
+      ending: false,
+      stopped: false,
+      editingHistory: false,
+      immediateNext: null,
+      activeTask: '请写一篇 2027 年产品规划文档，重点覆盖增长策略、关键项目和季度里程碑。',
+      activeRunElement: document.querySelector('.active-run'),
+      runTimers: [],
+      dragId: null,
+      deletedItem: null,
+      deletedIndex: -1,
+      toastTimer: null
+    };
+
+    const queuePanel = document.getElementById('queuePanel');
+    const queueList = document.getElementById('queueList');
+    const queueCount = document.getElementById('queueCount');
+    const conversation = document.getElementById('conversation');
+    const composerInput = document.getElementById('composerInput');
+    const sendButton = document.getElementById('sendButton');
+    const runButton = document.getElementById('runButton');
+    const statusPill = document.getElementById('statusPill');
+    const statusText = document.getElementById('statusText');
+    const sendModeText = document.getElementById('sendModeText');
+    const editBanner = document.getElementById('editBanner');
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+    const toastAction = document.getElementById('toastAction');
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+    }
+
+    function showToast(message, actionLabel = '', action = null) {
+      window.clearTimeout(state.toastTimer);
+      toastText.textContent = message;
+      toastAction.hidden = !action;
+      toastAction.textContent = actionLabel;
+      toastAction.onclick = action;
+      toast.classList.add('show');
+      state.toastTimer = window.setTimeout(() => toast.classList.remove('show'), 3600);
+    }
+
+    function updateStatus() {
+      statusPill.className = 'status-pill';
+      document.body.classList.toggle('is-stopped', state.stopped);
+      if (state.stopped) {
+        statusPill.classList.add('stopped');
+        statusText.textContent = '对话已停止';
+        sendModeText.textContent = '当前发送将保留在待发送区';
+        runButton.className = 'run-button continue';
+        runButton.textContent = '继续';
+        runButton.setAttribute('aria-label', '继续执行待发送消息');
+        runButton.title = '继续执行待发送消息';
+      } else if (state.ending) {
+        statusPill.classList.add('ending');
+        statusText.textContent = '正在自然结束当前运行';
+        sendModeText.textContent = '当前发送将加入待发送区';
+        runButton.className = 'run-button';
+        runButton.innerHTML = '<span class="stop-square" aria-hidden="true"></span>';
+        runButton.setAttribute('aria-label', '停止整个对话');
+      } else if (state.running) {
+        statusText.textContent = 'Agent 运行中';
+        sendModeText.textContent = '当前发送将加入待发送区';
+        runButton.className = 'run-button';
+        runButton.innerHTML = '<span class="stop-square" aria-hidden="true"></span>';
+        runButton.setAttribute('aria-label', '停止整个对话');
+      } else {
+        statusPill.classList.add('idle');
+        statusText.textContent = 'Agent 空闲';
+        sendModeText.textContent = '当前发送将立即执行';
+        runButton.className = 'run-button';
+        runButton.innerHTML = '<span class="stop-square" aria-hidden="true"></span>';
+        runButton.setAttribute('aria-label', '停止整个对话');
+      }
+      const immediateButtons = queueList.querySelectorAll('[data-action="immediate"]');
+      immediateButtons.forEach(button => { button.disabled = state.ending; });
+    }
+
+    function renderQueue() {
+      queueList.innerHTML = state.queue.map((item, index) => `
+        <li class="queue-item" draggable="true" tabindex="0" data-id="${item.id}" aria-label="待发送消息 ${index + 1}：${escapeHtml(item.text)}">
+          <button class="drag-handle" type="button" aria-label="拖动第 ${index + 1} 条消息调整顺序" title="拖动调整顺序">${icons.drag}</button>
+          <div class="queue-copy">${escapeHtml(item.text)}</div>
+          <div class="queue-actions">
+            <button class="icon-button" type="button" data-action="immediate" aria-label="立即发送：${escapeHtml(item.text)}" title="立即发送" ${state.ending ? 'disabled' : ''}>${icons.immediate}</button>
+            <button class="icon-button" type="button" data-action="edit" aria-label="编辑：${escapeHtml(item.text)}" title="编辑">${icons.edit}</button>
+            <button class="icon-button danger" type="button" data-action="delete" aria-label="删除：${escapeHtml(item.text)}" title="删除">${icons.delete}</button>
+          </div>
+        </li>`).join('');
+      queueCount.textContent = String(state.queue.length);
+      queuePanel.classList.toggle('has-items', state.queue.length > 0);
+      document.querySelector('.task-item span').textContent = `${state.running ? '正在运行' : state.stopped ? '已停止' : '空闲'} · ${state.queue.length} 条待发送`;
+    }
+
+    function clearRunTimers() {
+      state.runTimers.forEach(timer => window.clearTimeout(timer));
+      state.runTimers = [];
+    }
+
+    function scrollConversation() {
+      requestAnimationFrame(() => { conversation.scrollTop = conversation.scrollHeight; });
+    }
+
+    function markRunFinished(kind = 'done') {
+      const run = state.activeRunElement;
+      if (!run) return;
+      const runState = run.querySelector('.run-state');
+      const dynamicLog = run.querySelector('.dynamic-log');
+      if (dynamicLog) dynamicLog.textContent = kind === 'stopped' ? '运行已由用户停止' : '✓ 本轮生成完成';
+      if (runState) {
+        runState.className = `run-state ${kind}`;
+        runState.textContent = kind === 'stopped' ? '已停止' : kind === 'early' ? '已自然结束' : '已完成';
+      }
+      run.classList.remove('active-run');
+    }
+
+    function appendUserMessage(text) {
+      document.querySelectorAll('.message.user.latest').forEach(node => node.classList.remove('latest'));
+      const article = document.createElement('article');
+      article.className = 'message user latest';
+      article.dataset.messageId = crypto.randomUUID();
+      article.innerHTML = `
+        <div class="message-body">
+          <div class="speaker">你</div>
+          <div class="bubble user-copy">${escapeHtml(text)}</div>
+          <div class="message-actions">
+            <button class="history-edit" type="button" aria-label="编辑最近一条消息">${icons.edit} 编辑最近消息</button>
+          </div>
+        </div>`;
+      conversation.append(article);
+      return article;
+    }
+
+    function appendAgentRun(text) {
+      const article = document.createElement('article');
+      article.className = 'message agent active-run';
+      article.dataset.runId = crypto.randomUUID();
+      article.innerHTML = `
+        <div class="avatar" aria-hidden="true">AI</div>
+        <div class="message-body">
+          <div class="speaker">PlannerAI</div>
+          <div class="bubble agent-output">我已收到新要求，正在结合当前对话重新组织内容。</div>
+          <div class="run-log" aria-label="Agent 运行日志">
+            <div>✓ 已读取指令：${escapeHtml(text.length > 34 ? `${text.slice(0, 34)}…` : text)}</div>
+            <div class="dynamic-log">正在分析约束并生成内容…</div>
+          </div>
+          <div class="run-state">生成中 <span class="typing" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        </div>`;
+      conversation.append(article);
+      state.activeRunElement = article;
+      return article;
+    }
+
+    function startTask(text, options = {}) {
+      clearRunTimers();
+      state.running = true;
+      state.ending = false;
+      state.stopped = false;
+      state.activeTask = text;
+      if (!options.reuseUser) appendUserMessage(text);
+      const run = options.reuseExistingRun ? state.activeRunElement : appendAgentRun(text);
+      const output = run.querySelector('.agent-output');
+      const dynamicLog = run.querySelector('.dynamic-log');
+      updateStatus();
+      renderQueue();
+      scrollConversation();
+
+      const phases = [
+        { delay: 1200, log: '✓ 已完成结构规划', copy: '我已根据你的要求调整规划结构，接下来会补充可落地的目标、行动与衡量方式。' },
+        { delay: 2600, log: '正在补充关键细节与指标…', copy: '我已根据你的要求调整规划结构，接下来会补充可落地的目标、行动与衡量方式。\n\n当前重点包括：目标定义、核心策略、季度节奏和风险控制。' },
+        { delay: 4300, log: '✓ 已完成内容校验', copy: '我已根据你的要求调整规划结构，接下来会补充可落地的目标、行动与衡量方式。\n\n当前重点包括：目标定义、核心策略、季度节奏和风险控制。最终版本会保持信息精炼，并明确每项工作的负责人和验收口径。' }
+      ];
+      phases.forEach(phase => {
+        state.runTimers.push(window.setTimeout(() => {
+          if (!state.running || state.stopped || state.ending) return;
+          dynamicLog.textContent = phase.log;
+          output.textContent = phase.copy;
+          scrollConversation();
+        }, phase.delay));
+      });
+      state.runTimers.push(window.setTimeout(() => completeCurrentTask(), 5600));
+    }
+
+    function completeCurrentTask() {
+      if (!state.running || state.stopped) return;
+      clearRunTimers();
+      markRunFinished(state.ending ? 'early' : 'done');
+      state.running = false;
+      state.ending = false;
+
+      const next = state.immediateNext || state.queue.shift() || null;
+      state.immediateNext = null;
+      renderQueue();
+      if (next) {
+        updateStatus();
+        state.runTimers.push(window.setTimeout(() => startTask(next.text), 500));
+      } else {
+        updateStatus();
+      }
+    }
+
+    function queueMessage(text) {
+      state.queue.push({ id: crypto.randomUUID(), text });
+      renderQueue();
+      showToast(state.stopped ? '消息已保留在待发送区' : '消息已加入待发送区');
+    }
+
+    function sendComposer() {
+      const text = composerInput.value.trim();
+      if (!text) {
+        composerInput.focus();
+        showToast('请先输入消息');
+        return;
+      }
+      if (state.editingHistory) {
+        applyHistoryEdit(text);
+      } else if (state.running || state.stopped) {
+        queueMessage(text);
+      } else {
+        startTask(text);
+      }
+      composerInput.value = '';
+      autoResizeComposer();
+    }
+
+    function stopConversation() {
+      if (state.stopped) return;
+      clearRunTimers();
+      if (state.running) markRunFinished('stopped');
+      state.running = false;
+      state.ending = false;
+      state.stopped = true;
+      state.immediateNext = null;
+      updateStatus();
+      renderQueue();
+      showToast('整个对话已停止，待发送消息已保留');
+    }
+
+    function continueConversation() {
+      state.stopped = false;
+      const next = state.queue.shift() || null;
+      renderQueue();
+      updateStatus();
+      if (next) startTask(next.text);
+      else showToast('没有待发送消息，对话已回到空闲状态');
+    }
+
+    function immediateSend(id) {
+      if (state.ending) return;
+      const index = state.queue.findIndex(item => item.id === id);
+      if (index < 0) return;
+      const [item] = state.queue.splice(index, 1);
+      renderQueue();
+      if (state.stopped || !state.running) {
+        state.stopped = false;
+        showToast('消息已立即发送');
+        startTask(item.text);
+        return;
+      }
+      state.immediateNext = item;
+      state.ending = true;
+      updateStatus();
+      const dynamicLog = state.activeRunElement?.querySelector('.dynamic-log');
+      if (dynamicLog) dynamicLog.textContent = '正在自然结束当前运行，随后处理优先消息…';
+      showToast('已设为下一条，当前运行正在自然结束');
+      clearRunTimers();
+      state.runTimers.push(window.setTimeout(() => completeCurrentTask(), 1100));
+    }
+
+    function editQueueItem(id) {
+      const item = state.queue.find(candidate => candidate.id === id);
+      const row = queueList.querySelector(`[data-id="${CSS.escape(id)}"]`);
+      if (!item || !row) return;
+      const copy = row.querySelector('.queue-copy');
+      const actions = row.querySelector('.queue-actions');
+      copy.outerHTML = `<textarea class="queue-edit-input" aria-label="编辑待发送消息">${escapeHtml(item.text)}</textarea>`;
+      actions.innerHTML = `
+        <button class="icon-button" type="button" data-action="save" aria-label="保存编辑" title="保存">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+        </button>
+        <button class="icon-button" type="button" data-action="cancel" aria-label="取消编辑" title="取消">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>`;
+      const input = row.querySelector('.queue-edit-input');
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+
+    function saveQueueEdit(id, row) {
+      const input = row.querySelector('.queue-edit-input');
+      const text = input?.value.trim();
+      if (!text) {
+        showToast('消息不能为空');
+        input?.focus();
+        return;
+      }
+      const item = state.queue.find(candidate => candidate.id === id);
+      if (item) item.text = text;
+      renderQueue();
+      showToast('待发送消息已更新');
+    }
+
+    function deleteQueueItem(id) {
+      const index = state.queue.findIndex(item => item.id === id);
+      if (index < 0) return;
+      state.deletedIndex = index;
+      [state.deletedItem] = state.queue.splice(index, 1);
+      renderQueue();
+      showToast('已删除待发送消息', '撤销', () => {
+        if (!state.deletedItem) return;
+        state.queue.splice(Math.min(state.deletedIndex, state.queue.length), 0, state.deletedItem);
+        state.deletedItem = null;
+        renderQueue();
+        toast.classList.remove('show');
+      });
+    }
+
+    function beginHistoryEdit() {
+      if (!state.stopped) return;
+      const latest = document.querySelector('.message.user.latest');
+      if (!latest) return;
+      state.editingHistory = true;
+      editBanner.classList.add('active');
+      composerInput.value = latest.querySelector('.user-copy').textContent;
+      sendButton.textContent = '重新发送';
+      composerInput.focus();
+      autoResizeComposer();
+    }
+
+    function cancelHistoryEdit() {
+      state.editingHistory = false;
+      editBanner.classList.remove('active');
+      composerInput.value = '';
+      sendButton.textContent = '发送';
+      autoResizeComposer();
+    }
+
+    function applyHistoryEdit(text) {
+      const latestUser = document.querySelector('.message.user.latest');
+      if (!latestUser) return;
+      latestUser.querySelector('.user-copy').textContent = text;
+      let next = latestUser.nextElementSibling;
+      while (next) {
+        const target = next;
+        next = next.nextElementSibling;
+        target.remove();
+      }
+      state.editingHistory = false;
+      editBanner.classList.remove('active');
+      sendButton.textContent = '发送';
+      showToast('原回复已作废，正在从修改后的消息重新生成');
+      startTask(text, { reuseUser: true });
+    }
+
+    function autoResizeComposer() {
+      composerInput.style.height = 'auto';
+      composerInput.style.height = `${Math.min(composerInput.scrollHeight, 180)}px`;
+    }
+
+    queueList.addEventListener('click', event => {
+      const button = event.target.closest('[data-action]');
+      const row = event.target.closest('.queue-item');
+      if (!button || !row) return;
+      const { id } = row.dataset;
+      const action = button.dataset.action;
+      if (action === 'immediate') immediateSend(id);
+      if (action === 'edit') editQueueItem(id);
+      if (action === 'delete') deleteQueueItem(id);
+      if (action === 'save') saveQueueEdit(id, row);
+      if (action === 'cancel') renderQueue();
+    });
+
+    queueList.addEventListener('dragstart', event => {
+      const row = event.target.closest('.queue-item');
+      if (!row) return;
+      state.dragId = row.dataset.id;
+      row.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+    });
+    queueList.addEventListener('dragover', event => {
+      const row = event.target.closest('.queue-item');
+      if (!row || row.dataset.id === state.dragId) return;
+      event.preventDefault();
+      queueList.querySelectorAll('.drag-over').forEach(node => node.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+    queueList.addEventListener('drop', event => {
+      const target = event.target.closest('.queue-item');
+      if (!target || !state.dragId) return;
+      event.preventDefault();
+      const from = state.queue.findIndex(item => item.id === state.dragId);
+      const to = state.queue.findIndex(item => item.id === target.dataset.id);
+      if (from >= 0 && to >= 0) {
+        const [moved] = state.queue.splice(from, 1);
+        state.queue.splice(to, 0, moved);
+        renderQueue();
+        showToast('执行顺序已调整');
+      }
+    });
+    queueList.addEventListener('dragend', () => {
+      state.dragId = null;
+      queueList.querySelectorAll('.dragging, .drag-over').forEach(node => node.classList.remove('dragging', 'drag-over'));
+    });
+    queueList.addEventListener('keydown', event => {
+      const row = event.target.closest('.queue-item');
+      if (!row || !event.altKey || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+      event.preventDefault();
+      const index = state.queue.findIndex(item => item.id === row.dataset.id);
+      const nextIndex = event.key === 'ArrowUp' ? index - 1 : index + 1;
+      if (index < 0 || nextIndex < 0 || nextIndex >= state.queue.length) return;
+      const [moved] = state.queue.splice(index, 1);
+      state.queue.splice(nextIndex, 0, moved);
+      renderQueue();
+      queueList.querySelector(`[data-id="${CSS.escape(moved.id)}"]`)?.focus();
+      showToast('执行顺序已调整');
+    });
+
+    sendButton.addEventListener('click', sendComposer);
+    composerInput.addEventListener('input', autoResizeComposer);
+    composerInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendComposer();
+      }
+    });
+    runButton.addEventListener('click', () => state.stopped ? continueConversation() : stopConversation());
+    conversation.addEventListener('click', event => {
+      if (event.target.closest('.history-edit')) beginHistoryEdit();
+    });
+    document.getElementById('cancelHistoryEdit').addEventListener('click', cancelHistoryEdit);
+    document.getElementById('newTaskButton').addEventListener('click', () => showToast('Demo 聚焦当前任务的消息队列交互'));
+
+    renderQueue();
+    updateStatus();
+    autoResizeComposer();
+    startTask(state.activeTask, { reuseUser: true, reuseExistingRun: true });
+  </script>
+</body>
+</html>

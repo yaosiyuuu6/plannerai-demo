@@ -3535,12 +3535,13 @@
       text-align: center;
     }
     .composer-bar {
-      height: 34px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .composer-left { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
+    .composer-actions { display: flex; align-items: center; gap: 8px; }
     .round-btn {
       width: 32px;
       height: 32px;
@@ -3575,78 +3576,234 @@
     }
     .model-switch {
       position: relative;
+      flex: none;
     }
     .model-toggle {
-      height: 28px;
+      height: 36px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 999px;
       background: transparent;
-      color: #595959;
+      color: #262626;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 0 8px;
-      font-size: 13px;
-      font-weight: 500;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 0 10px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      transition: background .18s ease, color .18s ease;
     }
-    .model-toggle:hover,
+    .model-current-label {
+      min-width: 0;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .model-current-effort {
+      color: #8c8c8c;
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .model-toggle:hover {
+      background: transparent;
+      color: #1f1f1f;
+    }
     .model-toggle.open {
-      background: #f5f5f5;
-      color: var(--primary);
+      background: #ededed;
+      color: #1f1f1f;
+    }
+    .model-toggle:focus-visible,
+    .model-option:focus-visible,
+    .model-effort-option:focus-visible {
+      outline: 2px solid rgba(22, 119, 255, .36);
+      outline-offset: 2px;
+    }
+    .model-chevron {
+      width: 18px;
+      height: 18px;
+      color: #737373;
+      stroke-width: 1.8;
+      transition: transform .18s ease;
+    }
+    .model-toggle.open .model-chevron {
+      transform: rotate(180deg);
     }
     .model-menu {
+      --model-effort-width: 208px;
+      --model-panel-gap: 8px;
       position: absolute;
-      left: 0;
-      bottom: calc(100% + 8px);
-      width: 210px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 10px 28px rgba(0,0,0,.12);
-      padding: 6px;
+      right: 0;
+      bottom: calc(100% + 10px);
+      width: min(232px, calc(100vw - 32px));
       display: none;
       z-index: 55;
+      transform-origin: right bottom;
     }
-    .model-menu.open { display: block; }
+    .model-menu.open {
+      display: block;
+      animation: modelMenuIn .18s ease-out;
+    }
+    .model-menu-panel,
+    .model-effort-menu {
+      border: 1px solid #dedede;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 18px 48px rgba(0,0,0,.16), 0 3px 10px rgba(0,0,0,.08);
+      padding: 10px;
+    }
+    .model-menu-panel {
+      width: 100%;
+    }
+    .model-effort-menu {
+      position: absolute;
+      left: calc(100% + var(--model-panel-gap));
+      bottom: 0;
+      width: var(--model-effort-width);
+      display: none;
+      transform-origin: left bottom;
+    }
+    .model-effort-menu.open-left {
+      right: calc(100% + var(--model-panel-gap));
+      left: auto;
+      transform-origin: right bottom;
+    }
+    .model-menu.show-efforts .model-effort-menu {
+      display: block;
+      animation: modelEffortMenuIn .16s ease-out;
+    }
+    .model-menu.show-efforts .model-effort-menu.open-left {
+      animation-name: modelEffortMenuInLeft;
+    }
+    .model-menu-title {
+      display: block;
+      padding: 6px 12px 8px;
+      color: #8c8c8c;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 18px;
+    }
     .model-option {
       width: 100%;
-      min-height: 38px;
+      min-height: 44px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 9px;
       background: transparent;
       color: #262626;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 8px;
-      padding: 7px 8px;
+      gap: 12px;
+      padding: 0 12px;
       text-align: left;
+      transition: background .16s ease, color .16s ease;
     }
-    .model-option:hover,
     .model-option.active {
-      background: var(--primary-bg);
-      color: #0958d9;
+      background: transparent;
+      color: #1f1f1f;
+    }
+    .model-option:hover {
+      background: #f5f5f5;
+      color: #1f1f1f;
     }
     .model-name {
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
     }
-    .model-desc {
-      grid-column: 1 / -1;
-      color: #8c8c8c;
-      font-size: 12px;
-      line-height: 1.35;
+    .model-option-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    .model-check {
+    .model-submenu-chevron {
       width: 16px;
       height: 16px;
+      color: #a3a3a3;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .model-effort-header {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px 4px;
+      color: #8c8c8c;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .model-effort-option {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #262626;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 18px;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      font-size: 13px;
+      line-height: 20px;
+      text-align: left;
+      transition: background .16s ease, color .16s ease;
+    }
+    .model-effort-option[hidden] { display: none; }
+    .model-effort-option:hover { background: #f5f5f5; }
+    .model-effort-check {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0;
+    }
+    .model-check {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
       opacity: 0;
     }
     .model-option.active .model-check { opacity: 1; }
+    .model-effort-option.active .model-effort-check { opacity: 1; }
+    @keyframes modelMenuIn {
+      from { opacity: 0; transform: translateY(4px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes modelEffortMenuIn {
+      from { opacity: 0; transform: translateX(-4px) scale(.98); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes modelEffortMenuInLeft {
+      from { opacity: 0; transform: translateX(4px) scale(.98); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .model-toggle,
+      .model-chevron,
+      .model-option,
+      .model-effort-option { transition: none; }
+      .model-menu.open,
+      .model-menu.show-efforts .model-effort-menu { animation: none; }
+    }
     .mode-label {
       height: 24px;
       display: none;
@@ -3757,6 +3914,8 @@
       transform-origin: top center;
     }
     .suggest-pop.open.suggest-below { animation-name: panelSlideDown; }
+    .suggest-pop.caret-anchored { max-height: var(--suggest-available-height); }
+    .suggest-pop.caret-anchored.skill-pop { overflow-y: auto; overscroll-behavior: contain; }
     .suggest-head {
       height: 42px;
       border-bottom: 1px solid var(--border);
@@ -4105,20 +4264,6 @@
       align-items: center;
       flex: none;
     }
-    .artifact-open-manual {
-      width: 36px;
-      height: 32px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      color: #595959;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-    .artifact-open-manual:hover { background: #f0f0f0; color: #262626; }
-    .artifact-open-manual .icon { width: 18px; height: 18px; stroke-width: 2; }
     .artifact-menu-toggle {
       width: 36px;
       height: 32px;
@@ -4867,9 +5012,10 @@
     .asset-table td { height: 54px; border-bottom: 1px solid #f0f0f0; padding: 0 12px; text-align: left; }
     .asset-table th { height: 42px; color: #8c8c8c; font-size: 12px; font-weight: 600; }
     .asset-table th:first-child { width: auto; }
-    .asset-table th:nth-child(2) { width: 15%; }
-    .asset-table th:nth-child(3) { width: 14%; }
-    .asset-table th:nth-child(4) { width: 21%; }
+    .asset-table th:nth-child(2) { width: 12%; }
+    .asset-table th:nth-child(3) { width: 100px; }
+    .asset-table th:nth-child(4) { width: 17%; }
+    .asset-size { white-space: nowrap; font-variant-numeric: tabular-nums; }
     .asset-table th:last-child { width: 56px; }
     .asset-table tbody tr { transition: background .14s ease; }
     .asset-table tbody tr[data-asset-id] { cursor: default; }
@@ -4877,6 +5023,8 @@
     .asset-table tbody tr.asset-selected { background: #eaf4ff; }
     .asset-table tbody tr.asset-dragging { opacity: .45; }
     .asset-table tbody tr.asset-drop-target { background: #eaf4ff; outline: 2px solid #1677ff; outline-offset: -2px; }
+    .asset-table tr.asset-drop-before > td { box-shadow: inset 0 2px #1677ff; }
+    .asset-table tr.asset-drop-after > td { box-shadow: inset 0 -2px #1677ff; }
     .asset-name-cell { min-width: 0; display: flex; align-items: center; gap: 8px; padding-left: calc(var(--asset-depth, 0) * 22px); }
     .asset-name-button {
       width: 100%;
@@ -4960,6 +5108,8 @@
       padding: 16px;
       font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
+    .instruction-editor { white-space: pre-wrap; overflow-wrap: anywhere; overflow-y: auto; max-height: 55vh; }
+    .instruction-editor-footer #instructionEditorHint { margin-right: auto; }
     .instruction-editor:focus { border-color: #1677ff; outline: 3px solid rgba(22,119,255,.12); background: #fff; }
     .instruction-editor-footer { justify-content: flex-end; margin-top: 12px; color: #8c8c8c; font-size: 12px; }
     .project-automation-list { display: grid; gap: 8px; }
@@ -5227,7 +5377,19 @@
     .asset-move-folder-pane .asset-folder-tree { min-height: 0; max-height: none; flex: 1; border: 0; border-radius: 0; padding: 0; }
     .asset-action-dialog .confirm-actions .project-primary { border-color: #202124; }
     .asset-action-dialog .confirm-actions .project-primary:disabled { opacity: .42; cursor: not-allowed; }
-    .asset-preview-dialog { width: min(720px, 100%); padding: 0; overflow: hidden; }
+    .asset-preview-shell { flex: 1; min-height: 0; display: flex; }
+    .asset-preview-shell[hidden] { display: none; }
+    .artifact.asset-preview-mode > .tabs,
+    .artifact.asset-preview-mode > .artifact-head,
+    .artifact.asset-preview-mode > .artifact-body,
+    .artifact.asset-preview-mode > .artifact-empty { display: none !important; }
+    .asset-preview-dialog { width: 100%; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .asset-preview-head { background: #fff; flex-shrink: 0; }
+    .asset-preview-head > div { min-width: 0; }
+    .asset-preview-head h3 { overflow-wrap: anywhere; }
+    .asset-preview-head button { flex-shrink: 0; }
+    .asset-preview-paper { overflow-wrap: anywhere; }
+    .asset-preview-paper p { white-space: pre-wrap; }
     .asset-preview-head { padding: 16px 18px; border-bottom: 1px solid #ececec; }
     .asset-preview-head h3 { margin: 0; }
     .asset-preview-head p { margin-top: 4px; font-size: 12px; }
@@ -5243,8 +5405,8 @@
     }
     .asset-preview-head button:hover { background: #f2f2f2; color: #262626; }
     .asset-preview-body {
-      min-height: 300px;
-      max-height: 60vh;
+      flex: 1;
+      min-height: 0;
       overflow: auto;
       background: #f7f8fa;
       display: grid;
@@ -5271,8 +5433,7 @@
       .instruction-editor-footer { align-items: flex-start; flex-direction: column; }
       .project-detail-tabs { gap: 14px; overflow-x: auto; }
       .project-asset-summary { width: 100%; justify-content: space-between; }
-      .asset-table th:nth-child(3), .asset-table td:nth-child(3) { display: none; }
-      .asset-table th:first-child { width: 50%; }
+      .asset-table th:first-child { width: auto; }
     }
     @media (max-width: 640px) {
       .asset-action-dialog.move-mode { padding: 16px; }
@@ -5970,6 +6131,9 @@
               <div class="project-conversation-list" id="projectConversationList"></div>
             </section>
             <section class="project-detail-panel" data-project-panel="assets" hidden>
+              <div class="project-panel-heading">
+                <div><h2>资产</h2><p>Agent 对项目资产中的文档拥有读写权限。</p></div>
+              </div>
               <div class="project-asset-toolbar">
                 <div class="project-asset-actions">
                   <button class="project-secondary" id="projectNewFolder" type="button">
@@ -5990,8 +6154,8 @@
                 </div>
               </div>
               <div class="asset-table-wrap" id="projectAssetTableWrap">
-                <table class="asset-table" aria-label="项目资产，拖动移动，双击名称重命名，右侧或右键菜单可进行更多操作">
-                  <thead><tr><th>名称</th><th>类型</th><th>更新人</th><th>更新时间</th><th><span class="sr-only">操作</span></th></tr></thead>
+                <table class="asset-table" aria-label="项目资产，拖动行边缘排序，拖入文件夹移动，Alt 加上下方向键排序，双击名称重命名，右侧或右键菜单可进行更多操作">
+                  <thead><tr><th>名称</th><th>类型</th><th>文件大小</th><th>更新时间</th><th><span class="sr-only">操作</span></th></tr></thead>
                   <tbody id="projectAssetRows"></tbody>
                 </table>
                 <div class="asset-root-drop" data-asset-drop-root>拖到这里，移至项目根目录</div>
@@ -6003,8 +6167,9 @@
                 <span class="instruction-state" id="projectInstructionState">已保存</span>
               </div>
               <label class="instruction-editor-label" for="projectInstructionEditor">Agent.md</label>
-              <textarea class="instruction-editor" id="projectInstructionEditor" spellcheck="false"></textarea>
+              <div class="instruction-editor" id="projectInstructionEditor" contenteditable="true" role="textbox" aria-label="项目指令" aria-multiline="true" aria-describedby="instructionEditorHint" spellcheck="false"></div>
               <div class="instruction-editor-footer">
+                <span id="instructionEditorHint">输入 @ 引用文档、表格或项目资产，输入 / 使用 Skill</span>
                 <button class="project-primary" id="projectInstructionSave" type="button">保存指令</button>
               </div>
             </section>
@@ -6299,35 +6464,49 @@
                 <button class="human-btn" id="manualQaBtn" type="button" aria-label="创建人工问答">
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13v4a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2Zm16 0v4a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z"/></svg>
                 </button>
-                <div class="model-switch">
-                  <button class="model-toggle" id="modelToggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="切换模型">
-                    <span id="currentModel">MiniMax</span>
-                    <span aria-hidden="true">⌄</span>
-                  </button>
-                  <div class="model-menu" id="modelMenu" role="listbox" aria-label="模型选项">
-                    <button class="model-option active" type="button" role="option" aria-selected="true" data-model="MiniMax">
-                      <span class="model-name">MiniMax</span>
-                      <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
-                      <span class="model-desc">复杂规划与产物生成</span>
-                    </button>
-                    <button class="model-option" type="button" role="option" aria-selected="false" data-model="DeepSeek">
-                      <span class="model-name">DeepSeek</span>
-                      <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
-                      <span class="model-desc">快速问答和轻量编辑</span>
-                    </button>
-                    <button class="model-option" type="button" role="option" aria-selected="false" data-model="Doubao">
-                      <span class="model-name">Doubao</span>
-                      <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
-                      <span class="model-desc">长链路分析和校验</span>
-                    </button>
-                  </div>
-                </div>
                 <span class="mode-label" id="modeLabel">
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 1.6 1.6L9 5.2"/><path d="M13 7h7"/><circle cx="6" cy="17" r="2"/><path d="M13 17h7"/></svg>
                   Plan
                 </span>
               </div>
-              <div style="display:flex;align-items:center;">
+              <div class="composer-actions">
+                <div class="model-switch">
+                  <button class="model-toggle" id="modelToggle" type="button" aria-haspopup="dialog" aria-controls="modelMenu" aria-expanded="false" aria-label="切换模型，当前 GLM-5.3 Flash，思考深度 Median">
+                    <span class="model-current-label"><span id="currentModel">GLM-5.3 Flash</span><span class="model-current-effort" id="currentEffort">Median</span></span>
+                    <svg class="icon model-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg>
+                  </button>
+                  <div class="model-menu" id="modelMenu" role="dialog" aria-labelledby="modelMenuTitle" aria-hidden="true">
+                    <div class="model-menu-panel">
+                      <span class="model-menu-title" id="modelMenuTitle">选择模型</span>
+                      <div role="listbox" aria-labelledby="modelMenuTitle">
+                        <button class="model-option" type="button" role="option" aria-selected="false" aria-haspopup="listbox" aria-expanded="false" data-model="GPT Luna">
+                          <span class="model-name">GPT Luna</span>
+                          <span class="model-option-actions">
+                            <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+                            <svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg>
+                          </span>
+                        </button>
+                        <button class="model-option active" type="button" role="option" aria-selected="true" aria-haspopup="listbox" aria-expanded="false" data-model="GLM-5.3 Flash">
+                          <span class="model-name">GLM-5.3 Flash</span>
+                          <span class="model-option-actions">
+                            <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+                            <svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="model-effort-menu" id="modelEffortMenu" role="group" aria-labelledby="modelEffortTitle" aria-hidden="true">
+                      <div class="model-effort-header"><span id="modelEffortTitle">思考深度</span></div>
+                      <div role="listbox" aria-labelledby="modelEffortTitle">
+                        <button class="model-effort-option" type="button" role="option" aria-selected="false" data-model-effort="light"><span>Light</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
+                        <button class="model-effort-option active" type="button" role="option" aria-selected="true" data-model-effort="median"><span>Median</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
+                        <button class="model-effort-option" type="button" role="option" aria-selected="false" data-model-effort="high" hidden><span>High</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
+                        <button class="model-effort-option" type="button" role="option" aria-selected="false" data-model-effort="extra-high" hidden><span>Extra High</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
+                        <button class="model-effort-option" type="button" role="option" aria-selected="false" data-model-effort="max"><span>Max</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <button class="planning-control" id="planningControlBtn" type="button" aria-label="暂停当前任务" title="暂停当前任务">
                   <span class="planning-stop-square" aria-hidden="true"></span>
                 </button>
@@ -6364,10 +6543,7 @@
           <div class="artifact-actions">
             <button class="artifact-save-project" id="artifactSaveProject" type="button" aria-label="保存到项目资产" title="保存到项目资产">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/><path d="M15 12v5M12.5 14.5h5"/></svg>
-              <span>保存到项目</span>
-            </button>
-            <button class="artifact-open-manual" id="openManualBtn" type="button" aria-label="在人工问答中打开" title="在人工问答中打开" hidden>
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="m20 4-9 9"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
+              <span>保存</span>
             </button>
             <button class="artifact-menu-toggle" id="artifactMenuToggle" type="button" aria-label="打开产物操作菜单" aria-expanded="false" aria-controls="artifactMenu" title="更多操作">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
@@ -6396,6 +6572,15 @@
             <div>点击上方 + 或从会话产物记录重新打开。</div>
           </div>
         </div>
+  <section class="asset-preview-shell" id="assetPreviewOverlay" role="region" hidden aria-labelledby="assetPreviewTitle" aria-hidden="true">
+    <div class="asset-preview-dialog">
+      <div class="asset-preview-head">
+        <div><h3 id="assetPreviewTitle">文件预览</h3><p id="assetPreviewMeta"></p></div>
+        <button id="assetPreviewClose" type="button" aria-label="关闭文件预览">×</button>
+      </div>
+      <div class="asset-preview-body" id="assetPreviewBody"></div>
+    </div>
+  </section>
         <section class="automation-editor-shell" id="automationEditorShell" aria-label="自动化详情" hidden>
           <header class="automation-editor-head">
             <h2 id="automationEditorTitle">创建自动化</h2>
@@ -6604,15 +6789,7 @@
     </form>
   </div>
 
-  <div class="confirm-overlay" id="assetPreviewOverlay" role="dialog" aria-modal="true" aria-labelledby="assetPreviewTitle" aria-hidden="true">
-    <div class="confirm-dialog asset-preview-dialog">
-      <div class="asset-preview-head">
-        <div><h3 id="assetPreviewTitle">文件预览</h3><p id="assetPreviewMeta"></p></div>
-        <button id="assetPreviewClose" type="button" aria-label="关闭文件预览">×</button>
-      </div>
-      <div class="asset-preview-body" id="assetPreviewBody"></div>
-    </div>
-  </div>
+
 
   <div class="confirm-overlay" id="vanishConnectionOverlay" role="dialog" aria-modal="true" aria-labelledby="vanishConnectionTitle" aria-hidden="true">
     <form class="confirm-dialog mcp-connect-dialog" id="vanishConnectionForm">
@@ -6772,7 +6949,15 @@
     const chatSearchResults = document.getElementById('chatSearchResults');
     const modelToggle = document.getElementById('modelToggle');
     const modelMenu = document.getElementById('modelMenu');
+    const modelEffortMenu = document.getElementById('modelEffortMenu');
     const currentModel = document.getElementById('currentModel');
+    const currentEffort = document.getElementById('currentEffort');
+    const modelEffortSupport = Object.freeze({
+      'GPT Luna': Object.freeze(['light', 'median', 'high', 'extra-high']),
+      'GLM-5.3 Flash': Object.freeze(['light', 'median', 'max'])
+    });
+    const modelEffortLabels = Object.freeze({ light: 'Light', median: 'Median', high: 'High', 'extra-high': 'Extra High', max: 'Max' });
+    const selectedModelEfforts = {};
     const identityToggle = document.getElementById('identityToggle');
     const identityMenu = document.getElementById('identityMenu');
     const currentIdentityLabel = document.getElementById('currentIdentity');
@@ -6825,7 +7010,6 @@
     const foxmailConnectionStatus = document.getElementById('foxmailConnectionStatus');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
     const artifactSaveProject = document.getElementById('artifactSaveProject');
-    const openManualBtn = document.getElementById('openManualBtn');
     const artifactMenu = document.getElementById('artifactMenu');
     const artifactPaneClose = document.getElementById('artifactPaneClose');
     const manualIssueList = document.getElementById('manualIssueList');
@@ -7061,6 +7245,7 @@
       { id: 'asset-finance-workshop', projectId: 'project-finance', parentId: '', kind: 'image', name: '市场研讨会.jpg', type: 'JPG 图片', size: '1.9 MB', updatedBy: '姚晨恺', updatedAt: Date.now() - 46800000, content: '市场研讨会照片记录研究讨论和结论确认过程。' },
       { id: 'asset-finance-cover', projectId: 'project-finance', parentId: '', kind: 'image', name: '报告封面.webp', type: 'WEBP 图片', size: '524 KB', updatedBy: '姚晨恺', updatedAt: Date.now() - 50400000, content: '报告封面用于月度黄金分析报告的视觉展示。' }
     ];
+    restoreAssetOrder();
     let automationTasks = [
       {
         id: 'automation-weekly-sync', name: '每周项目同步会', status: 'active', instruction: '整理项目最新进展、未解决事项和本周计划，生成同步会议材料。',
@@ -7261,7 +7446,11 @@
     }
 
     function closeModelMenu() {
-      modelMenu.classList.remove('open');
+      modelMenu.classList.remove('open', 'show-efforts');
+      modelMenu.setAttribute('aria-hidden', 'true');
+      modelEffortMenu.setAttribute('aria-hidden', 'true');
+      modelEffortMenu.classList.remove('open-left');
+      modelMenu.querySelectorAll('.model-option').forEach(option => option.setAttribute('aria-expanded', 'false'));
       modelToggle.classList.remove('open');
       modelToggle.setAttribute('aria-expanded', 'false');
     }
@@ -7472,9 +7661,7 @@
 
     function runArtifactAction(action) {
       closeArtifactMenu();
-      if (action === 'open-manual') {
-        setApplicationView('manual-qa');
-      } else if (activeTab === 'manualQa') {
+      if (activeTab === 'manualQa') {
         return;
       } else if (action === 'download') {
         showToast('已模拟导出产物');
@@ -7491,7 +7678,37 @@
         item.disabled = !isAgentFile;
         item.setAttribute('aria-disabled', String(!isAgentFile));
       });
-      openManualBtn.hidden = activeTab !== 'manualQa';
+    }
+
+    function getModelEffort(model) {
+      const supportedEfforts = modelEffortSupport[model] || [];
+      if (supportedEfforts.includes(selectedModelEfforts[model])) return selectedModelEfforts[model];
+      return supportedEfforts.includes('median') ? 'median' : supportedEfforts[0];
+    }
+
+    function updateModelEffortUi(model) {
+      const supportedEfforts = modelEffortSupport[model] || [];
+      const effort = getModelEffort(model);
+      currentEffort.textContent = modelEffortLabels[effort] || effort;
+      modelToggle.setAttribute('aria-label', `切换模型，当前 ${model}，思考深度 ${modelEffortLabels[effort] || effort}`);
+      modelMenu.querySelectorAll('.model-effort-option').forEach(item => {
+        const supported = supportedEfforts.includes(item.dataset.modelEffort);
+        const active = supported && item.dataset.modelEffort === effort;
+        item.hidden = !supported;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+    }
+
+    function positionModelEffortMenu() {
+      modelEffortMenu.classList.remove('open-left');
+      const menuRect = modelMenu.getBoundingClientRect();
+      const menuStyle = getComputedStyle(modelMenu);
+      const effortWidth = parseFloat(menuStyle.getPropertyValue('--model-effort-width')) || 208;
+      const panelGap = parseFloat(menuStyle.getPropertyValue('--model-panel-gap')) || 8;
+      const viewportWidth = window.visualViewport?.width || window.innerWidth;
+      const opensLeft = viewportWidth - menuRect.right < effortWidth + panelGap;
+      modelEffortMenu.classList.toggle('open-left', opensLeft);
     }
 
     function setModel(option) {
@@ -7501,9 +7718,25 @@
         const active = item === option;
         item.classList.toggle('active', active);
         item.setAttribute('aria-selected', String(active));
+        item.setAttribute('aria-expanded', String(active));
       });
-      closeModelMenu();
+      updateModelEffortUi(model);
+      positionModelEffortMenu();
+      modelMenu.classList.add('show-efforts');
+      modelEffortMenu.setAttribute('aria-hidden', 'false');
       showToast(`已切换到 ${model}`);
+      requestAnimationFrame(() => modelMenu.querySelector('.model-effort-option.active')?.focus());
+    }
+
+    function setModelEffort(option) {
+      const model = currentModel.textContent.trim();
+      const effort = option.dataset.modelEffort;
+      if (!(modelEffortSupport[model] || []).includes(effort)) return;
+      selectedModelEfforts[model] = effort;
+      updateModelEffortUi(model);
+      closeModelMenu();
+      modelToggle.focus();
+      showToast(`${model} 思考深度已设为 ${modelEffortLabels[effort]}`);
     }
 
     function setSettingsTab(tab) {
@@ -7952,6 +8185,12 @@
     }
 
     function setArtifactVisible(on, preserveTitle = false) {
+      if (artifact.classList.contains('asset-preview-mode')) {
+        artifact.classList.remove('asset-preview-mode');
+        assetPreviewOverlay.hidden = true;
+        assetPreviewOverlay.classList.remove('open');
+        assetPreviewOverlay.setAttribute('aria-hidden', 'true');
+      }
       if (!on && artifactMaximized) setArtifactMaximized(false);
       artifactVisible = on;
       layout.classList.toggle('with-artifact', on);
@@ -8357,6 +8596,7 @@
     }
 
     function openAutomationEditor(mode, taskId = null) {
+      if (artifact.classList.contains('asset-preview-mode')) setArtifactVisible(false);
       closeOverlays();
       automationEditorMode = mode;
       editingAutomationId = taskId;
@@ -9575,7 +9815,7 @@
 
     function mentionResultGroups() {
       const query = currentMentionQuery.trim().toLocaleLowerCase();
-      const projectId = activePromptInput === automationInstruction ? automationLocation.value : currentConversationProjectId();
+      const projectId = activePromptInput === projectInstructionEditor ? currentProjectDetailId : activePromptInput === automationInstruction ? automationLocation.value : currentConversationProjectId();
       const projectItems = projectId
         ? projectAssetItems(projectId)
           .filter(item => item.kind !== 'folder')
@@ -9647,34 +9887,67 @@
       suggestPop.style.setProperty('--suggest-natural-height', `${resultHeight}px`);
     }
 
+    function promptCaretRect() {
+      const selection = window.getSelection();
+      const selectedRange = selection?.rangeCount ? selection.getRangeAt(0) : null;
+      const source = selectedRange && activePromptInput.contains(selectedRange.endContainer)
+        ? selectedRange : mentionTriggerRange;
+      if (!source || !activePromptInput.contains(source.endContainer)) return null;
+      const caret = source.cloneRange();
+      caret.collapse(false);
+      const rect = caret.getBoundingClientRect();
+      if (rect.height) return rect;
+      // Some browsers omit the rectangle for a collapsed range at a line end.
+      const node = caret.endContainer;
+      const offset = caret.endOffset;
+      if (node.nodeType === Node.TEXT_NODE && offset > 0) {
+        caret.setStart(node, offset - 1);
+        const rects = caret.getClientRects();
+        const character = rects[rects.length - 1];
+        if (character) return { left: character.right, top: character.top, bottom: character.bottom, height: character.height };
+      }
+      return null;
+    }
+
     function updateSuggestPanelMetrics() {
       if (!suggestPop.classList.contains('open')) return;
       const viewport = window.visualViewport;
       const viewportTop = viewport?.offsetTop || 0;
+      const viewportLeft = viewport?.offsetLeft || 0;
+      const viewportWidth = viewport?.width || window.innerWidth;
       const viewportBottom = viewportTop + (viewport?.height || window.innerHeight);
-      const composerRect = (activePromptInput === automationInstruction ? automationInstruction.closest('.automation-prompt-box') : composer).getBoundingClientRect();
+      const caretAnchored = activePromptInput === projectInstructionEditor || activePromptInput === automationInstruction;
+      const editorRect = activePromptInput.getBoundingClientRect();
+      const anchor = caretAnchored ? promptCaretRect() : composer.getBoundingClientRect();
+      if (!anchor) { suggestPop.classList.remove('open'); return; }
       const topbarBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || viewportTop;
       const safeTop = Math.max(viewportTop, topbarBottom);
-      const gap = 8;
-      const spaceAbove = Math.max(0, Math.floor(composerRect.top - safeTop - gap));
-      const spaceBelow = Math.max(0, Math.floor(viewportBottom - composerRect.bottom - gap));
+      if (caretAnchored && (anchor.bottom < Math.max(editorRect.top, safeTop) || anchor.top > Math.min(editorRect.bottom, viewportBottom))) {
+        suggestPop.classList.remove('open');
+        return;
+      }
+      const gap = 6;
+      const spaceAbove = Math.max(0, Math.floor(anchor.top - safeTop - gap));
+      const spaceBelow = Math.max(0, Math.floor(viewportBottom - anchor.bottom - gap - 8));
       const naturalHeight = Number.parseFloat(
         getComputedStyle(suggestPop).getPropertyValue('--suggest-natural-height')
       ) || 268;
       const minimumUsefulHeight = Math.min(naturalHeight, 176);
-      const openBelow = spaceAbove < minimumUsefulHeight && spaceBelow > spaceAbove;
+      const openBelow = caretAnchored
+        ? spaceBelow >= naturalHeight || spaceBelow >= spaceAbove
+        : spaceAbove < minimumUsefulHeight && spaceBelow > spaceAbove;
       suggestPop.classList.toggle('suggest-below', openBelow);
-      if (activePromptInput === automationInstruction) {
+      suggestPop.classList.toggle('caret-anchored', caretAnchored);
+      if (caretAnchored) {
         document.body.append(suggestPop);
-        Object.assign(suggestPop.style, { position: 'fixed', zIndex: '1000', left: `${composerRect.left}px`, right: 'auto', width: `${composerRect.width}px`, top: openBelow ? `${composerRect.bottom + gap}px` : 'auto', bottom: openBelow ? 'auto' : `${window.innerHeight - composerRect.top + gap}px` });
+        const width = Math.min(480, viewportWidth - 16);
+        const left = Math.max(viewportLeft + 8, Math.min(anchor.left, viewportLeft + viewportWidth - width - 8));
+        Object.assign(suggestPop.style, { position: 'fixed', zIndex: '1000', left: `${left}px`, right: 'auto', width: `${width}px`, top: openBelow ? `${anchor.bottom + gap}px` : 'auto', bottom: openBelow ? 'auto' : `${window.innerHeight - anchor.top + gap}px` });
       } else {
         composer.prepend(suggestPop);
         ['position', 'z-index', 'left', 'right', 'width', 'top', 'bottom'].forEach(key => suggestPop.style.removeProperty(key));
       }
-      suggestPop.style.setProperty(
-        '--suggest-available-height',
-        `${openBelow ? spaceBelow : spaceAbove}px`
-      );
+      suggestPop.style.setProperty('--suggest-available-height', `${openBelow ? spaceBelow : spaceAbove}px`);
     }
 
     function assetVisual(item) {
@@ -9819,6 +10092,7 @@
       currentMentionQuery = '';
       closeOverlays();
       if (activePromptInput === automationInstruction) automationDirty = true;
+      else if (activePromptInput === projectInstructionEditor) projectInstructionEditor.dispatchEvent(new Event('input', { bubbles: true }));
       else setTaskMode(true);
     }
 
@@ -9836,6 +10110,7 @@
         renderMentionResults();
       } else {
         if (!mentionTriggerRange) saveMentionTriggerRange();
+        suggestPop.style.setProperty('--suggest-natural-height', '268px');
         suggestHead.innerHTML = '<strong style="color:#595959">Skills</strong><span style="margin-left:auto">内置 · 已按权限过滤</span>';
         suggestRows.innerHTML = suggestions[kind].filter(item => mentionMatches(currentMentionQuery.trim().toLocaleLowerCase(), item)).map((item, idx) => {
           const [type, title, , space] = item;
@@ -10063,6 +10338,51 @@
       return path;
     }
 
+    function compareAssetOrder(a, b) {
+      const orderA = Number.isFinite(a.order) ? a.order : Number.MAX_SAFE_INTEGER;
+      const orderB = Number.isFinite(b.order) ? b.order : Number.MAX_SAFE_INTEGER;
+      return orderA - orderB || Number(b.kind === 'folder') - Number(a.kind === 'folder') || a.name.localeCompare(b.name, 'zh-CN');
+    }
+
+    function saveAssetOrder() {
+      try {
+        localStorage.setItem('plannerai-asset-order', JSON.stringify(projectAssets.filter(item => Number.isFinite(item.order)).map(({ id, projectId, parentId, order }) => ({ id, projectId, parentId: parentId || '', order }))));
+      } catch (error) {}
+    }
+
+    function restoreAssetOrder() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('plannerai-asset-order') || '[]');
+        if (!Array.isArray(saved)) return;
+        projectAssets.forEach(item => {
+          const record = saved.find(entry => entry && entry.id === item.id && entry.projectId === item.projectId && entry.parentId === (item.parentId || '') && Number.isFinite(entry.order));
+          if (record) item.order = record.order;
+        });
+      } catch (error) {}
+    }
+
+    function reorderProjectAsset(assetId, targetId, placeAfter = false) {
+      if (assetId === targetId) return false;
+      const item = projectAssetItems().find(asset => asset.id === assetId);
+      const target = projectAssetItems().find(asset => asset.id === targetId);
+      if (!item || !target) return false;
+      const parentId = target.parentId || '';
+      const error = assetMoveError(assetId, parentId);
+      if (error) { showToast(error); return false; }
+      if ((item.parentId || '') !== parentId && !moveProjectAsset(assetId, parentId)) return false;
+      const siblings = projectAssetItems().filter(asset => (asset.parentId || '') === parentId && asset.id !== assetId).sort(compareAssetOrder);
+      const index = siblings.findIndex(asset => asset.id === targetId);
+      siblings.splice(index + (placeAfter ? 1 : 0), 0, item);
+      siblings.forEach((asset, order) => { asset.order = order; });
+      saveAssetOrder();
+      selectedAssetId = item.id;
+      revealAssetFolder(parentId);
+      renderProjectAssets();
+      focusProjectAsset(item.id);
+      showToast('资产顺序已更新');
+      return true;
+    }
+
     function visibleAssetRows(items, expandedIds = expandedAssetFolderIds) {
       const childrenByParent = new Map();
       items.forEach(item => {
@@ -10076,7 +10396,7 @@
         const children = childrenByParent.get(parentId) || [];
         if (parentId && !children.length) rows.push({ item: null, parentId, depth });
         children
-          .sort((a, b) => Number(b.kind === 'folder') - Number(a.kind === 'folder') || a.name.localeCompare(b.name, 'zh-CN'))
+          .sort(compareAssetOrder)
           .forEach(item => {
             if (visited.has(item.id)) return;
             visited.add(item.id);
@@ -10195,6 +10515,8 @@
         updatedBy: '姚晨恺',
         updatedAt: timestamp
       }));
+      const copiedRoot = copies.find(copy => copy.id === idMap.get(item.id));
+      if (copiedRoot) delete copiedRoot.order;
       projectAssets.push(...copies);
       selectedAssetId = idMap.get(item.id);
       currentAssetFolderId = item.kind === 'folder' ? selectedAssetId : item.parentId || '';
@@ -10232,6 +10554,10 @@
         asset.updatedAt = Date.now();
       });
       item.parentId = parentId;
+      const siblings = projectAssetItems(targetProjectId).filter(asset => asset.id !== item.id && (asset.parentId || '') === parentId).sort(compareAssetOrder);
+      siblings.push(item);
+      siblings.forEach((asset, order) => { asset.order = order; });
+      saveAssetOrder();
       const visibleInCurrentProject = currentProjectDetailId === targetProjectId;
       selectedAssetId = visibleInCurrentProject ? item.id : '';
       currentAssetFolderId = visibleInCurrentProject ? (item.kind === 'folder' ? item.id : parentId) : '';
@@ -10246,19 +10572,36 @@
       return true;
     }
 
-    function assetDropDestination(target) {
+    function assetDropDestination(target, clientY) {
       const row = target.closest('tr[data-asset-id]');
       const item = row ? projectAssetItems().find(asset => asset.id === row.dataset.assetId) : null;
+      if (item) {
+        const rect = row.getBoundingClientRect();
+        const offset = clientY - rect.top;
+        if (item.kind !== 'folder' || offset < rect.height * .25 || offset > rect.height * .75) {
+          const placeAfter = offset >= rect.height / 2;
+          let element = row;
+          if (placeAfter && item.kind === 'folder') {
+            const descendants = assetDescendantIds(item.id);
+            let next = row.nextElementSibling;
+            while (next && (descendants.has(next.dataset.assetId) || descendants.has(next.dataset.assetEmptyFolder))) {
+              element = next;
+              next = next.nextElementSibling;
+            }
+          }
+          return { parentId: item.parentId || '', targetId: item.id, placeAfter, element, indicator: placeAfter ? 'asset-drop-after' : 'asset-drop-before' };
+        }
+      }
       const emptyFolder = target.closest('[data-asset-empty-folder]');
       const parentId = item ? (item.kind === 'folder' ? item.id : item.parentId || '') : emptyFolder?.dataset.assetEmptyFolder || '';
       const element = parentId
         ? projectAssetRows.querySelector(`tr[data-asset-id="${CSS.escape(parentId)}"]`)
         : projectAssetTableWrap.querySelector('[data-asset-drop-root]');
-      return { parentId, element };
+      return { parentId, element, indicator: 'asset-drop-target' };
     }
 
     function clearAssetDropTargets() {
-      projectAssetTableWrap.querySelectorAll('.asset-drop-target').forEach(item => item.classList.remove('asset-drop-target'));
+      projectAssetTableWrap.querySelectorAll('.asset-drop-target, .asset-drop-before, .asset-drop-after').forEach(item => item.classList.remove('asset-drop-target', 'asset-drop-before', 'asset-drop-after'));
     }
 
     function finishAssetDrag() {
@@ -10285,9 +10628,9 @@
           : '<span class="asset-disclosure" aria-hidden="true"></span>';
         const icon = folder ? assetKindIconHtml(item) : `<button class="asset-preview-trigger" type="button" data-asset-preview="${assetId}" aria-label="预览 ${assetName}" title="预览 ${assetName}">${assetKindIconHtml(item)}</button>`;
         return `<tr data-asset-id="${assetId}" draggable="true" style="--asset-depth: ${depth}">
-        <td><div class="asset-name-cell">${disclosure}${icon}<button class="asset-name-button" type="button" data-asset-select="${assetId}" title="${assetName} · 双击重命名"><span>${assetName}</span></button></div></td>
+        <td><div class="asset-name-cell">${disclosure}${icon}<button class="asset-name-button" type="button" data-asset-select="${assetId}" title="${assetName} · ${folder ? '双击重命名' : '点击预览，双击重命名'}"><span>${assetName}</span></button></div></td>
         <td class="asset-cell-muted">${escapeProjectHtml(item.type || '文件')}</td>
-        <td class="asset-cell-muted">${escapeProjectHtml(item.updatedBy || '姚晨恺')}</td>
+        <td class="asset-cell-muted asset-size">${folder ? '—' : Number.isFinite(item.sizeBytes) ? formatStorageBytes(assetSizeBytes(item)) : escapeProjectHtml(item.size || '—')}</td>
         <td class="asset-cell-muted">${formatProjectTime(item.updatedAt)}</td>
         <td><button class="asset-more" type="button" data-asset-menu="${assetId}" aria-label="${assetName}的更多操作" title="更多操作" aria-haspopup="menu" aria-controls="assetContextMenu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></td>
       </tr>`;
@@ -10313,6 +10656,8 @@
     }
 
     function setProjectDetailTab(tabName) {
+      closeOverlays();
+      if (tabName !== 'assets' && artifact.classList.contains('asset-preview-mode')) setArtifactVisible(false);
       closeAutomationTaskMenus();
       closeAssetContextMenu();
       finishAssetDrag();
@@ -10338,7 +10683,11 @@
       projectListPage.hidden = true;
       projectDetailPage.hidden = false;
       projectDetailTitle.textContent = project.name;
-      projectInstructionEditor.value = project.instruction || '';
+      projectInstructionEditor.replaceChildren();
+      if (project.instructionNodes) project.instructionNodes.forEach(part => {
+        projectInstructionEditor.append(part.type === 'reference' ? createComposerReference(part.refType, part.value, part.metadata) : document.createTextNode(part.text));
+      });
+      else projectInstructionEditor.textContent = project.instruction || '';
       projectInstructionState.textContent = '已保存';
       projectInstructionState.className = 'instruction-state saved';
       renderProjectConversations();
@@ -10772,7 +11121,7 @@
         assetNameLabel.textContent = '文件名称';
         assetNameInput.value = payload?.name || artifactTitle.textContent.trim() || '未命名产物';
         renderAssetDestination(projectId, '', true);
-        assetActionSubmit.textContent = '保存到项目';
+        assetActionSubmit.textContent = '保存';
       }
       assetActionOverlay.classList.add('open');
       assetActionOverlay.setAttribute('aria-hidden', 'false');
@@ -10792,8 +11141,14 @@
     function openAssetPreview(item) {
       if (!item || item.kind === 'folder') return;
       assetPreviewTitle.textContent = item.name;
-      assetPreviewMeta.textContent = `${item.type || '文件'}${item.size ? ` · ${item.size}` : ''} · ${item.updatedBy || '姚晨恺'}更新`;
+      const size = Number.isFinite(item.sizeBytes) ? formatStorageBytes(assetSizeBytes(item)) : item.size;
+      assetPreviewMeta.textContent = `${item.type || '文件'}${size ? ` · ${size}` : ''}`;
       assetPreviewBody.innerHTML = `<article class="asset-preview-paper"><h4>${escapeProjectHtml(item.name)}</h4><p>${escapeProjectHtml(item.content || '这是上传文件的演示预览。实际产品将在此按文件类型展示可访问内容。')}</p><p>该文件已属于项目资产，可在项目内对话中输入 @ 后引用。</p></article>`;
+      exitAutomationEditorMode();
+      artifact.classList.add('asset-preview-mode', 'open');
+      artifactVisible = true;
+      layout.classList.add('with-artifact');
+      assetPreviewOverlay.hidden = false;
       assetPreviewOverlay.classList.add('open');
       assetPreviewOverlay.setAttribute('aria-hidden', 'false');
       requestAnimationFrame(() => assetPreviewClose.focus());
@@ -10829,8 +11184,7 @@
     }
 
     function closeAssetPreview() {
-      assetPreviewOverlay.classList.remove('open');
-      assetPreviewOverlay.setAttribute('aria-hidden', 'true');
+      setArtifactVisible(false);
       focusProjectAsset();
     }
 
@@ -11074,14 +11428,70 @@
       const open = !modelMenu.classList.contains('open');
       closeOverlays();
       modelMenu.classList.toggle('open', open);
+      modelMenu.setAttribute('aria-hidden', String(!open));
       modelToggle.classList.toggle('open', open);
       modelToggle.setAttribute('aria-expanded', String(open));
+      if (open) requestAnimationFrame(() => modelMenu.querySelector('.model-option.active')?.focus());
+    });
+
+    modelToggle.addEventListener('keydown', event => {
+      if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+      event.preventDefault();
+      closeOverlays();
+      modelMenu.classList.add('open');
+      modelMenu.setAttribute('aria-hidden', 'false');
+      modelToggle.classList.add('open');
+      modelToggle.setAttribute('aria-expanded', 'true');
+      const options = [...modelMenu.querySelectorAll('.model-option')];
+      const target = event.key === 'ArrowDown' ? options[0] : options[options.length - 1];
+      target?.focus();
     });
 
     modelMenu.addEventListener('click', event => {
+      const effortOption = event.target.closest('.model-effort-option');
+      if (effortOption) {
+        setModelEffort(effortOption);
+        return;
+      }
       const option = event.target.closest('.model-option');
       if (!option) return;
       setModel(option);
+    });
+
+    modelMenu.addEventListener('keydown', event => {
+      const inEffortMenu = document.activeElement?.classList.contains('model-effort-option');
+      const options = inEffortMenu
+        ? [...modelMenu.querySelectorAll('.model-effort-option:not([hidden])')]
+        : [...modelMenu.querySelectorAll('.model-option')];
+      const current = options.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        options[(current + direction + options.length) % options.length]?.focus();
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        options[event.key === 'Home' ? 0 : options.length - 1]?.focus();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (current >= 0) {
+          if (inEffortMenu) setModelEffort(options[current]);
+          else setModel(options[current]);
+        }
+      } else if (event.key === 'ArrowRight' && !inEffortMenu && current >= 0) {
+        event.preventDefault();
+        setModel(options[current]);
+      } else if (event.key === 'ArrowLeft' && inEffortMenu) {
+        event.preventDefault();
+        modelMenu.classList.remove('show-efforts');
+        modelEffortMenu.setAttribute('aria-hidden', 'true');
+        const selectedModel = modelMenu.querySelector('.model-option.active');
+        selectedModel?.setAttribute('aria-expanded', 'false');
+        selectedModel?.focus();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeModelMenu();
+        modelToggle.focus();
+      }
     });
 
     artifactMenuToggle.addEventListener('click', event => {
@@ -11092,8 +11502,6 @@
       artifactMenuToggle.classList.toggle('open', open);
       artifactMenuToggle.setAttribute('aria-expanded', String(open));
     });
-    openManualBtn.addEventListener('click', () => runArtifactAction('open-manual'));
-
     artifactMenu.addEventListener('click', event => {
       const item = event.target.closest('[data-artifact-action]');
       if (!item || item.disabled) return;
@@ -11208,12 +11616,12 @@
       selection.addRange(nextRange);
     }
 
-    [composerInput, automationInstruction].forEach(promptInput => {
+    [composerInput, automationInstruction, projectInstructionEditor].forEach(promptInput => {
       promptInput.addEventListener('focus', () => { if (activePromptInput !== promptInput) { closeOverlays(); mentionTriggerRange = null; } activePromptInput = promptInput; });
       promptInput.addEventListener('input', event => {
         activePromptInput = promptInput;
         if (promptInput === composerInput) promoteTrailingComposerUrl();
-        else automationDirty = true;
+        else if (promptInput === automationInstruction) automationDirty = true;
         if (event.isComposing) return;
         updatePlanningComposerActions();
         const mentionContext = composerMentionContext();
@@ -11250,6 +11658,7 @@
             if (previous?.classList?.contains('composer-reference') || previous?.classList?.contains('composer-url')) {
               event.preventDefault();
               previous.remove();
+              promptInput.dispatchEvent(new Event('input', { bubbles: true }));
               return;
             }
           }
@@ -11288,7 +11697,7 @@
           if ((event.key === 'Enter' || event.key === 'Tab') && rows.length) { event.preventDefault(); rows[Math.max(index, 0)].click(); return; }
           if (event.key === 'Escape') { event.preventDefault(); closeOverlays(); return; }
         }
-        if (promptInput === automationInstruction || event.key !== 'Enter' || event.shiftKey) return;
+        if (promptInput !== composerInput || event.key !== 'Enter' || event.shiftKey) return;
         event.preventDefault();
         sendBtn.click();
       });
@@ -11301,8 +11710,17 @@
 
     });
 
+    document.addEventListener('selectionchange', () => {
+      if (activePromptInput !== composerInput) updateSuggestPanelMetrics();
+    });
     window.addEventListener('resize', updateSuggestPanelMetrics);
+    window.addEventListener('resize', () => {
+      if (modelMenu.classList.contains('show-efforts')) positionModelEffortMenu();
+    });
     window.visualViewport?.addEventListener('resize', updateSuggestPanelMetrics);
+    window.visualViewport?.addEventListener('resize', () => {
+      if (modelMenu.classList.contains('show-efforts')) positionModelEffortMenu();
+    });
     window.visualViewport?.addEventListener('scroll', updateSuggestPanelMetrics);
 
     mentionRows.addEventListener('mousemove', event => {
@@ -12442,7 +12860,7 @@
     suggestPop.addEventListener('mousedown', event => event.preventDefault());
     document.addEventListener('scroll', updateSuggestPanelMetrics, true);
 
-    function serializeAutomationInstruction() {
+    function serializeAutomationInstruction(input = automationInstruction) {
       const parts = [];
       function visit(node) {
         if (node.nodeType === Node.TEXT_NODE) parts.push({ type: 'text', text: node.textContent });
@@ -12453,7 +12871,7 @@
           if (['DIV', 'P'].includes(node.nodeName)) parts.push({ type: 'text', text: '\n' });
         }
       }
-      automationInstruction.childNodes.forEach(visit);
+      input.childNodes.forEach(visit);
       return parts;
     }
 
@@ -12652,7 +13070,8 @@
     projectInstructionSave.addEventListener('click', () => {
       const project = projects.find(item => item.id === currentProjectDetailId);
       if (!project) return;
-      project.instruction = projectInstructionEditor.value;
+      project.instruction = projectInstructionEditor.innerText;
+      project.instructionNodes = serializeAutomationInstruction(projectInstructionEditor);
       projectInstructionState.textContent = '已保存';
       projectInstructionState.className = 'instruction-state saved';
       showToast('项目指令已保存，将应用于本项目内的后续对话');
@@ -12666,7 +13085,48 @@
     projectAutomationList.addEventListener('keydown', handleAutomationListKeydown);
     projectAutomationList.addEventListener('focusout', handleAutomationListFocusout);
 
-    projectNewFolder.addEventListener('click', () => openAssetAction('new-folder'));
+    projectNewFolder.addEventListener('click', () => {
+      if (!currentProjectDetailId) return;
+      const parentId = currentAssetFolderId;
+      let name = '新建文件夹';
+      let suffix = 2;
+      while (assetNameExists(currentProjectDetailId, parentId, name)) name = `新建文件夹 (${suffix++})`;
+      const item = { id: `asset-folder-${Date.now().toString(36)}`, projectId: currentProjectDetailId, parentId, kind: 'folder', name, type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() };
+      projectAssets.push(item);
+      selectedAssetId = item.id;
+      revealAssetFolder(parentId);
+      renderProjectAssets();
+      const label = projectAssetRows.querySelector(`[data-asset-select="${item.id}"]`);
+      if (!label) return;
+      const input = document.createElement('input');
+      input.className = 'history-rename-input';
+      input.value = name;
+      input.setAttribute('aria-label', '文件夹名称');
+      label.replaceWith(input);
+      let finished = false;
+      function finish(cancel = false) {
+        if (finished) return;
+        const nextName = input.value.trim();
+        if (!cancel && nextName && assetNameExists(item.projectId, parentId, nextName, item.id)) {
+          showToast('当前目录已有同名资产');
+          input.focus();
+          return;
+        }
+        finished = true;
+        if (!cancel && nextName) item.name = nextName;
+        renderProjectAssets();
+        focusProjectAsset(item.id);
+      }
+      input.addEventListener('click', event => event.stopPropagation());
+      input.addEventListener('keydown', event => {
+        event.stopPropagation();
+        if (event.isComposing) return;
+        if (event.key === 'Enter' || event.key === 'Escape') { event.preventDefault(); finish(event.key === 'Escape'); }
+      });
+      input.addEventListener('blur', () => finish());
+      input.focus();
+      input.select();
+    });
     projectUploadFile.addEventListener('click', () => projectUploadInput.click());
     projectUploadInput.addEventListener('change', () => {
       const files = [...projectUploadInput.files];
@@ -12709,7 +13169,7 @@
       selectProjectAsset(item.id);
       if (event.target.closest('[data-asset-toggle]')) {
         toggleAssetFolder(item.id);
-      } else if (event.target.closest('[data-asset-preview]')) {
+      } else if (item.kind !== 'folder') {
         openAssetPreview(item);
       }
     });
@@ -12734,6 +13194,15 @@
       if (event.key === 'Tab') { event.stopPropagation(); return; }
       const item = projectAssetItems().find(asset => asset.id === row.dataset.assetId);
       if (!item) return;
+      if (event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        event.stopPropagation();
+        const siblings = projectAssetItems().filter(asset => (asset.parentId || '') === (item.parentId || '')).sort(compareAssetOrder);
+        const delta = event.key === 'ArrowUp' ? -1 : 1;
+        const target = siblings[siblings.findIndex(asset => asset.id === item.id) + delta];
+        if (target) reorderProjectAsset(item.id, target.id, delta > 0);
+        return;
+      }
       const more = event.target.closest('[data-asset-menu]');
       if (more && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
         event.preventDefault();
@@ -12753,7 +13222,10 @@
         } else if (moveKey) openAssetAction('move', item.id);
         else if (event.key === 'F2') openAssetAction('rename', item.id);
         else if (event.key === 'Delete') openAssetAction('delete', item.id);
-        else if (event.key === 'Escape') { closeAssetContextMenu(); selectProjectAsset(''); }
+        else if (event.key === 'Escape') {
+          if (assetPreviewOverlay.classList.contains('open')) closeAssetPreview();
+          else { closeAssetContextMenu(); selectProjectAsset(''); }
+        }
         else toggleAssetFolder(item.id, event.key === 'ArrowRight');
       }
     });
@@ -12779,10 +13251,10 @@
       event.preventDefault();
       event.stopPropagation();
       clearAssetDropTargets();
-      const destination = assetDropDestination(event.target);
-      const error = assetMoveError(draggedAssetId, destination.parentId);
+      const destination = assetDropDestination(event.target, event.clientY);
+      const error = destination.targetId === draggedAssetId ? '不能拖到自身' : assetMoveError(draggedAssetId, destination.parentId);
       if (event.dataTransfer) event.dataTransfer.dropEffect = error ? 'none' : 'move';
-      if (!error) destination.element?.classList.add('asset-drop-target');
+      if (!error) destination.element?.classList.add(destination.indicator);
     });
     projectAssetTableWrap.addEventListener('dragleave', event => {
       if (!projectAssetTableWrap.contains(event.relatedTarget)) clearAssetDropTargets();
@@ -12792,9 +13264,10 @@
       event.preventDefault();
       event.stopPropagation();
       const assetId = draggedAssetId;
-      const { parentId } = assetDropDestination(event.target);
+      const destination = assetDropDestination(event.target, event.clientY);
       finishAssetDrag();
-      moveProjectAsset(assetId, parentId);
+      if (destination.targetId) reorderProjectAsset(assetId, destination.targetId, destination.placeAfter);
+      else moveProjectAsset(assetId, destination.parentId);
     });
     projectAssetRows.addEventListener('dragend', finishAssetDrag);
     assetContextMenu.addEventListener('click', event => {
@@ -12994,7 +13467,7 @@
       }
     });
     assetPreviewClose.addEventListener('click', closeAssetPreview);
-    assetPreviewOverlay.addEventListener('click', event => { if (event.target === assetPreviewOverlay) closeAssetPreview(); });
+
 
     conversationLocationSelect.addEventListener('change', () => {
       const row = activeConversationRow();
@@ -13123,7 +13596,8 @@
     document.addEventListener('click', event => {
       if (event.target.closest('.chat-search-dialog') || event.target.closest('#searchChats')) return;
       if (event.target.closest('#historyContextMenu, #moveConversationMenu, #projectContextMenu')) return;
-      if (!event.target.closest('.composer, .automation-prompt-box, #suggestPop')) closeOverlays();
+      if (!event.target.closest('.model-switch')) closeModelMenu();
+      if (!event.target.closest('.composer, .automation-prompt-box, #projectInstructionEditor, #suggestPop')) closeOverlays();
     });
 
     renderProjectSidebar();
@@ -13136,6 +13610,7 @@
     renderManualIssueDetail();
     renderArtifact();
     updateIdentityUi();
+    updateModelEffortUi(currentModel.textContent.trim());
     const initialConversationRow = historyList.querySelector('.history-row.active');
     setCurrentConversation(initialConversationRow, 'artifact');
     if (!initializeSharedSnapshot() && !initializePlanningLaunch()) openHistoryRow(initialConversationRow);
