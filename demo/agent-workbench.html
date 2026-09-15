@@ -3616,6 +3616,7 @@
     }
     .model-toggle:focus-visible,
     .model-option:focus-visible,
+    .model-expand:focus-visible,
     .model-effort-option:focus-visible {
       outline: 2px solid rgba(22, 119, 255, .36);
       outline-offset: 2px;
@@ -3684,27 +3685,37 @@
       font-weight: 400;
       line-height: 18px;
     }
-    .model-option {
+    .model-row {
       width: 100%;
       min-height: 44px;
-      border: 0;
       border-radius: 9px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px;
+      align-items: stretch;
+      transition: background .16s ease, color .16s ease;
+    }
+    .model-row:hover {
+      background: #f5f5f5;
+    }
+    .model-option {
+      min-width: 0;
+      min-height: 44px;
+      border: 0;
+      border-radius: 9px 0 0 9px;
       background: transparent;
       color: #262626;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) 18px;
       align-items: center;
       gap: 12px;
-      padding: 0 12px;
+      padding: 0 6px 0 12px;
       text-align: left;
-      transition: background .16s ease, color .16s ease;
     }
     .model-option.active {
       background: transparent;
       color: #1f1f1f;
     }
     .model-option:hover {
-      background: #f5f5f5;
       color: #1f1f1f;
     }
     .model-name {
@@ -3716,15 +3727,27 @@
       font-weight: 400;
       line-height: 20px;
     }
-    .model-option-actions {
+    .model-expand {
+      width: 44px;
+      min-height: 44px;
+      border: 0;
+      border-radius: 0 9px 9px 0;
+      background: transparent;
+      color: #a3a3a3;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      padding: 0;
+      transition: background .16s ease, color .16s ease;
+    }
+    .model-expand:hover,
+    .model-expand[aria-expanded="true"] {
+      background: #ededed;
+      color: #595959;
     }
     .model-submenu-chevron {
       width: 16px;
       height: 16px;
-      color: #a3a3a3;
       fill: none;
       stroke: currentColor;
       stroke-width: 1.8;
@@ -3799,7 +3822,9 @@
     @media (prefers-reduced-motion: reduce) {
       .model-toggle,
       .model-chevron,
+      .model-row,
       .model-option,
+      .model-expand,
       .model-effort-option { transition: none; }
       .model-menu.open,
       .model-menu.show-efforts .model-effort-menu { animation: none; }
@@ -6119,18 +6144,18 @@
               </button>
             </header>
             <nav class="project-detail-tabs" role="tablist" aria-label="项目内容">
-              <button class="project-detail-tab active" type="button" role="tab" aria-selected="true" data-project-detail-tab="conversations">对话</button>
-              <button class="project-detail-tab" type="button" role="tab" aria-selected="false" data-project-detail-tab="assets">资产</button>
+              <button class="project-detail-tab active" type="button" role="tab" aria-selected="true" data-project-detail-tab="assets">资产</button>
+              <button class="project-detail-tab" type="button" role="tab" aria-selected="false" data-project-detail-tab="conversations">对话</button>
               <button class="project-detail-tab" type="button" role="tab" aria-selected="false" data-project-detail-tab="instructions">指令</button>
               <button class="project-detail-tab" type="button" role="tab" aria-selected="false" data-project-detail-tab="automations">自动化</button>
             </nav>
-            <section class="project-detail-panel" data-project-panel="conversations">
+            <section class="project-detail-panel" data-project-panel="conversations" hidden>
               <div class="project-panel-heading">
                 <div><h2>项目对话</h2><p>置顶对话仍保留项目归属，并在此处完整展示。</p></div>
               </div>
               <div class="project-conversation-list" id="projectConversationList"></div>
             </section>
-            <section class="project-detail-panel" data-project-panel="assets" hidden>
+            <section class="project-detail-panel" data-project-panel="assets">
               <div class="project-panel-heading">
                 <div><h2>资产</h2><p>Agent 对项目资产中的文档拥有读写权限。</p></div>
               </div>
@@ -6478,21 +6503,25 @@
                   <div class="model-menu" id="modelMenu" role="dialog" aria-labelledby="modelMenuTitle" aria-hidden="true">
                     <div class="model-menu-panel">
                       <span class="model-menu-title" id="modelMenuTitle">选择模型</span>
-                      <div role="listbox" aria-labelledby="modelMenuTitle">
-                        <button class="model-option" type="button" role="option" aria-selected="false" aria-haspopup="listbox" aria-expanded="false" data-model="GPT Luna">
-                          <span class="model-name">GPT Luna</span>
-                          <span class="model-option-actions">
+                      <div role="group" aria-labelledby="modelMenuTitle">
+                        <div class="model-row">
+                          <button class="model-option" type="button" aria-pressed="false" data-model="GPT Luna">
+                            <span class="model-name">GPT Luna</span>
                             <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+                          </button>
+                          <button class="model-expand" type="button" aria-label="选择 GPT Luna 的思考深度" aria-haspopup="listbox" aria-controls="modelEffortMenu" aria-expanded="false" data-model-expand="GPT Luna">
                             <svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg>
-                          </span>
-                        </button>
-                        <button class="model-option active" type="button" role="option" aria-selected="true" aria-haspopup="listbox" aria-expanded="false" data-model="GLM-5.3 Flash">
-                          <span class="model-name">GLM-5.3 Flash</span>
-                          <span class="model-option-actions">
+                          </button>
+                        </div>
+                        <div class="model-row">
+                          <button class="model-option active" type="button" aria-pressed="true" data-model="GLM-5.3 Flash">
+                            <span class="model-name">GLM-5.3 Flash</span>
                             <svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>
+                          </button>
+                          <button class="model-expand" type="button" aria-label="选择 GLM-5.3 Flash 的思考深度" aria-haspopup="listbox" aria-controls="modelEffortMenu" aria-expanded="false" data-model-expand="GLM-5.3 Flash">
                             <svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg>
-                          </span>
-                        </button>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div class="model-effort-menu" id="modelEffortMenu" role="group" aria-labelledby="modelEffortTitle" aria-hidden="true">
@@ -7206,7 +7235,7 @@
       'sidebar-general': false
     };
     let currentProjectDetailId = null;
-    let activeProjectDetailTab = 'conversations';
+    let activeProjectDetailTab = 'assets';
     let currentAssetFolderId = '';
     let selectedAssetId = '';
     let draggedAssetId = null;
@@ -7450,7 +7479,7 @@
       modelMenu.setAttribute('aria-hidden', 'true');
       modelEffortMenu.setAttribute('aria-hidden', 'true');
       modelEffortMenu.classList.remove('open-left');
-      modelMenu.querySelectorAll('.model-option').forEach(option => option.setAttribute('aria-expanded', 'false'));
+      modelMenu.querySelectorAll('.model-expand').forEach(button => button.setAttribute('aria-expanded', 'false'));
       modelToggle.classList.remove('open');
       modelToggle.setAttribute('aria-expanded', 'false');
     }
@@ -7711,20 +7740,34 @@
       modelEffortMenu.classList.toggle('open-left', opensLeft);
     }
 
-    function setModel(option) {
+    function applyModelSelection(option, resetToMedian = false) {
       const model = option.dataset.model;
+      if (resetToMedian) selectedModelEfforts[model] = 'median';
       currentModel.textContent = model;
       modelMenu.querySelectorAll('.model-option').forEach(item => {
         const active = item === option;
         item.classList.toggle('active', active);
-        item.setAttribute('aria-selected', String(active));
-        item.setAttribute('aria-expanded', String(active));
+        item.setAttribute('aria-pressed', String(active));
       });
       updateModelEffortUi(model);
+      return model;
+    }
+
+    function setModel(option) {
+      const model = applyModelSelection(option, true);
+      closeModelMenu();
+      modelToggle.focus();
+      showToast(`已切换到 ${model}，思考深度为 Median`);
+    }
+
+    function openModelEfforts(option) {
+      const model = applyModelSelection(option);
+      modelMenu.querySelectorAll('.model-expand').forEach(button => {
+        button.setAttribute('aria-expanded', String(button.dataset.modelExpand === model));
+      });
       positionModelEffortMenu();
       modelMenu.classList.add('show-efforts');
       modelEffortMenu.setAttribute('aria-hidden', 'false');
-      showToast(`已切换到 ${model}`);
       requestAnimationFrame(() => modelMenu.querySelector('.model-effort-option.active')?.focus());
     }
 
@@ -10661,7 +10704,7 @@
       closeAutomationTaskMenus();
       closeAssetContextMenu();
       finishAssetDrag();
-      activeProjectDetailTab = ['conversations', 'assets', 'instructions', 'automations'].includes(tabName) ? tabName : 'conversations';
+      activeProjectDetailTab = ['conversations', 'assets', 'instructions', 'automations'].includes(tabName) ? tabName : 'assets';
       projectDetailTabs.forEach(tab => {
         const active = tab.dataset.projectDetailTab === activeProjectDetailTab;
         tab.classList.toggle('active', active);
@@ -10674,7 +10717,7 @@
       if (activeProjectDetailTab === 'automations') renderProjectAutomations();
     }
 
-    function openProjectDetail(projectId, tabName = 'conversations') {
+    function openProjectDetail(projectId, tabName = 'assets') {
       const project = projects.find(item => item.id === projectId);
       if (!project) return;
       currentProjectDetailId = project.id;
@@ -11448,6 +11491,12 @@
     });
 
     modelMenu.addEventListener('click', event => {
+      const expandButton = event.target.closest('.model-expand');
+      if (expandButton) {
+        const option = expandButton.closest('.model-row')?.querySelector('.model-option');
+        if (option) openModelEfforts(option);
+        return;
+      }
       const effortOption = event.target.closest('.model-effort-option');
       if (effortOption) {
         setModelEffort(effortOption);
@@ -11459,6 +11508,31 @@
     });
 
     modelMenu.addEventListener('keydown', event => {
+      const activeExpand = document.activeElement?.classList.contains('model-expand') ? document.activeElement : null;
+      if (activeExpand) {
+        const modelOptions = [...modelMenu.querySelectorAll('.model-option')];
+        const rowOption = activeExpand.closest('.model-row')?.querySelector('.model-option');
+        const rowIndex = modelOptions.indexOf(rowOption);
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          if (rowOption) openModelEfforts(rowOption);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          rowOption?.focus();
+        } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const direction = event.key === 'ArrowDown' ? 1 : -1;
+          modelOptions[(rowIndex + direction + modelOptions.length) % modelOptions.length]?.focus();
+        } else if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault();
+          modelOptions[event.key === 'Home' ? 0 : modelOptions.length - 1]?.focus();
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closeModelMenu();
+          modelToggle.focus();
+        }
+        return;
+      }
       const inEffortMenu = document.activeElement?.classList.contains('model-effort-option');
       const options = inEffortMenu
         ? [...modelMenu.querySelectorAll('.model-effort-option:not([hidden])')]
@@ -11479,13 +11553,13 @@
         }
       } else if (event.key === 'ArrowRight' && !inEffortMenu && current >= 0) {
         event.preventDefault();
-        setModel(options[current]);
+        openModelEfforts(options[current]);
       } else if (event.key === 'ArrowLeft' && inEffortMenu) {
         event.preventDefault();
         modelMenu.classList.remove('show-efforts');
         modelEffortMenu.setAttribute('aria-hidden', 'true');
         const selectedModel = modelMenu.querySelector('.model-option.active');
-        selectedModel?.setAttribute('aria-expanded', 'false');
+        modelMenu.querySelectorAll('.model-expand').forEach(button => button.setAttribute('aria-expanded', 'false'));
         selectedModel?.focus();
       } else if (event.key === 'Escape') {
         event.preventDefault();
