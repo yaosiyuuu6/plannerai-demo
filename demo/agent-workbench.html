@@ -1560,7 +1560,7 @@
       outline: 2px solid rgba(22,119,255,.12);
     }
     .automation-help { display: block; margin-top: 6px; color: #8c8c8c; font-size: 12px; line-height: 1.5; }
-    .automation-prompt-box { position: relative; overflow: hidden; border: 1px solid #d0d5dd; border-radius: 12px; background: #fff; }
+    .automation-prompt-box { position: relative; overflow: visible; border: 1px solid #d0d5dd; border-radius: 12px; background: #fff; }
     .automation-prompt-box:focus-within { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.12); }
     .automation-prompt-input {
       min-height: 132px;
@@ -1584,24 +1584,9 @@
       gap: 8px;
       padding: 0;
     }
-    .automation-model-select {
-      max-width: 180px;
-      height: 32px;
-      border: 1px solid transparent;
-      border-radius: 7px;
-      background: transparent;
-      color: #344054;
-      padding: 0 26px 0 8px;
-      font: inherit;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .automation-model-select:hover { background: #f5f7fa; color: #0958d9; }
-    .automation-model-select:focus-visible {
-      border-color: #1677ff;
-      outline: 2px solid rgba(22,119,255,.18);
-      outline-offset: 1px;
-    }
+    .automation-model-switch { position: relative; flex: none; }
+    .automation-model-switch .model-toggle { height: 36px; padding: 0 8px 0 10px; font-size: 13px; }
+    .automation-model-switch .model-menu { z-index: 85; }
     .automation-ref-chip {
       margin-right: 4px;
       border-radius: 6px;
@@ -7089,7 +7074,7 @@
           </header>
           <form class="automation-editor-form" id="automationForm" novalidate>
             <div class="automation-field"><label class="automation-label" for="automationName">名称 <b aria-hidden="true">*</b></label><input id="automationName" type="text" maxlength="60" placeholder="例如：每周质检报告" autocomplete="off" required></div>
-            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div><div class="automation-prompt-tools"><label class="sr-only" for="automationModel">模型</label><select class="automation-model-select" id="automationModel" aria-label="选择定时任务模型"><option value="GLM-5.3 Flash">GLM-5.3 Flash</option><option value="GPT Luna">GPT Luna</option></select></div></div></div>
+            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div><div class="automation-prompt-tools"><div class="automation-model-switch model-switch"><input id="automationModel" type="hidden" value="GLM-5.3 Flash"><input id="automationModelEffort" type="hidden" value="median"><button class="model-toggle" id="automationModelToggle" type="button" aria-haspopup="dialog" aria-controls="automationModelMenu" aria-expanded="false" aria-label="切换定时任务模型，当前 GLM-5.3 Flash，思考深度 Median"><span class="model-current-label"><span id="automationCurrentModel">GLM-5.3 Flash</span><span class="model-current-effort" id="automationCurrentEffort">Median</span></span><svg class="icon model-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg></button><div class="model-menu automation-model-menu" id="automationModelMenu" role="dialog" aria-labelledby="automationModelMenuTitle" aria-hidden="true"><div class="model-menu-panel"><span class="model-menu-title" id="automationModelMenuTitle">选择模型</span><div role="group" aria-labelledby="automationModelMenuTitle"><div class="model-row"><button class="model-option automation-model-option" type="button" aria-pressed="false" data-automation-model="GPT Luna"><span class="model-name">GPT Luna</span><svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-expand automation-model-expand" type="button" aria-label="选择 GPT Luna 的思考深度" aria-haspopup="listbox" aria-controls="automationModelEffortMenu" aria-expanded="false" data-automation-model-expand="GPT Luna"><svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg></button></div><div class="model-row"><button class="model-option automation-model-option active" type="button" aria-pressed="true" data-automation-model="GLM-5.3 Flash"><span class="model-name">GLM-5.3 Flash</span><svg class="model-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-expand automation-model-expand" type="button" aria-label="选择 GLM-5.3 Flash 的思考深度" aria-haspopup="listbox" aria-controls="automationModelEffortMenu" aria-expanded="false" data-automation-model-expand="GLM-5.3 Flash"><svg class="model-submenu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5"/></svg></button></div></div></div><div class="model-effort-menu" id="automationModelEffortMenu" role="group" aria-labelledby="automationModelEffortTitle" aria-hidden="true"><div class="model-effort-header"><span id="automationModelEffortTitle">思考深度</span></div><div role="listbox" aria-labelledby="automationModelEffortTitle"><button class="model-effort-option automation-model-effort-option" type="button" role="option" aria-selected="false" data-automation-model-effort="light"><span>Light</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-effort-option automation-model-effort-option active" type="button" role="option" aria-selected="true" data-automation-model-effort="median"><span>Median</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-effort-option automation-model-effort-option" type="button" role="option" aria-selected="false" data-automation-model-effort="high" hidden><span>High</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-effort-option automation-model-effort-option" type="button" role="option" aria-selected="false" data-automation-model-effort="extra-high" hidden><span>Extra High</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button><button class="model-effort-option automation-model-effort-option" type="button" role="option" aria-selected="false" data-automation-model-effort="max"><span>Max</span><svg class="model-effort-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button></div></div></div></div></div></div></div>
             <div class="automation-field"><label class="automation-label" for="automationLocation">运行位置</label><div class="automation-location-control"><select id="automationLocation"></select></div><div class="automation-help">每次运行都会在所选位置新建对话。</div></div>
             <div class="automation-field"><div class="automation-label">激活区间<span>北京时间</span></div><div class="automation-date-grid"><label><span>开始时间</span><input id="automationStartDate" type="datetime-local"></label><label><span>结束时间（可选）</span><input id="automationEndDate" type="datetime-local"></label></div></div>
 
@@ -7459,6 +7444,7 @@
     });
     const modelEffortLabels = Object.freeze({ light: 'Light', median: 'Median', high: 'High', 'extra-high': 'Extra High', max: 'Max' });
     const selectedModelEfforts = {};
+    const automationSelectedModelEfforts = {};
     const identityToggle = document.getElementById('identityToggle');
     const identityMenu = document.getElementById('identityMenu');
     const currentIdentityLabel = document.getElementById('currentIdentity');
@@ -7605,6 +7591,12 @@
     const automationName = document.getElementById('automationName');
     const automationInstruction = document.getElementById('automationInstruction');
     const automationModel = document.getElementById('automationModel');
+    const automationModelEffort = document.getElementById('automationModelEffort');
+    const automationModelToggle = document.getElementById('automationModelToggle');
+    const automationModelMenu = document.getElementById('automationModelMenu');
+    const automationModelEffortMenu = document.getElementById('automationModelEffortMenu');
+    const automationCurrentModel = document.getElementById('automationCurrentModel');
+    const automationCurrentEffort = document.getElementById('automationCurrentEffort');
     const automationLocation = document.getElementById('automationLocation');
     const automationStartDate = document.getElementById('automationStartDate');
     const automationEndDate = document.getElementById('automationEndDate');
@@ -8270,6 +8262,92 @@
       closeModelMenu();
       modelToggle.focus();
       showToast(`${model} 思考深度已设为 ${modelEffortLabels[effort]}`);
+    }
+
+    function getAutomationModelEffort(model) {
+      const supportedEfforts = modelEffortSupport[model] || [];
+      const selectedEffort = automationSelectedModelEfforts[model];
+      if (supportedEfforts.includes(selectedEffort)) return selectedEffort;
+      return supportedEfforts.includes('median') ? 'median' : supportedEfforts[0];
+    }
+
+    function updateAutomationModelUi(model, effort = getAutomationModelEffort(model)) {
+      const supportedEfforts = modelEffortSupport[model] || [];
+      const nextEffort = supportedEfforts.includes(effort) ? effort : getAutomationModelEffort(model);
+      automationSelectedModelEfforts[model] = nextEffort;
+      automationModel.value = model;
+      automationModelEffort.value = nextEffort;
+      automationCurrentModel.textContent = model;
+      automationCurrentEffort.textContent = modelEffortLabels[nextEffort] || nextEffort;
+      automationModelToggle.setAttribute('aria-label', `切换定时任务模型，当前 ${model}，思考深度 ${modelEffortLabels[nextEffort] || nextEffort}`);
+      automationModelMenu.querySelectorAll('.automation-model-option').forEach(item => {
+        const active = item.dataset.automationModel === model;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      automationModelMenu.querySelectorAll('.automation-model-effort-option').forEach(item => {
+        const supported = supportedEfforts.includes(item.dataset.automationModelEffort);
+        const active = supported && item.dataset.automationModelEffort === nextEffort;
+        item.hidden = !supported;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+    }
+
+    function positionAutomationModelEffortMenu() {
+      automationModelEffortMenu.classList.remove('open-left');
+      const menuRect = automationModelMenu.getBoundingClientRect();
+      const menuStyle = getComputedStyle(automationModelMenu);
+      const effortWidth = parseFloat(menuStyle.getPropertyValue('--model-effort-width')) || 208;
+      const panelGap = parseFloat(menuStyle.getPropertyValue('--model-panel-gap')) || 8;
+      const viewportWidth = window.visualViewport?.width || window.innerWidth;
+      automationModelEffortMenu.classList.toggle('open-left', viewportWidth - menuRect.right < effortWidth + panelGap);
+    }
+
+    function closeAutomationModelMenu() {
+      automationModelMenu.classList.remove('open', 'show-efforts');
+      automationModelMenu.setAttribute('aria-hidden', 'true');
+      automationModelEffortMenu.setAttribute('aria-hidden', 'true');
+      automationModelEffortMenu.classList.remove('open-left');
+      automationModelMenu.querySelectorAll('.automation-model-expand').forEach(button => button.setAttribute('aria-expanded', 'false'));
+      automationModelToggle.classList.remove('open');
+      automationModelToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function applyAutomationModelSelection(option, resetToMedian = false) {
+      const model = option.dataset.automationModel;
+      if (resetToMedian || !automationSelectedModelEfforts[model]) automationSelectedModelEfforts[model] = 'median';
+      updateAutomationModelUi(model);
+      automationDirty = true;
+      return model;
+    }
+
+    function setAutomationModel(option) {
+      applyAutomationModelSelection(option, true);
+      closeAutomationModelMenu();
+      automationModelToggle.focus();
+    }
+
+    function openAutomationModelEfforts(option) {
+      const model = applyAutomationModelSelection(option);
+      automationModelMenu.querySelectorAll('.automation-model-expand').forEach(button => {
+        button.setAttribute('aria-expanded', String(button.dataset.automationModelExpand === model));
+      });
+      positionAutomationModelEffortMenu();
+      automationModelMenu.classList.add('show-efforts');
+      automationModelEffortMenu.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => automationModelMenu.querySelector('.automation-model-effort-option.active')?.focus());
+    }
+
+    function setAutomationModelEffort(option) {
+      const model = automationModel.value;
+      const effort = option.dataset.automationModelEffort;
+      if (!(modelEffortSupport[model] || []).includes(effort)) return;
+      automationSelectedModelEfforts[model] = effort;
+      updateAutomationModelUi(model, effort);
+      automationDirty = true;
+      closeAutomationModelMenu();
+      automationModelToggle.focus();
     }
 
     function setSettingsTab(tab) {
@@ -9298,7 +9376,10 @@
         automationInstruction.append(part.type === 'reference' ? createComposerReference(part.refType, part.value, part.metadata) : document.createTextNode(part.text));
       });
       else automationInstruction.textContent = task?.instruction || '';
-      automationModel.value = task?.model || currentModel.textContent.trim() || 'GLM-5.3 Flash';
+      const taskModel = task?.model || currentModel.textContent.trim() || 'GLM-5.3 Flash';
+      const taskEffort = task?.effort || getModelEffort(taskModel) || 'median';
+      automationSelectedModelEfforts[taskModel] = taskEffort;
+      updateAutomationModelUi(taskModel, taskEffort);
       renderAutomationLocationOptions(task?.location || 'conversation');
       automationStartDate.value = task?.startDate || '2026-08-25T09:00';
       automationEndDate.value = task?.endDate || '';
@@ -9354,6 +9435,7 @@
         instruction,
         instructionNodes: serializeAutomationInstruction(),
         model: automationModel.value,
+        effort: automationModelEffort.value,
         location: automationLocation.value,
         createTimedProject,
         timedProjectName: createTimedProject ? timedAutomationProjectName(name) : '',
@@ -9458,7 +9540,10 @@
       delete testTask.timedProjectName;
       const selectedTaskModel = testTask.model || 'GLM-5.3 Flash';
       const modelOption = [...modelMenu.querySelectorAll('.model-option')].find(option => option.dataset.model === selectedTaskModel);
-      if (modelOption) applyModelSelection(modelOption);
+      if (modelOption) {
+        selectedModelEfforts[selectedTaskModel] = testTask.effort || 'median';
+        applyModelSelection(modelOption);
+      }
       createAutomationConversation(testTask, true);
     }
 
@@ -11936,6 +12021,7 @@
       closeHistoryContextMenu();
       closeChatSearch();
       closeModelMenu();
+      closeAutomationModelMenu();
       closeArtifactMenu();
       closeIdentityMenu();
       closeMoveConversationMenu();
@@ -12245,6 +12331,105 @@
         event.preventDefault();
         closeModelMenu();
         modelToggle.focus();
+      }
+    });
+
+    automationModelToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = !automationModelMenu.classList.contains('open');
+      closeOverlays();
+      automationModelMenu.classList.toggle('open', open);
+      automationModelMenu.setAttribute('aria-hidden', String(!open));
+      automationModelToggle.classList.toggle('open', open);
+      automationModelToggle.setAttribute('aria-expanded', String(open));
+      if (open) requestAnimationFrame(() => automationModelMenu.querySelector('.automation-model-option.active')?.focus());
+    });
+
+    automationModelToggle.addEventListener('keydown', event => {
+      if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+      event.preventDefault();
+      closeOverlays();
+      automationModelMenu.classList.add('open');
+      automationModelMenu.setAttribute('aria-hidden', 'false');
+      automationModelToggle.classList.add('open');
+      automationModelToggle.setAttribute('aria-expanded', 'true');
+      const options = [...automationModelMenu.querySelectorAll('.automation-model-option')];
+      options[event.key === 'ArrowDown' ? 0 : options.length - 1]?.focus();
+    });
+
+    automationModelMenu.addEventListener('click', event => {
+      const expandButton = event.target.closest('.automation-model-expand');
+      if (expandButton) {
+        const option = expandButton.closest('.model-row')?.querySelector('.automation-model-option');
+        if (option) openAutomationModelEfforts(option);
+        return;
+      }
+      const effortOption = event.target.closest('.automation-model-effort-option');
+      if (effortOption) {
+        setAutomationModelEffort(effortOption);
+        return;
+      }
+      const option = event.target.closest('.automation-model-option');
+      if (option) setAutomationModel(option);
+    });
+
+    automationModelMenu.addEventListener('keydown', event => {
+      const activeExpand = document.activeElement?.classList.contains('automation-model-expand') ? document.activeElement : null;
+      if (activeExpand) {
+        const modelOptions = [...automationModelMenu.querySelectorAll('.automation-model-option')];
+        const rowOption = activeExpand.closest('.model-row')?.querySelector('.automation-model-option');
+        const rowIndex = modelOptions.indexOf(rowOption);
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          if (rowOption) openAutomationModelEfforts(rowOption);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          rowOption?.focus();
+        } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const direction = event.key === 'ArrowDown' ? 1 : -1;
+          modelOptions[(rowIndex + direction + modelOptions.length) % modelOptions.length]?.focus();
+        } else if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault();
+          modelOptions[event.key === 'Home' ? 0 : modelOptions.length - 1]?.focus();
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closeAutomationModelMenu();
+          automationModelToggle.focus();
+        }
+        return;
+      }
+      const inEffortMenu = document.activeElement?.classList.contains('automation-model-effort-option');
+      const options = inEffortMenu
+        ? [...automationModelMenu.querySelectorAll('.automation-model-effort-option:not([hidden])')]
+        : [...automationModelMenu.querySelectorAll('.automation-model-option')];
+      const current = options.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        options[(current + direction + options.length) % options.length]?.focus();
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        options[event.key === 'Home' ? 0 : options.length - 1]?.focus();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (current >= 0) {
+          if (inEffortMenu) setAutomationModelEffort(options[current]);
+          else setAutomationModel(options[current]);
+        }
+      } else if (event.key === 'ArrowRight' && !inEffortMenu && current >= 0) {
+        event.preventDefault();
+        openAutomationModelEfforts(options[current]);
+      } else if (event.key === 'ArrowLeft' && inEffortMenu) {
+        event.preventDefault();
+        automationModelMenu.classList.remove('show-efforts');
+        automationModelEffortMenu.setAttribute('aria-hidden', 'true');
+        automationModelMenu.querySelectorAll('.automation-model-expand').forEach(button => button.setAttribute('aria-expanded', 'false'));
+        automationModelMenu.querySelector('.automation-model-option.active')?.focus();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeAutomationModelMenu();
+        automationModelToggle.focus();
       }
     });
 
@@ -13693,7 +13878,6 @@
     automationEditorClose.addEventListener('click', closeAutomationEditor);
     automationCancel.addEventListener('click', closeAutomationEditor);
     automationForm.addEventListener('input', () => { automationDirty = true; });
-    automationModel.addEventListener('change', () => { automationDirty = true; });
     automationLocation.addEventListener('change', () => { automationDirty = true; });
     automationForm.addEventListener('submit', event => {
       event.preventDefault();
@@ -14424,6 +14608,7 @@
       if (event.target.closest('.chat-search-dialog') || event.target.closest('#searchChats')) return;
       if (event.target.closest('#historyContextMenu, #moveConversationMenu, #projectContextMenu')) return;
       if (!event.target.closest('.model-switch')) closeModelMenu();
+      if (!event.target.closest('.automation-model-switch')) closeAutomationModelMenu();
       if (!event.target.closest('.composer, .automation-prompt-box, #projectInstructionEditor, #suggestPop')) closeOverlays();
     });
 
