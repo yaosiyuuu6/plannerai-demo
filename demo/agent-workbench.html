@@ -1578,13 +1578,28 @@
       border-top: 1px solid #eaecf0;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 8px;
       padding: 6px 8px;
     }
-    .automation-prompt-tools > div { display: flex; align-items: center; gap: 2px; }
-    .automation-prompt-tools button { height: 30px; border: 0; border-radius: 6px; background: transparent; color: #475467; padding: 0 8px; font-size: 12px; }
-    .automation-prompt-tools button:hover { background: #f5f7fa; color: #0958d9; }
+    .automation-model-select {
+      max-width: 180px;
+      height: 32px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      color: #344054;
+      padding: 0 26px 0 8px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .automation-model-select:hover { background: #f5f7fa; color: #0958d9; }
+    .automation-model-select:focus-visible {
+      border-color: #1677ff;
+      outline: 2px solid rgba(22,119,255,.18);
+      outline-offset: 1px;
+    }
     .automation-ref-chip {
       margin-right: 4px;
       border-radius: 6px;
@@ -7072,7 +7087,7 @@
           </header>
           <form class="automation-editor-form" id="automationForm" novalidate>
             <div class="automation-field"><label class="automation-label" for="automationName">名称 <b aria-hidden="true">*</b></label><input id="automationName" type="text" maxlength="60" placeholder="例如：每周质检报告" autocomplete="off" required></div>
-            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div></div></div>
+            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div><div class="automation-prompt-tools"><label class="sr-only" for="automationModel">模型</label><select class="automation-model-select" id="automationModel" aria-label="选择定时任务模型"><option value="GLM-5.3 Flash">GLM-5.3 Flash</option><option value="GPT Luna">GPT Luna</option></select></div></div></div>
             <div class="automation-field"><label class="automation-label" for="automationLocation">运行位置</label><div class="automation-location-control"><select id="automationLocation"></select></div><div class="automation-help">每次运行都会在所选位置新建对话。</div></div>
             <div class="automation-field"><div class="automation-label">激活区间<span>北京时间</span></div><div class="automation-date-grid"><label><span>开始时间</span><input id="automationStartDate" type="datetime-local"></label><label><span>结束时间（可选）</span><input id="automationEndDate" type="datetime-local"></label></div></div>
 
@@ -7587,6 +7602,7 @@
     const automationForm = document.getElementById('automationForm');
     const automationName = document.getElementById('automationName');
     const automationInstruction = document.getElementById('automationInstruction');
+    const automationModel = document.getElementById('automationModel');
     const automationLocation = document.getElementById('automationLocation');
     const automationStartDate = document.getElementById('automationStartDate');
     const automationEndDate = document.getElementById('automationEndDate');
@@ -9280,6 +9296,7 @@
         automationInstruction.append(part.type === 'reference' ? createComposerReference(part.refType, part.value, part.metadata) : document.createTextNode(part.text));
       });
       else automationInstruction.textContent = task?.instruction || '';
+      automationModel.value = task?.model || currentModel.textContent.trim() || 'GLM-5.3 Flash';
       renderAutomationLocationOptions(task?.location || 'conversation');
       automationStartDate.value = task?.startDate || '2026-08-25T09:00';
       automationEndDate.value = task?.endDate || '';
@@ -9334,6 +9351,7 @@
         name,
         instruction,
         instructionNodes: serializeAutomationInstruction(),
+        model: automationModel.value,
         location: automationLocation.value,
         createTimedProject,
         timedProjectName: createTimedProject ? timedAutomationProjectName(name) : '',
@@ -9436,6 +9454,9 @@
       }
       delete testTask.createTimedProject;
       delete testTask.timedProjectName;
+      const selectedTaskModel = testTask.model || 'GLM-5.3 Flash';
+      const modelOption = [...modelMenu.querySelectorAll('.model-option')].find(option => option.dataset.model === selectedTaskModel);
+      if (modelOption) applyModelSelection(modelOption);
       createAutomationConversation(testTask, true);
     }
 
@@ -13670,6 +13691,7 @@
     automationEditorClose.addEventListener('click', closeAutomationEditor);
     automationCancel.addEventListener('click', closeAutomationEditor);
     automationForm.addEventListener('input', () => { automationDirty = true; });
+    automationModel.addEventListener('change', () => { automationDirty = true; });
     automationLocation.addEventListener('change', () => { automationDirty = true; });
     automationForm.addEventListener('submit', event => {
       event.preventDefault();
