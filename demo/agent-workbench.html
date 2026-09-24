@@ -523,6 +523,7 @@
     }
     .history-more {
       grid-column: 3;
+      grid-row: 1;
       width: 28px;
       height: 28px;
       border: 0;
@@ -537,6 +538,33 @@
       transition: opacity .16s ease, background .16s ease, color .16s ease;
     }
     .history-more .icon { width: 16px; height: 16px; }
+    .history-automation-clock {
+      grid-column: 3;
+      grid-row: 1;
+      width: 28px;
+      height: 28px;
+      color: #748094;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease;
+    }
+    .history-automation-clock .icon {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.55;
+    }
+    .history-row[data-automation-conversation="true"] .history-automation-clock {
+      display: inline-flex;
+      opacity: 1;
+    }
+    .history-row[data-automation-conversation="true"]:hover .history-automation-clock,
+    .history-row[data-automation-conversation="true"]:focus-within .history-automation-clock,
+    .history-row[data-automation-conversation="true"].menu-open .history-automation-clock {
+      opacity: 0;
+    }
     .history-row:hover .history-more,
     .history-row:focus-within .history-more,
     .history-row.menu-open .history-more {
@@ -547,6 +575,10 @@
     .history-more[aria-expanded="true"] {
       background: #e6e6e6;
       color: #262626;
+    }
+    @media (hover: none) {
+      .history-row[data-automation-conversation="true"] .history-automation-clock { opacity: 0; }
+      .history-row[data-automation-conversation="true"] .history-more { opacity: 1; pointer-events: auto; }
     }
     .history-rename-input {
       grid-column: 1;
@@ -1540,12 +1572,6 @@
       outline: 0 !important;
       overflow-wrap: anywhere;
     }
-    .automation-attachments { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px; }
-    .automation-attachments:empty { display: none; }
-    .automation-attachment { display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; max-width: 100%; font-size: 12px; }
-    .automation-attachment > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .automation-attachment small { display: block; color: #8992a3; }
-    .automation-attachment button { border: 0; background: transparent; cursor: pointer; color: #667085; font-size: 18px; }
     .automation-prompt-input:empty::before { content: attr(data-placeholder); color: #a3acba; pointer-events: none; }
     .automation-prompt-tools {
       min-height: 44px;
@@ -1749,6 +1775,20 @@
     .automation-label span:last-child { color: #8992a3; font-size: 11px; font-weight: 400; }
     .automation-field > input, .automation-field > select, .automation-date-grid input { min-height: 44px; height: auto; border-color: #d4d9e2; border-radius: 9px; padding: 0 12px; }
     .automation-field > input:focus, .automation-field > select:focus, .automation-date-grid input:focus { border-color: #1677ff; outline: 0; box-shadow: 0 0 0 3px rgba(22,119,255,.11); }
+    .automation-location-control { display: block; }
+    .automation-location-control select {
+      min-width: 0;
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid #d4d9e2;
+      border-radius: 9px;
+      background: #fff;
+      padding: 0 12px;
+      color: #262626;
+      font: inherit;
+      font-size: 14px;
+    }
+    .automation-location-control select:focus { border-color: #1677ff; outline: 0; box-shadow: 0 0 0 3px rgba(22,119,255,.11); }
     .automation-prompt-box { border-color: #d4d9e2; border-radius: 13px; }
     .automation-prompt-box:focus-within { box-shadow: 0 0 0 3px rgba(22,119,255,.11); }
     .automation-prompt-input { min-height: 170px; padding: 14px; }
@@ -1766,6 +1806,7 @@
     .automation-frequency-key { color: #4e5969; font-size: 14px; }
     .automation-frequency-key span { color: #8992a3; font-size: 11px; }
     .automation-frequency-value { min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .automation-frequency-toggle { min-width: 0; display: flex; align-items: center; justify-content: flex-end; }
     .automation-frequency-value select, .automation-frequency-value input { width: auto; min-width: 150px; min-height: 38px; height: auto; border: 0; border-radius: 8px; padding: 0 4px 0 8px; color: #1f2329; text-align: right; background: transparent; font: inherit; }
     .automation-repeat-trigger { min-height: 38px; border: 0; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; padding: 0 13px; color: #1f2329; background: #f0f2f5; }
     .automation-repeat-trigger:hover { background: #e8ebef; }
@@ -1797,6 +1838,7 @@
     .automation-switch::after { top: 3px; left: 3px; width: 20px; height: 20px; }
     .automation-switch-label input:checked + .automation-switch { background: #1677ff; }
     .automation-switch-label input:checked + .automation-switch::after { transform: translateX(18px); }
+    .automation-switch-label input:focus-visible + .automation-switch { outline: 2px solid rgba(22,119,255,.36); outline-offset: 2px; }
     .automation-runs { margin-top: 28px; padding-top: 22px; }
     .automation-runs-head { margin-bottom: 6px; }
     .automation-runs h3 { margin: 0; color: #1f2329; font-size: 13px; font-weight: 650; }
@@ -5520,6 +5562,355 @@
     .project-detail-tabs { margin-top: 0; }
     .automation-page-head { margin-bottom: 0; }
     .automation-filters { margin: 12px 0; }
+
+    /* Plugin center */
+    .legacy-mcp-section { display: none !important; }
+    .plugin-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .plugin-card {
+      position: relative;
+      min-height: 164px;
+      border: 1px solid #e4eaf2;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .plugin-card:hover {
+      border-color: #8bb2ee;
+      box-shadow: 0 5px 18px rgba(31, 52, 84, .07);
+    }
+    .plugin-card:focus-visible {
+      border-color: #2563eb;
+      outline: 3px solid rgba(37, 99, 235, .2);
+      outline-offset: 2px;
+    }
+    .plugin-card-head {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+    .plugin-brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex: none;
+    }
+    .plugin-brand-icon img { display: block; object-fit: contain; }
+    .plugin-brand-icon.vanish { background: transparent; }
+    .plugin-brand-icon.vanish img { width: 100%; height: 100%; }
+    .plugin-brand-icon.seatable { background: transparent; }
+    .plugin-brand-icon.seatable img { width: 40px; height: 40px; }
+    .plugin-brand-icon.atlassian { border: 0; background: transparent; }
+    .plugin-brand-icon.atlassian img { width: 32px; height: 32px; }
+    .plugin-brand-icon.foxmail { position: relative; background: transparent; }
+    .plugin-brand-icon.foxmail img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 218px;
+      max-width: none;
+      height: 48px;
+      object-fit: fill;
+    }
+    .plugin-title { color: #172033; font-size: 16px; font-weight: 700; }
+    .plugin-state {
+      min-height: 26px;
+      border-radius: 13px;
+      background: #f2f4f7;
+      color: #667085;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .plugin-state::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #98a2b3;
+    }
+    .plugin-state.ready { color: #17683a; background: #edf9f1; }
+    .plugin-state.ready::before { background: #22a65a; }
+    .plugin-description {
+      min-height: 42px;
+      margin: 14px 0 12px;
+      color: #4f5a6b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .plugin-button {
+      min-height: 40px;
+      border: 1px solid #d7dee8;
+      border-radius: 8px;
+      background: #fff;
+      color: #344054;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 13px;
+      font-size: 13px;
+      font-weight: 550;
+      text-decoration: none;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .plugin-button .icon { width: 16px; height: 16px; }
+    .plugin-button:hover { border-color: #8bb2ee; color: #1559b7; background: #f8fbff; }
+    .plugin-button.primary { border-color: #2563eb; background: #2563eb; color: #fff; }
+    .plugin-button.primary:hover { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
+    .plugin-button:focus-visible,
+    .plugin-manual-link:focus-visible,
+    .plugin-drawer-close:focus-visible,
+    .plugin-switch input:focus-visible + span {
+      outline: 3px solid rgba(37, 99, 235, .25);
+      outline-offset: 2px;
+    }
+    .plugin-detail-overlay {
+      position: fixed;
+      inset: 46px 0 0;
+      z-index: 330;
+      display: none;
+      justify-content: flex-end;
+      background: rgba(15, 23, 42, .42);
+    }
+    .plugin-detail-overlay.open { display: flex; }
+    .plugin-detail-drawer {
+      width: min(620px, 100%);
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -16px 0 42px rgba(15, 23, 42, .16);
+      animation: pluginDrawerIn .22s ease-out;
+    }
+    @keyframes pluginDrawerIn {
+      from { opacity: .65; transform: translateX(24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .plugin-drawer-header {
+      min-height: 82px;
+      border-bottom: 1px solid #e8edf4;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto 44px;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+    }
+    .plugin-drawer-title { margin: 0; color: #172033; font-size: 18px; line-height: 1.3; }
+    .plugin-manual-link {
+      min-height: 40px;
+      border-radius: 8px;
+      color: #175cd3;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .plugin-manual-link:hover { background: #f0f6ff; color: #0b4ba6; }
+    .plugin-manual-link .icon { width: 15px; height: 15px; }
+    .plugin-drawer-close {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #667085;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .plugin-drawer-close:hover { color: #172033; background: #f2f4f7; }
+    .plugin-drawer-close .icon { width: 20px; height: 20px; }
+    .plugin-drawer-body { min-height: 0; overflow: auto; padding: 20px; }
+    .plugin-pane { display: none; }
+    .plugin-pane.active { display: block; }
+    .plugin-config-section {
+      border: 1px solid #e5eaf1;
+      border-radius: 10px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .plugin-config-section:last-child { margin-bottom: 0; }
+    .plugin-section-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    .plugin-section-heading h3 { margin: 0; color: #1d2939; font-size: 15px; }
+    .plugin-section-heading p { margin: 5px 0 0; color: #7a8493; font-size: 12px; line-height: 1.5; }
+    .plugin-capability-detail {
+      border-top: 1px solid #edf1f5;
+      margin-top: 14px;
+      padding-top: 14px;
+    }
+    .plugin-capability-detail.is-hidden { display: none; }
+    .plugin-field { display: block; margin-top: 12px; }
+    .plugin-field:first-of-type { margin-top: 0; }
+    .plugin-field > span { display: block; margin-bottom: 6px; color: #344054; font-size: 13px; font-weight: 600; }
+    .plugin-textarea,
+    .plugin-input {
+      width: 100%;
+      border: 1px solid #d0d7e2;
+      border-radius: 8px;
+      background: #fff;
+      color: #1d2939;
+      padding: 10px 11px;
+      font: inherit;
+      font-size: 13px;
+    }
+    .plugin-input { height: 42px; }
+    .plugin-textarea { min-height: 128px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; line-height: 1.5; }
+    .plugin-input:focus,
+    .plugin-textarea:focus { border-color: #2563eb; outline: 3px solid rgba(37, 99, 235, .12); }
+    .plugin-field-help { margin-top: 6px; color: #7a8493; font-size: 12px; line-height: 1.5; }
+    .plugin-form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .plugin-inline-status { min-height: 18px; margin-top: 10px; color: #667085; font-size: 12px; }
+    .plugin-inline-status.success { color: #067647; }
+    .plugin-inline-status.error { color: #b42318; }
+    .plugin-capability-list { display: grid; gap: 2px; }
+    .plugin-capability-option {
+      min-height: 60px;
+      border-bottom: 1px solid #edf1f5;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+    .plugin-capability-option:last-child { border-bottom: 0; }
+    .plugin-capability-option strong { display: block; color: #344054; font-size: 13px; }
+    .plugin-capability-option small { display: block; margin-top: 4px; color: #7a8493; font-size: 12px; line-height: 1.45; }
+    .plugin-switch { position: relative; display: inline-flex; flex: none; }
+    .plugin-switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .plugin-switch span {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: #c7ced8;
+      display: block;
+      transition: background .18s ease;
+    }
+    .plugin-switch span::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, .2);
+      transition: transform .18s ease;
+    }
+    .plugin-switch input:checked + span { background: #2563eb; }
+    .plugin-switch input:checked + span::after { transform: translateX(20px); }
+    .plugin-switch input:disabled + span { opacity: .48; cursor: not-allowed; }
+    .plugin-agent-list { display: grid; gap: 8px; }
+    .plugin-agent-row {
+      min-height: 54px;
+      border: 1px solid #edf1f5;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+    }
+    .plugin-agent-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: transparent;
+      color: #748094;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .plugin-agent-avatar .robot-icon { width: 21px; height: 21px; }
+    .plugin-agent-copy strong { display: block; color: #344054; font-size: 13px; }
+    .plugin-agent-copy span { display: block; margin-top: 3px; color: #7a8493; font-size: 11px; }
+    .plugin-agent-mark-preview {
+      width: 30px;
+      height: 30px;
+      color: #748094;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .plugin-agent-mark-preview .robot-icon { width: 24px; height: 24px; }
+    .robot-icon {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: none;
+    }
+    .history-agent-robot {
+      grid-column: 3;
+      grid-row: 1;
+      width: 28px;
+      height: 28px;
+      color: #748094;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease;
+    }
+    .history-agent-robot .robot-icon { width: 23px; height: 23px; stroke-width: 1.55; }
+    .history-row[data-agent-conversation="true"] .history-agent-robot {
+      display: inline-flex;
+      opacity: 1;
+    }
+    .history-row[data-agent-conversation="true"]:hover .history-agent-robot,
+    .history-row[data-agent-conversation="true"]:focus-within .history-agent-robot,
+    .history-row[data-agent-conversation="true"].menu-open .history-agent-robot { opacity: 0; }
+    @media (hover: none) {
+      .history-row[data-agent-conversation="true"] .history-agent-robot { opacity: 0; }
+    }
+    @media (max-width: 840px) {
+      .plugin-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .plugin-card-head { grid-template-columns: 44px minmax(0, 1fr); }
+      .plugin-brand-icon { width: 44px; height: 44px; }
+      .plugin-state { grid-column: 1 / -1; justify-self: start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .plugin-card,
+      .plugin-switch span,
+      .plugin-switch span::after,
+      .plugin-detail-drawer { transition: none; animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -5691,7 +6082,8 @@
             <div class="history-row" data-history-state="empty" role="button" tabindex="0"><span class="history-title">新问答</span><button class="history-more" type="button" aria-label="新问答的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row active" data-history-state="artifact" role="button" tabindex="0"><span class="history-title">港股股权激励处理方案</span><button class="history-more" type="button" aria-label="港股股权激励处理方案的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="manual-qa" role="button" tabindex="0"><span class="history-title">国财A股组规则确认</span><button class="history-more" type="button" aria-label="国财A股组规则确认的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
-            <div class="history-row" data-history-state="daily-report" role="button" tabindex="0"><span class="history-title">质检日报生成</span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="daily-report" data-automation-conversation="true" role="button" tabindex="0"><span class="history-title">质检日报生成</span><span class="history-automation-clock" role="img" aria-label="由自动化创建" title="由自动化创建"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><button class="history-more" type="button" aria-label="质检日报生成的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="vanish-agent" data-agent-conversation="true" role="button" tabindex="0"><span class="history-title">Vanish · 舆情智员</span><span class="history-agent-robot" role="img" aria-label="由 Vanish 智员创建" title="由 Vanish 智员创建"><svg class="robot-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg></span><button class="history-more" type="button" aria-label="Vanish 舆情智员对话的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="financial-extraction" role="button" tabindex="0"><span class="history-title">财务数据抽取</span><button class="history-more" type="button" aria-label="财务数据抽取的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" data-history-state="planning-summary" role="button" tabindex="0"><span class="history-title">规划文档总结</span><button class="history-more" type="button" aria-label="规划文档总结的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">业务流程优化建议</span><button class="history-more" type="button" aria-label="业务流程优化建议的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
@@ -6235,9 +6627,9 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9Z"/><path d="M12 11 4 6.5"/><path d="m12 11 8-4.5"/><path d="M12 11v9"/></svg>
               Skill
             </button>
-            <button class="settings-tab" type="button" data-settings-tab="mcps" aria-pressed="false">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="3" width="6" height="6" rx="1.5"/><rect x="9" y="15" width="6" height="6" rx="1.5"/><path d="M9 6h6M6 9v3a3 3 0 0 0 3 3h3M18 9v3a3 3 0 0 1-3 3h-3"/></svg>
-              MCPs
+            <button class="settings-tab" type="button" data-settings-tab="plugins" aria-pressed="false">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v4M15 3v4"/><path d="M7 7h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5Z"/><path d="M12 15v6M8 21h8"/></svg>
+              插件
             </button>
             <button class="settings-tab" type="button" data-settings-tab="tools" aria-pressed="false">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-3-3Z"/></svg>
@@ -6334,14 +6726,60 @@
 
             </section>
 
-            <section class="settings-panel" id="settingsPanelMcps" data-settings-panel="mcps">
+            <section class="settings-panel" id="settingsPanelMcps" data-settings-panel="plugins">
               <div class="settings-panel-head">
                 <div>
-                  <h2 class="settings-panel-title">MCPs</h2>
-                  <div class="settings-panel-subtitle">连接外部服务，为 Agent 扩展可调用的消息、项目和邮件等能力。</div>
+                  <h2 class="settings-panel-title">插件</h2>
+                  <div class="settings-panel-subtitle">统一管理外部服务、Skill 与接口能力；每项能力都可独立启用。</div>
                 </div>
               </div>
-              <div class="settings-section">
+              <div class="plugin-grid" aria-label="插件列表">
+                <article class="plugin-card" data-plugin-card="vanish" role="button" tabindex="0" aria-label="打开 Vanish 插件设置">
+                  <div class="plugin-card-head">
+                    <span class="plugin-brand-icon vanish" role="img" aria-label="Vanish 图标">
+                      <img src="assets/plugin-icons/vanish.png" alt="" aria-hidden="true">
+                    </span>
+                    <div class="plugin-title">Vanish</div>
+                    <span class="plugin-state" data-plugin-state="vanish">未启用</span>
+                  </div>
+                  <p class="plugin-description">连接 Vanish MCP，也可通过接口发送消息并管理智员。智员创建的对话会显示专属标识。</p>
+                </article>
+
+                <article class="plugin-card" data-plugin-card="seatable" role="button" tabindex="0" aria-label="打开 SeaTable 插件设置">
+                  <div class="plugin-card-head">
+                    <span class="plugin-brand-icon seatable" role="img" aria-label="SeaTable 图标">
+                      <img src="assets/plugin-icons/seatable.png" alt="" aria-hidden="true">
+                    </span>
+                    <div class="plugin-title">SeaTable</div>
+                    <span class="plugin-state" data-plugin-state="seatable">未启用</span>
+                  </div>
+                  <p class="plugin-description">使用 Account Token 管理工作区、成员与 Base，也可安装 SeaTable Skill 供 Agent 调用。</p>
+                </article>
+
+                <article class="plugin-card" data-plugin-card="atlassian" role="button" tabindex="0" aria-label="打开 Atlassian 插件设置">
+                  <div class="plugin-card-head">
+                    <span class="plugin-brand-icon atlassian" role="img" aria-label="Atlassian 图标">
+                      <img src="assets/plugin-icons/atlassian.svg" alt="" aria-hidden="true">
+                    </span>
+                    <div class="plugin-title">Atlassian</div>
+                    <span class="plugin-state" data-plugin-state="atlassian">未启用</span>
+                  </div>
+                  <p class="plugin-description">当前版本暂不提供 Jira 或 Confluence 接口，只保留用户手册与后续接入说明。</p>
+                </article>
+
+                <article class="plugin-card" data-plugin-card="foxmail" role="button" tabindex="0" aria-label="打开 Foxmail 插件设置">
+                  <div class="plugin-card-head">
+                    <span class="plugin-brand-icon foxmail" role="img" aria-label="Foxmail 图标">
+                      <img src="assets/plugin-icons/foxmail-wordmark.png" alt="" aria-hidden="true">
+                    </span>
+                    <div class="plugin-title">Foxmail</div>
+                    <span class="plugin-state" data-plugin-state="foxmail">未启用</span>
+                  </div>
+                  <p class="plugin-description">仅开放发送邮件能力，不读取收件箱、邮件历史或附件，发送前仍需用户确认。</p>
+                </article>
+              </div>
+
+              <div class="settings-section legacy-mcp-section" aria-hidden="true">
                 <div class="settings-section-head">
                   <div>
                     <div class="settings-section-title">可用连接</div>
@@ -6459,6 +6897,22 @@
 
           </div>
         </section>
+
+        <div class="plugin-detail-overlay" id="pluginDetailOverlay" role="dialog" aria-modal="true" aria-labelledby="pluginDetailTitle" aria-hidden="true">
+          <aside class="plugin-detail-drawer">
+            <header class="plugin-drawer-header">
+              <span class="plugin-brand-icon vanish" id="pluginDetailIcon" aria-hidden="true"></span>
+              <h2 class="plugin-drawer-title" id="pluginDetailTitle">插件详情</h2>
+              <a class="plugin-manual-link" id="pluginManualLink" href="#" target="_blank" rel="noreferrer">用户手册<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg></a>
+              <button class="plugin-drawer-close" id="pluginDetailClose" type="button" aria-label="关闭插件详情">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+              </button>
+            </header>
+            <div class="plugin-drawer-body">
+              <section id="pluginConfigPane"></section>
+            </div>
+          </aside>
+        </div>
 
         <div class="composer-wrap">
           <div class="financial-question-dock" id="financialQuestionDock" aria-label="待回答的问题">
@@ -6618,9 +7072,9 @@
           </header>
           <form class="automation-editor-form" id="automationForm" novalidate>
             <div class="automation-field"><label class="automation-label" for="automationName">名称 <b aria-hidden="true">*</b></label><input id="automationName" type="text" maxlength="60" placeholder="例如：每周质检报告" autocomplete="off" required></div>
-            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作，支持粘贴上传附件；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div><div id="automationAttachments" class="automation-attachments"></div><div class="composer-bar"><div class="composer-left"><button class="round-btn" type="button" id="automationUpload" aria-label="上传附件" title="上传附件">＋</button><input type="file" id="automationUploadInput" multiple hidden></div></div></div></div>
-            <div class="automation-field"><label class="automation-label" for="automationLocation">运行位置</label><select id="automationLocation"></select><div class="automation-help">每次运行都会在所选位置新建对话。</div></div>
-            <div class="automation-field"><div class="automation-label"><span>激活区间</span><span>北京时间</span></div><div class="automation-date-grid"><label><span>开始时间</span><input id="automationStartDate" type="datetime-local"></label><label><span>结束时间（可选）</span><input id="automationEndDate" type="datetime-local"></label></div></div>
+            <div class="automation-field"><div class="automation-label" id="automationInstructionLabel">指令 <b aria-hidden="true">*</b></div><div class="automation-prompt-box"><div class="automation-prompt-input" id="automationInstruction" role="textbox" aria-labelledby="automationInstructionLabel" aria-multiline="true" contenteditable="true" data-placeholder="描述 Agent 每次需要完成的工作；输入 @ 搜索并引用内容，输入 / 调用 Skill"></div></div></div>
+            <div class="automation-field"><label class="automation-label" for="automationLocation">运行位置</label><div class="automation-location-control"><select id="automationLocation"></select></div><div class="automation-help">每次运行都会在所选位置新建对话。</div></div>
+            <div class="automation-field"><div class="automation-label">激活区间<span>北京时间</span></div><div class="automation-date-grid"><label><span>开始时间</span><input id="automationStartDate" type="datetime-local"></label><label><span>结束时间（可选）</span><input id="automationEndDate" type="datetime-local"></label></div></div>
 
             <div class="automation-frequency-label">频次</div>
             <div class="automation-frequency-box" id="automationFrequencyBox">
@@ -6632,6 +7086,7 @@
                 <button class="automation-repeat-option" type="button" role="option" aria-selected="false" data-automation-repeat="weekly"><span>每周</span><svg class="icon check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
                 <button class="automation-repeat-option" type="button" role="option" aria-selected="false" data-automation-repeat="custom"><span>自定义</span><svg class="icon check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></button>
               </div>
+              <div class="automation-frequency-row" id="automationAlternatingWeekRow" hidden><label class="automation-frequency-key" for="automationAlternatingWeek">大小周</label><div class="automation-frequency-toggle"><label class="automation-switch-label"><span class="sr-only">启用大小周</span><input id="automationAlternatingWeek" type="checkbox"><span class="automation-switch" aria-hidden="true"></span></label></div></div>
               <div class="automation-frequency-row" id="automationEveryRow" hidden><label class="automation-frequency-key" for="automationEvery">重复周期</label><div class="automation-frequency-value"><span class="automation-frequency-prefix">每</span><input class="automation-small-number" id="automationEvery" type="number" min="1" max="99" value="1"><select class="automation-unit-select" id="automationIntervalUnit" aria-label="间隔单位"><option value="minute">分钟</option><option value="hour" selected>小时</option><option value="day">天</option></select><select class="automation-unit-select" id="automationCustomUnit" aria-label="自定义周期单位" hidden><option value="hour">小时</option><option value="day">天</option><option value="week" selected>周</option><option value="month">月</option></select></div></div>
               <div class="automation-frequency-row" id="automationOnRow" hidden><span class="automation-frequency-key">执行日</span><div class="automation-weekdays" aria-label="选择执行日"><button class="automation-weekday selected" type="button" aria-pressed="true" data-automation-day="一">一</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="二">二</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="三">三</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="四">四</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="五">五</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="六">六</button><button class="automation-weekday" type="button" aria-pressed="false" data-automation-day="日">日</button></div></div>
               <div class="automation-frequency-row" id="automationMonthDayRow" hidden><label class="automation-frequency-key" for="automationMonthDay">执行日期</label><div class="automation-frequency-value"><select id="automationMonthDay"><option>每月 1 日</option><option>每月 5 日</option><option>每月 15 日</option><option>每月最后一天</option></select></div></div>
@@ -7037,6 +7492,12 @@
     const foxmailConnectionSubmit = document.getElementById('foxmailConnectionSubmit');
     const foxmailEndpointInput = document.getElementById('foxmailEndpointInput');
     const foxmailConnectionStatus = document.getElementById('foxmailConnectionStatus');
+    const pluginDetailOverlay = document.getElementById('pluginDetailOverlay');
+    const pluginDetailClose = document.getElementById('pluginDetailClose');
+    const pluginDetailTitle = document.getElementById('pluginDetailTitle');
+    const pluginDetailIcon = document.getElementById('pluginDetailIcon');
+    const pluginManualLink = document.getElementById('pluginManualLink');
+    const pluginConfigPane = document.getElementById('pluginConfigPane');
     const artifactMenuToggle = document.getElementById('artifactMenuToggle');
     const artifactSaveProject = document.getElementById('artifactSaveProject');
     const artifactMenu = document.getElementById('artifactMenu');
@@ -7132,6 +7593,8 @@
     const automationRepeatTrigger = document.getElementById('automationRepeatTrigger');
     const automationRepeatLabel = document.getElementById('automationRepeatLabel');
     const automationRepeatMenu = document.getElementById('automationRepeatMenu');
+    const automationAlternatingWeekRow = document.getElementById('automationAlternatingWeekRow');
+    const automationAlternatingWeek = document.getElementById('automationAlternatingWeek');
     const automationCustomUnit = document.getElementById('automationCustomUnit');
     const automationEveryRow = document.getElementById('automationEveryRow');
     const automationOnRow = document.getElementById('automationOnRow');
@@ -7213,6 +7676,14 @@
       serverName: '',
       timer: null
     };
+    let activePluginId = 'vanish';
+    let pluginDrawerReturnFocus = null;
+    const pluginState = {
+      vanish: { connected: false, capabilities: { mcp: false, api: false, agents: false } },
+      seatable: { connected: false, capabilities: { api: false, skill: false }, skillInstalled: false },
+      atlassian: { connected: false, capabilities: {} },
+      foxmail: { connected: false, capabilities: { send: false } }
+    };
     let historyMenuRow = null;
     let pendingDeleteHistoryRow = null;
     let currentConversationState = 'empty';
@@ -7220,6 +7691,7 @@
     let conversationGenerating = false;
     let sharedSnapshotMode = false;
     let projectFormMode = 'create';
+    let projectFormOrigin = 'projects';
     let editingProjectId = null;
     let pendingDeleteProjectId = null;
     let highlightedProjectId = null;
@@ -7791,6 +8263,107 @@
       settingsPanels.forEach(panel => {
         panel.classList.toggle('active', panel.dataset.settingsPanel === tab);
       });
+    }
+
+    const pluginCatalog = {
+      vanish: {
+        name: 'Vanish',
+        manualUrl: 'https://vanish.myhexin.com/website/vanish-agent/#/docs'
+      },
+      seatable: {
+        name: 'SeaTable',
+        manualUrl: 'https://cloud.seafile.com/wiki/publish/seatable-user-manual/boIy/'
+      },
+      atlassian: {
+        name: 'Atlassian',
+        manualUrl: 'https://support.atlassian.com/'
+      },
+      foxmail: {
+        name: 'Foxmail',
+        manualUrl: 'https://www.foxmail.com/'
+      }
+    };
+
+    function pluginBrandIconMarkup(pluginId) {
+      const icons = {
+        vanish: '<img src="assets/plugin-icons/vanish.png" alt="" aria-hidden="true">',
+        seatable: '<img src="assets/plugin-icons/seatable.png" alt="" aria-hidden="true">',
+        atlassian: '<img src="assets/plugin-icons/atlassian.svg" alt="" aria-hidden="true">',
+        foxmail: '<img src="assets/plugin-icons/foxmail-wordmark.png" alt="" aria-hidden="true">'
+      };
+      return icons[pluginId] || '';
+    }
+
+    function pluginAbilityCard(pluginId, capability, title, copy, detail) {
+      const checked = pluginState[pluginId].capabilities[capability];
+      return `<section class="plugin-config-section" data-capability-card="${capability}">
+        <div class="plugin-section-heading">
+          <div><h3>${title}</h3><p>${copy}</p></div>
+          <label class="plugin-switch"><input type="checkbox" data-plugin-capability="${capability}" data-plugin-id="${pluginId}" ${checked ? 'checked' : ''} aria-label="${checked ? '关闭' : '打开'}${title}" aria-expanded="${checked}"><span aria-hidden="true"></span></label>
+        </div>
+        <div class="plugin-capability-detail${checked ? '' : ' is-hidden'}">${detail}</div>
+      </section>`;
+    }
+
+    function renderPluginConfig(pluginId) {
+      if (pluginId === 'vanish') {
+        const mcpDetail = `<label class="plugin-field" for="vanishPluginConfig"><span>MCP 配置信息</span><textarea class="plugin-textarea" id="vanishPluginConfig" spellcheck="false" placeholder='粘贴 { "mcpServers": ... } 或 claude mcp add ...'>${pluginState.vanish.connected ? '{\n  "mcpServers": { "vanish": { "type": "http", "url": "http://127.0.0.1:17477/mcp", "headers": { "Authorization": "Bearer ••••••••" } } }\n}' : ''}</textarea><div class="plugin-field-help">支持完整 JSON 或 Claude Code 命令；连接成功后令牌会显示为掩码。</div></label><div class="plugin-inline-status${pluginState.vanish.connected ? ' success' : ''}" id="vanishPluginStatus" role="status" aria-live="polite">${pluginState.vanish.connected ? '已连接 · http://127.0.0.1:17477/mcp · Token ••••••••' : ''}</div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-plugin-connect="vanish">${pluginState.vanish.connected ? '重新连接' : '解析并连接'}</button></div>`;
+        const messageDetail = `<label class="plugin-field"><span>接口地址</span><input class="plugin-input" id="vanishMessageEndpoint" type="url" value="https://vanish.myhexin.com/openapi/v1/messages" spellcheck="false"></label><label class="plugin-field"><span>API Token</span><input class="plugin-input" id="vanishMessageToken" type="password" placeholder="输入访问令牌" autocomplete="off"></label><div class="plugin-inline-status" id="vanishMessageStatus" role="status" aria-live="polite"></div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-vanish-api-save>保存消息配置</button></div>`;
+        const robotIcon = `<svg class="robot-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>`;
+        const agentDetail = `<div class="plugin-section-heading"><div><p>智员创建的对话会在历史记录中显示机器人标识。</p></div><span class="plugin-agent-mark-preview" role="img" aria-label="智员机器人标识">${robotIcon}</span></div><div class="plugin-agent-list"><div class="plugin-agent-row"><span class="plugin-agent-avatar" aria-hidden="true">${robotIcon}</span><div class="plugin-agent-copy"><strong>舆情智员</strong><span>监测与归纳热点动态</span></div><span class="plugin-state ready">运行中</span></div><div class="plugin-agent-row"><span class="plugin-agent-avatar" aria-hidden="true">${robotIcon}</span><div class="plugin-agent-copy"><strong>研报智员</strong><span>提取研报观点与数据</span></div><span class="plugin-state">已停用</span></div></div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-vanish-agent-manage>进入智员管理</button></div>`;
+        return `${pluginAbilityCard('vanish', 'mcp', '连接 MCP', '粘贴 Vanish MCP 配置并建立连接。', mcpDetail)}${pluginAbilityCard('vanish', 'api', '消息发送', '通过 API 接口发送 Vanish 消息。', messageDetail)}${pluginAbilityCard('vanish', 'agents', '智员管理', '查看、启停并管理 Vanish 智员。', agentDetail)}`;
+      }
+      if (pluginId === 'seatable') {
+        const apiDetail = `<label class="plugin-field"><span>SeaTable 服务地址</span><input class="plugin-input" id="seatableServerInput" type="url" value="https://cloud.seatable.cn" spellcheck="false"></label><label class="plugin-field"><span>Account Token</span><input class="plugin-input" id="seatableTokenInput" type="password" placeholder="粘贴 Account Token" autocomplete="off"><div class="plugin-field-help">Account Token 用于工作区、成员与 Base 等全局操作。</div></label><div class="plugin-inline-status${pluginState.seatable.connected ? ' success' : ''}" id="seatablePluginStatus" role="status" aria-live="polite">${pluginState.seatable.connected ? '已保存 · Token ••••••••' : ''}</div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-seatable-save>验证并保存</button></div>`;
+        const skillDetail = `<p class="plugin-field-help">安装后，Agent 可使用 SeaTable 表格操作方法。</p><div class="plugin-form-actions"><button class="plugin-button${pluginState.seatable.skillInstalled ? '' : ' primary'}" type="button" data-seatable-install>${pluginState.seatable.skillInstalled ? '卸载 Skill' : '安装 Skill'}</button></div>`;
+        return `${pluginAbilityCard('seatable', 'api', 'Web API', '使用 Account Token 进行全局操作。', apiDetail)}${pluginAbilityCard('seatable', 'skill', 'SeaTable Skill', '安装面向 Agent 的 SeaTable 操作能力。', skillDetail)}`;
+      }
+      if (pluginId === 'foxmail') {
+        const sendDetail = `<label class="plugin-field"><span>发件邮箱</span><input class="plugin-input" id="foxmailSenderInput" type="email" value="planner@example.com" autocomplete="email"></label><label class="plugin-field"><span>SMTP 服务器</span><input class="plugin-input" id="foxmailSmtpInput" type="text" value="smtp.example.com" spellcheck="false"></label><label class="plugin-field"><span>授权码</span><input class="plugin-input" id="foxmailAuthInput" type="password" placeholder="输入邮箱授权码" autocomplete="off"><div class="plugin-field-help">使用邮箱服务商生成的授权码，不读取收件箱或历史邮件。</div></label><div class="plugin-inline-status" id="foxmailPluginStatus" role="status" aria-live="polite"></div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-foxmail-save>保存发件配置</button></div>`;
+        return pluginAbilityCard('foxmail', 'send', '发送邮件', '仅发送用户确认过的邮件。', sendDetail);
+      }
+      return `<div class="plugin-config-section"><div class="plugin-section-heading"><div><h3>暂无可配置能力</h3><p>Atlassian 当前仅提供用户手册。</p></div></div></div>`;
+    }
+
+    function openPluginDetail(pluginId) {
+      const plugin = pluginCatalog[pluginId];
+      if (!plugin) return;
+      activePluginId = pluginId;
+      pluginDrawerReturnFocus = document.activeElement;
+      pluginDetailTitle.textContent = plugin.name;
+      pluginDetailIcon.className = `plugin-brand-icon ${pluginId}`;
+      pluginDetailIcon.innerHTML = pluginBrandIconMarkup(pluginId);
+      pluginManualLink.href = plugin.manualUrl;
+      pluginManualLink.setAttribute('aria-label', `打开 ${plugin.name} 用户手册`);
+      pluginConfigPane.innerHTML = renderPluginConfig(pluginId);
+      pluginDetailOverlay.classList.add('open');
+      pluginDetailOverlay.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => pluginDetailClose.focus());
+    }
+
+    function closePluginDetail() {
+      pluginDetailOverlay.classList.remove('open');
+      pluginDetailOverlay.setAttribute('aria-hidden', 'true');
+      if (pluginDrawerReturnFocus?.isConnected) pluginDrawerReturnFocus.focus();
+      pluginDrawerReturnFocus = null;
+    }
+
+    function updatePluginCards() {
+      Object.entries(pluginState).forEach(([pluginId, state]) => {
+        const badge = document.querySelector(`[data-plugin-state="${pluginId}"]`);
+        if (!badge) return;
+        const enabled = Object.values(state.capabilities).some(Boolean);
+        badge.classList.toggle('ready', enabled);
+        badge.textContent = enabled ? '已启用' : '未启用';
+      });
+    }
+
+    function setPluginInlineStatus(elementId, message, type = '') {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      element.textContent = message;
+      element.className = 'plugin-inline-status';
+      if (type) element.classList.add(type);
     }
 
     function setVanishFormStatus(message = '', type = '') {
@@ -8387,9 +8960,11 @@
 
     const automationStatusLabels = Object.freeze({ active: '激活', inactive: '未激活', running: '运行中', failed: '失败' });
     const automationRepeatLabels = Object.freeze({ interval: '间隔', daily: '每天', weekdays: '工作日', weekly: '每周', custom: '自定义' });
+    const AUTOMATION_CREATE_PROJECT_VALUE = '__create_timed_project__';
 
     function automationLocationLabel(value) {
       if (value === 'conversation') return '对话';
+      if (value === AUTOMATION_CREATE_PROJECT_VALUE) return '自动创建定时项目';
       const project = projects.find(item => item.id === value);
       return project ? `项目 · ${project.name}` : '对话';
     }
@@ -8399,7 +8974,7 @@
       const every = Number(task.every) || 1;
       const days = task.days?.length ? task.days : ['一'];
       if (task.repeat === 'daily') return `每天 ${at}`;
-      if (task.repeat === 'weekdays') return `工作日 ${at}`;
+      if (task.repeat === 'weekdays') return `工作日${task.alternatingWeek ? '（大小周）' : ''} ${at}`;
       if (task.repeat === 'weekly') return `每周${days.join('、周')} ${at}`;
       if (task.repeat === 'interval') {
         const unit = { minute: '分钟', hour: '小时', day: '天' }[task.intervalUnit] || '小时';
@@ -8474,7 +9049,7 @@
         closeAutomationTaskMenus(true);
         const action = actionButton.dataset.automationAction;
         if (action === 'edit') openAutomationEditor('edit', task.id);
-        else if (action === 'test') openAutomationConfirm('test', task);
+        else if (action === 'test') prepareAutomationTest(task);
         else if (action === 'toggle') {
           toggleAutomationTask(task);
           event.currentTarget.querySelector(`[data-automation-menu="${CSS.escape(task.id)}"]`)?.focus();
@@ -8545,8 +9120,58 @@
     }
 
     function renderAutomationLocationOptions(selected = 'conversation') {
-      automationLocation.innerHTML = `<option value="conversation">对话</option>${projects.map(project => `<option value="${escapeHtml(project.id)}">项目 · ${escapeHtml(project.name)}</option>`).join('')}`;
-      automationLocation.value = [...automationLocation.options].some(option => option.value === selected) ? selected : 'conversation';
+      const createProjectOption = automationEditorMode === 'create' ? `<option value="${AUTOMATION_CREATE_PROJECT_VALUE}">＋ 自动创建定时项目</option>` : '';
+      automationLocation.innerHTML = `<option value="conversation">对话</option>${projects.map(project => `<option value="${escapeHtml(project.id)}">项目 · ${escapeHtml(project.name)}</option>`).join('')}${createProjectOption}`;
+      const normalizedSelected = [...automationLocation.options].some(option => option.value === selected) ? selected : 'conversation';
+      automationLocation.value = normalizedSelected;
+    }
+
+    function automationProjectDateStamp(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function uniqueAutomationProjectName(baseName) {
+      const exists = name => projects.some(project => project.name.trim().toLocaleLowerCase() === name.toLocaleLowerCase());
+      if (!exists(baseName)) return baseName;
+      let sequence = 2;
+      let candidate = baseName;
+      do {
+        const suffix = `（${sequence}）`;
+        candidate = `${[...baseName].slice(0, Math.max(1, 30 - [...suffix].length)).join('')}${suffix}`;
+        sequence += 1;
+      } while (exists(candidate));
+      return candidate;
+    }
+
+    function timedAutomationProjectName(taskName) {
+      const dateStamp = automationProjectDateStamp();
+      const prefix = '自动化_';
+      const suffix = `_${dateStamp}`;
+      const availableNameLength = Math.max(1, 30 - [...prefix].length - [...suffix].length);
+      const compactTaskName = [...taskName].slice(0, availableNameLength).join('');
+      return uniqueAutomationProjectName(`${prefix}${compactTaskName}${suffix}`);
+    }
+
+    function createTimedAutomationProject(taskName, projectName = timedAutomationProjectName(taskName)) {
+      const resolvedProjectName = uniqueAutomationProjectName(projectName);
+      const now = Date.now();
+      const project = {
+        id: `project-automation-${now.toString(36)}`,
+        name: resolvedProjectName,
+        createdAt: now,
+        lastActive: now,
+        collapsed: false,
+        instruction: `# 自动化项目\n\n此项目由自动化“${taskName}”创建，用于保存每次运行产生的对话与产物。`
+      };
+      projects.unshift(project);
+      saveProjectOrder();
+      highlightedProjectId = project.id;
+      renderProjectSidebar();
+      renderProjectGrid(projectSearch.value);
+      return project;
     }
 
     function selectedAutomationDays() {
@@ -8579,6 +9204,7 @@
     function automationFrequencyVisibility(repeat, customUnit = 'week') {
       const custom = repeat === 'custom';
       return {
+        alternatingWeek: repeat === 'weekdays',
         every: repeat === 'interval' || custom,
         on: repeat === 'weekly' || (custom && customUnit === 'week'),
         monthDay: custom && customUnit === 'month',
@@ -8596,6 +9222,7 @@
     function renderAutomationFrequencyFields() {
       const unit = automationCustomUnit.value;
       const visibility = automationFrequencyVisibility(automationRepeatValue, unit);
+      setAutomationFrequencyFieldVisible(automationAlternatingWeekRow, visibility.alternatingWeek);
       setAutomationFrequencyFieldVisible(automationEveryRow, visibility.every);
       setAutomationFrequencyFieldVisible(automationOnRow, visibility.on);
       setAutomationFrequencyFieldVisible(automationMonthDayRow, visibility.monthDay);
@@ -8653,8 +9280,6 @@
         automationInstruction.append(part.type === 'reference' ? createComposerReference(part.refType, part.value, part.metadata) : document.createTextNode(part.text));
       });
       else automationInstruction.textContent = task?.instruction || '';
-      automationAttachments = (task?.attachments || []).map(file => ({ ...file }));
-      renderAutomationAttachments();
       renderAutomationLocationOptions(task?.location || 'conversation');
       automationStartDate.value = task?.startDate || '2026-08-25T09:00';
       automationEndDate.value = task?.endDate || '';
@@ -8664,6 +9289,7 @@
       automationMonthDay.value = task?.monthDay || '每月 1 日';
       setAutomationDays(task?.days || ['一']);
       automationRunAt.value = task?.runAt || '09:00';
+      automationAlternatingWeek.checked = Boolean(task?.alternatingWeek);
       automationRetry.checked = Boolean(task?.retry);
       setAutomationRepeat(task?.repeat || 'daily', false);
       renderAutomationRuns(task);
@@ -8702,19 +9328,22 @@
         return null;
       }
       const current = automationTasks.find(item => item.id === editingAutomationId);
+      const createTimedProject = automationEditorMode === 'create' && automationLocation.value === AUTOMATION_CREATE_PROJECT_VALUE;
       const draft = {
         id: current?.id || `automation-${Date.now().toString(36)}`,
         name,
         instruction,
         instructionNodes: serializeAutomationInstruction(),
-        attachments: automationAttachments.map(file => ({ ...file })),
         location: automationLocation.value,
+        createTimedProject,
+        timedProjectName: createTimedProject ? timedAutomationProjectName(name) : '',
         startDate: automationStartDate.value,
         endDate: automationEndDate.value,
         repeat: automationRepeatValue,
         every: Number(automationEvery.value) || 1,
         intervalUnit: automationIntervalUnit.value,
         customUnit: automationCustomUnit.value,
+        alternatingWeek: automationRepeatValue === 'weekdays' && automationAlternatingWeek.checked,
         days: selectedAutomationDays(),
         monthDay: automationMonthDay.value,
         runAt: automationRunAt.value || '09:00',
@@ -8737,23 +9366,11 @@
       automationConfirmAction = { type, task };
       automationConfirmSubmit.classList.remove('danger');
       automationConfirmSubmit.disabled = false;
-      if (type === 'create') {
-        automationConfirmTitle.textContent = '确认创建并激活？';
-        automationConfirmCopy.textContent = '创建后任务将按计划无人值守运行，并可执行当前指令中的外部操作。';
-        automationConfirmSubmit.textContent = '创建并激活';
-        automationConfirmOutcome.textContent = '保存并默认激活';
-      } else if (type === 'test') {
-        automationConfirmTitle.textContent = '确认测试？';
-        automationConfirmCopy.textContent = '测试会立即新建对话并真实执行当前指令，可能产生外部操作。';
-        automationConfirmSubmit.textContent = '确认测试';
-        automationConfirmOutcome.textContent = '真实运行，不改变激活状态';
-      } else {
-        automationConfirmTitle.textContent = '确认删除？';
-        automationConfirmCopy.textContent = '删除后将不再按计划运行，此操作无法撤销。';
-        automationConfirmSubmit.textContent = '删除';
-        automationConfirmSubmit.classList.add('danger');
-        automationConfirmOutcome.textContent = '删除自动化及运行计划';
-      }
+      automationConfirmTitle.textContent = '确认删除？';
+      automationConfirmCopy.textContent = '删除后将不再按计划运行，此操作无法撤销。';
+      automationConfirmSubmit.textContent = '删除';
+      automationConfirmSubmit.classList.add('danger');
+      automationConfirmOutcome.textContent = '删除自动化及运行计划';
       automationConfirmTask.textContent = task.name;
       automationConfirmLocation.textContent = automationLocationLabel(task.location);
       automationConfirm.classList.add('open');
@@ -8762,6 +9379,13 @@
     }
 
     function saveAutomationDraft(draft, create = false) {
+      const shouldCreateTimedProject = create && draft.createTimedProject;
+      if (shouldCreateTimedProject) {
+        const project = createTimedAutomationProject(draft.name, draft.timedProjectName);
+        draft.location = project.id;
+      }
+      delete draft.createTimedProject;
+      delete draft.timedProjectName;
       if (create) {
         draft.status = 'active';
         draft.nextRun = automationNextRun(draft);
@@ -8772,7 +9396,7 @@
           button.classList.toggle('active', selected);
           button.setAttribute('aria-selected', String(selected));
         });
-        showToast('自动化已创建并激活');
+        showToast(shouldCreateTimedProject ? '自动化及定时项目已创建并激活' : '自动化已创建并激活');
         closeAutomationEditor(true);
       } else {
         const index = automationTasks.findIndex(task => task.id === draft.id);
@@ -8785,26 +9409,59 @@
       renderAutomationTasks();
     }
 
+    function populateAutomationTestComposer(task) {
+      composerInput.replaceChildren();
+      const parts = task.instructionNodes?.length
+        ? task.instructionNodes
+        : [{ type: 'text', text: task.instruction || '' }];
+      parts.forEach(part => {
+        composerInput.append(part.type === 'reference'
+          ? createComposerReference(part.refType, part.value, part.metadata)
+          : document.createTextNode(part.text || ''));
+      });
+      composerInput.focus();
+      const range = document.createRange();
+      range.selectNodeContents(composerInput);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    function prepareAutomationTest(task) {
+      const testTask = { ...task };
+      if (testTask.createTimedProject) {
+        const project = createTimedAutomationProject(testTask.name, testTask.timedProjectName);
+        testTask.location = project.id;
+      }
+      delete testTask.createTimedProject;
+      delete testTask.timedProjectName;
+      createAutomationConversation(testTask, true);
+    }
+
     function createAutomationConversation(task, isTest = false) {
       const row = document.createElement('div');
       const conversationId = `conv-automation-${Date.now().toString(36)}`;
       row.className = 'history-row';
-      row.dataset.historyState = 'daily-report';
+      row.dataset.automationConversation = 'true';
+      row.dataset.automationId = task.id;
+      row.dataset.historyState = isTest ? 'empty' : 'daily-report';
       row.dataset.historyOrder = String(Date.now());
       row.dataset.conversationId = conversationId;
       if (task.location !== 'conversation' && projects.some(project => project.id === task.location)) row.dataset.projectId = task.location;
       const title = `${task.name}${isTest ? ' · 测试' : ''}`;
-      row.innerHTML = `<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg><span class="history-title" role="button" tabindex="0">${escapeHtml(title)}</span><span class="history-input-badge" hidden>待输入</span><button class="history-more" type="button" aria-label="${escapeHtml(title)}的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>`;
+      row.innerHTML = `<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg><span class="history-title" role="button" tabindex="0">${escapeHtml(title)}</span><span class="history-input-badge" hidden>待输入</span><span class="history-automation-clock" role="img" aria-label="由自动化 ${escapeHtml(task.name)} 创建" title="由自动化创建"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><button class="history-more" type="button" aria-label="${escapeHtml(title)}的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>`;
       historyList.append(row);
       const project = projects.find(item => item.id === row.dataset.projectId);
       if (project) { project.collapsed = false; project.lastActive = Date.now(); }
       const savedTask = automationTasks.find(item => item.id === task.id);
-      if (savedTask) savedTask.runs.unshift({ id: `run-${Date.now().toString(36)}`, state: 'running', label: task.name, location: automationLocationLabel(task.location), detail: '正在新建对话并执行指令', time: '刚刚', conversationId, historyState: 'daily-report' });
+      if (savedTask && !isTest) savedTask.runs.unshift({ id: `run-${Date.now().toString(36)}`, state: 'running', label: task.name, location: automationLocationLabel(task.location), detail: '正在新建对话并执行指令', time: '刚刚', conversationId, historyState: 'daily-report' });
       renderProjectSidebar();
       openHistoryRow(row);
       conversationTitle.textContent = title;
-      conversationMeta.textContent = isTest ? '自动化测试 · 正在运行' : '自动化 · 正在运行';
-      showToast(isTest ? '已立即测试，任务不会因此激活' : '自动化已开始运行');
+      if (isTest) populateAutomationTestComposer(task);
+      conversationMeta.textContent = isTest ? '自动化测试 · 等待确认发送' : '自动化 · 正在运行';
+      showToast(isTest ? '测试内容已填入，请确认后发送' : '自动化已开始运行');
     }
 
     function openAutomationRunConversation(taskId, runId) {
@@ -9809,8 +10466,6 @@
     }
 
     let activePromptInput = composerInput;
-    let automationAttachments = [];
-
     function saveMentionTriggerRange() {
       const selection = window.getSelection();
       if (!selection || !selection.rangeCount) return;
@@ -10819,8 +11474,9 @@
       return { ok: true, name };
     }
 
-    function openProjectForm(mode, projectId = null) {
+    function openProjectForm(mode, projectId = null, origin = 'projects') {
       projectFormMode = mode;
+      projectFormOrigin = origin;
       editingProjectId = projectId;
       const project = projects.find(item => item.id === projectId);
       projectFormTitle.textContent = mode === 'create' ? '新建项目' : '重命名项目';
@@ -10837,6 +11493,7 @@
       projectFormOverlay.classList.remove('open');
       projectFormOverlay.setAttribute('aria-hidden', 'true');
       editingProjectId = null;
+      projectFormOrigin = 'projects';
     }
 
     function createEmptyConversation(projectId = '') {
@@ -11627,6 +12284,115 @@
     settingsTabs.forEach(tab => tab.addEventListener('click', () => {
       setSettingsTab(tab.dataset.settingsTab);
     }));
+    document.getElementById('settingsPanelMcps').addEventListener('click', event => {
+      const card = event.target.closest('[data-plugin-card]');
+      if (card) openPluginDetail(card.dataset.pluginCard);
+    });
+    document.getElementById('settingsPanelMcps').addEventListener('keydown', event => {
+      const card = event.target.closest('[data-plugin-card]');
+      if (!card || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      openPluginDetail(card.dataset.pluginCard);
+    });
+    pluginDetailClose.addEventListener('click', closePluginDetail);
+    pluginDetailOverlay.addEventListener('click', event => {
+      if (event.target === pluginDetailOverlay) closePluginDetail();
+    });
+    pluginDetailOverlay.addEventListener('change', event => {
+      const toggle = event.target.closest('[data-plugin-capability]');
+      if (!toggle) return;
+      const pluginId = toggle.dataset.pluginId;
+      const capability = toggle.dataset.pluginCapability;
+      pluginState[pluginId].capabilities[capability] = toggle.checked;
+      const card = toggle.closest('[data-capability-card]');
+      const title = card.querySelector('h3').textContent;
+      toggle.setAttribute('aria-label', `${toggle.checked ? '关闭' : '打开'}${title}`);
+      toggle.setAttribute('aria-expanded', String(toggle.checked));
+      card.querySelector('.plugin-capability-detail').classList.toggle('is-hidden', !toggle.checked);
+      updatePluginCards();
+      showToast(`${title}已${toggle.checked ? '打开' : '关闭'}`);
+    });
+    pluginDetailOverlay.addEventListener('click', event => {
+      if (event.target.closest('[data-plugin-connect="vanish"]')) {
+        const text = document.getElementById('vanishPluginConfig')?.value.trim() || '';
+        const endpoint = text.match(/https?:\/\/[^\s"']+\/mcp\b/i)?.[0];
+        const bearer = text.match(/Bearer\s+([A-Za-z0-9._~-]+)/i)?.[1];
+        if (!endpoint || !bearer) {
+          setPluginInlineStatus('vanishPluginStatus', '未识别到完整的 MCP 地址与 Bearer Token，请粘贴完整配置。', 'error');
+          return;
+        }
+        pluginState.vanish.connected = true;
+        pluginState.vanish.capabilities.mcp = true;
+        document.getElementById('vanishPluginConfig').value = text.replace(/Bearer\s+([A-Za-z0-9._~-]+)/i, 'Bearer ••••••••');
+        setPluginInlineStatus('vanishPluginStatus', `已连接 · ${endpoint} · Token ••••${bearer.slice(-4)}`, 'success');
+        updatePluginCards();
+        showToast('Vanish MCP 已连接');
+        return;
+      }
+      if (event.target.closest('[data-vanish-api-save]')) {
+        const endpoint = document.getElementById('vanishMessageEndpoint')?.value.trim() || '';
+        const token = document.getElementById('vanishMessageToken')?.value.trim() || '';
+        if (!/^https?:\/\//i.test(endpoint) || token.length < 8) {
+          setPluginInlineStatus('vanishMessageStatus', '请填写有效的接口地址与 API Token。', 'error');
+          return;
+        }
+        document.getElementById('vanishMessageToken').value = '';
+        setPluginInlineStatus('vanishMessageStatus', `消息配置已保存 · Token ••••${token.slice(-4)}`, 'success');
+        showToast('Vanish 消息发送配置已保存');
+        return;
+      }
+      if (event.target.closest('[data-vanish-agent-manage]')) {
+        showToast('已进入 Vanish 智员管理');
+        return;
+      }
+      if (event.target.closest('[data-seatable-save]')) {
+        const server = document.getElementById('seatableServerInput')?.value.trim() || '';
+        const token = document.getElementById('seatableTokenInput')?.value.trim() || '';
+        if (!/^https?:\/\//i.test(server) || token.length < 8) {
+          setPluginInlineStatus('seatablePluginStatus', '请填写有效的服务地址与 Account Token。', 'error');
+          return;
+        }
+        pluginState.seatable.connected = true;
+        pluginState.seatable.capabilities.api = true;
+        setPluginInlineStatus('seatablePluginStatus', `已保存 · ${server} · Token ••••${token.slice(-4)}`, 'success');
+        updatePluginCards();
+        showToast('SeaTable Web API 配置已保存');
+        return;
+      }
+      if (event.target.closest('[data-seatable-install]')) {
+        pluginState.seatable.skillInstalled = !pluginState.seatable.skillInstalled;
+        pluginState.seatable.capabilities.skill = pluginState.seatable.skillInstalled;
+        const installButton = event.target.closest('[data-seatable-install]');
+        installButton.textContent = pluginState.seatable.skillInstalled ? '卸载 Skill' : '安装 Skill';
+        installButton.classList.toggle('primary', !pluginState.seatable.skillInstalled);
+        const skillToggle = pluginConfigPane.querySelector('[data-plugin-capability="skill"]');
+        if (skillToggle) skillToggle.checked = pluginState.seatable.skillInstalled;
+        updatePluginCards();
+        showToast(pluginState.seatable.skillInstalled ? 'SeaTable Skill 已安装并启用' : 'SeaTable Skill 已卸载');
+        return;
+      }
+      if (event.target.closest('[data-foxmail-save]')) {
+        const email = document.getElementById('foxmailSenderInput')?.value.trim() || '';
+        const server = document.getElementById('foxmailSmtpInput')?.value.trim() || '';
+        const auth = document.getElementById('foxmailAuthInput')?.value.trim() || '';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !server || auth.length < 6) {
+          setPluginInlineStatus('foxmailPluginStatus', '请填写有效的发件邮箱、SMTP 服务器与授权码。', 'error');
+          return;
+        }
+        pluginState.foxmail.connected = true;
+        pluginState.foxmail.capabilities.send = true;
+        setPluginInlineStatus('foxmailPluginStatus', `发件配置已保存 · ${email} · 授权码 ••••${auth.slice(-4)}`, 'success');
+        updatePluginCards();
+        showToast('Foxmail 发件配置已保存');
+      }
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && pluginDetailOverlay.classList.contains('open')) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        closePluginDetail();
+      }
+    }, true);
     addSkillBtn.addEventListener('click', startCustomSkillChat);
     vanishConnectBtn.addEventListener('click', openVanishConnectionDialog);
     vanishDisconnectBtn.addEventListener('click', disconnectVanish);
@@ -12904,16 +13670,17 @@
     automationEditorClose.addEventListener('click', closeAutomationEditor);
     automationCancel.addEventListener('click', closeAutomationEditor);
     automationForm.addEventListener('input', () => { automationDirty = true; });
+    automationLocation.addEventListener('change', () => { automationDirty = true; });
     automationForm.addEventListener('submit', event => {
       event.preventDefault();
       const draft = automationDraft();
       if (!draft) return;
-      if (automationEditorMode === 'create') openAutomationConfirm('create', draft);
+      if (automationEditorMode === 'create') saveAutomationDraft(draft, true);
       else saveAutomationDraft(draft, false);
     });
     automationTest.addEventListener('click', () => {
       const draft = automationDraft();
-      if (draft) openAutomationConfirm('test', draft);
+      if (draft) prepareAutomationTest(draft);
     });
     automationRunList.addEventListener('click', event => {
       const row = event.target.closest('[data-automation-run]');
@@ -12949,43 +13716,9 @@
       return parts;
     }
 
-    function renderAutomationAttachments() {
-      document.getElementById('automationAttachments').innerHTML = automationAttachments.map((file, index) => `<div class="automation-attachment">${icons.paperclip}<span title="${escapeHtml(file.name)}">${escapeHtml(file.name)}<small>${Math.max(1, Math.ceil(file.size / 1024))} KB</small></span><button type="button" data-remove-attachment="${index}" aria-label="移除 ${escapeHtml(file.name)}">×</button></div>`).join('');
-    }
-
-    function addAutomationAttachments(files) {
-      for (const file of files) {
-        if (automationAttachments.some(item => item.name === file.name && item.size === file.size && item.lastModified === file.lastModified)) continue;
-        automationAttachments.push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified, file });
-      }
-      automationDirty = true;
-      renderAutomationAttachments();
-    }
-    const automationUploadInput = document.getElementById('automationUploadInput');
-    document.getElementById('automationUpload').addEventListener('click', () => automationUploadInput.click());
-    automationUploadInput.addEventListener('change', () => { addAutomationAttachments(automationUploadInput.files); automationUploadInput.value = ''; });
-    document.getElementById('automationAttachments').addEventListener('click', event => {
-      const button = event.target.closest('[data-remove-attachment]');
-      if (!button) return;
-      automationAttachments.splice(Number(button.dataset.removeAttachment), 1);
-      automationDirty = true;
-      renderAutomationAttachments();
-    });
     automationInstruction.addEventListener('paste', event => {
-      if (event.clipboardData?.files.length) {
-        event.preventDefault();
-        addAutomationAttachments(event.clipboardData.files);
-      } else {
-        event.preventDefault();
-        document.execCommand('insertText', false, event.clipboardData?.getData('text/plain') || '');
-      }
-    });
-    const automationPromptBox = automationInstruction.closest('.automation-prompt-box');
-    automationPromptBox.addEventListener('dragover', event => {
-      if (Array.from(event.dataTransfer.types).includes('Files')) { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; }
-    });
-    automationPromptBox.addEventListener('drop', event => {
-      if (event.dataTransfer.files.length) { event.preventDefault(); addAutomationAttachments(event.dataTransfer.files); }
+      event.preventDefault();
+      document.execCommand('insertText', false, event.clipboardData?.getData('text/plain') || '');
     });
     automationConfirmCancel.addEventListener('click', closeAutomationConfirm);
     automationConfirm.addEventListener('click', event => {
@@ -12996,14 +13729,6 @@
       const action = automationConfirmAction;
       if (!action) return;
       closeAutomationConfirm();
-      if (action.type === 'create') {
-        saveAutomationDraft(action.task, true);
-        return;
-      }
-      if (action.type === 'test') {
-        createAutomationConversation(action.task, true);
-        return;
-      }
       automationTasks = automationTasks.filter(task => task.id !== action.task.id);
       if (editingAutomationId === action.task.id) closeAutomationEditor(true);
       renderAutomationTasks();
@@ -13083,6 +13808,10 @@
         projects.unshift(project);
         saveProjectOrder();
         highlightedProjectId = project.id;
+        if (projectFormOrigin === 'automation') {
+          renderAutomationLocationOptions(project.id);
+          automationDirty = true;
+        }
         showToast(`已创建“${project.name}”`);
       } else {
         const project = projects.find(item => item.id === editingProjectId);
@@ -13680,6 +14409,7 @@
     updateVanishConnectionUi();
     updateAtlassianConnectionUi();
     updateFoxmailConnectionUi();
+    updatePluginCards();
     renderManualIssueList();
     renderManualIssueDetail();
     renderArtifact();
