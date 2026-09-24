@@ -1560,12 +1560,12 @@
       outline: 2px solid rgba(22,119,255,.12);
     }
     .automation-help { display: block; margin-top: 6px; color: #8c8c8c; font-size: 12px; line-height: 1.5; }
-    .automation-prompt-box { overflow: hidden; border: 1px solid #d0d5dd; border-radius: 12px; background: #fff; }
+    .automation-prompt-box { position: relative; overflow: hidden; border: 1px solid #d0d5dd; border-radius: 12px; background: #fff; }
     .automation-prompt-box:focus-within { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.12); }
     .automation-prompt-input {
       min-height: 132px;
       border: 0;
-      padding: 13px 14px;
+      padding: 13px 14px 52px;
       color: #262626;
       font-size: 14px;
       line-height: 1.65;
@@ -1574,13 +1574,15 @@
     }
     .automation-prompt-input:empty::before { content: attr(data-placeholder); color: #a3acba; pointer-events: none; }
     .automation-prompt-tools {
-      min-height: 44px;
-      border-top: 1px solid #eaecf0;
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      min-height: 32px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
-      padding: 6px 8px;
+      padding: 0;
     }
     .automation-model-select {
       max-width: 180px;
@@ -1806,8 +1808,8 @@
     .automation-location-control select:focus { border-color: #1677ff; outline: 0; box-shadow: 0 0 0 3px rgba(22,119,255,.11); }
     .automation-prompt-box { border-color: #d4d9e2; border-radius: 13px; }
     .automation-prompt-box:focus-within { box-shadow: 0 0 0 3px rgba(22,119,255,.11); }
-    .automation-prompt-input { min-height: 170px; padding: 14px; }
-    .automation-prompt-tools { min-height: 48px; padding: 6px 9px; justify-content: flex-start; gap: 5px; }
+    .automation-prompt-input { min-height: 170px; padding: 14px 14px 52px; }
+    .automation-prompt-tools { min-height: 32px; padding: 0; justify-content: flex-end; gap: 5px; }
     .automation-prompt-tools button { min-height: 34px; height: auto; display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; color: #4e5969; }
     .automation-prompt-tools > span { margin-left: auto; color: #8992a3; font-size: 11px; }
     .automation-help { margin-top: 7px; color: #8992a3; font-size: 11px; }
