@@ -5429,7 +5429,7 @@
       cursor: pointer;
       transition: background-color .16s ease, color .16s ease;
     }
-    .asset-folder-tree-row.can-add-folder { grid-template-columns: 18px 20px minmax(0, 1fr) 32px; }
+    .asset-folder-tree-row.can-add-folder { grid-template-columns: 18px 20px minmax(0, 1fr) auto; }
     .asset-folder-tree-row:hover { background: #f5f5f5; }
     .asset-folder-tree-row.selected { background: #e6f4ff; color: #0958d9; }
     .asset-folder-tree-row:focus-visible { outline: 2px solid #1677ff; outline-offset: -2px; }
@@ -5457,7 +5457,9 @@
       outline: 0;
       box-shadow: 0 0 0 2px rgba(22,119,255,.12);
     }
-    .asset-folder-tree-add {
+    .asset-folder-tree-actions { display: flex; align-items: center; gap: 2px; }
+    .asset-folder-tree-add,
+    .asset-folder-tree-delete {
       width: 32px;
       height: 32px;
       border: 0;
@@ -5472,17 +5474,25 @@
       cursor: pointer;
       transition: opacity .16s ease, background-color .16s ease, color .16s ease;
     }
-    .asset-folder-tree-add .icon { width: 17px; height: 17px; }
+    .asset-folder-tree-add .icon,
+    .asset-folder-tree-delete .icon { width: 17px; height: 17px; }
     .asset-folder-tree-row:hover .asset-folder-tree-add,
+    .asset-folder-tree-row:hover .asset-folder-tree-delete,
     .asset-folder-tree-row:focus-within .asset-folder-tree-add,
-    .asset-folder-tree-add:focus-visible {
+    .asset-folder-tree-row:focus-within .asset-folder-tree-delete,
+    .asset-folder-tree-add:focus-visible,
+    .asset-folder-tree-delete:focus-visible {
       opacity: 1;
       pointer-events: auto;
     }
     .asset-folder-tree-add:hover { background: #e5e6e8; color: #262626; }
-    .asset-folder-tree-add:focus-visible { outline: 2px solid #1677ff; outline-offset: 1px; }
+    .asset-folder-tree-delete:hover,
+    .asset-folder-tree-delete.confirming { background: #fff1f0; color: #d4380d; }
+    .asset-folder-tree-add:focus-visible,
+    .asset-folder-tree-delete:focus-visible { outline: 2px solid #1677ff; outline-offset: 1px; }
     @media (hover: none) {
-      .asset-folder-tree-add { opacity: 1; pointer-events: auto; }
+      .asset-folder-tree-add,
+      .asset-folder-tree-delete { opacity: 1; pointer-events: auto; }
     }
     .asset-move-folder-pane .asset-folder-tree { min-height: 0; max-height: none; flex: 1; border: 0; border-radius: 0; padding: 0; }
     .asset-action-dialog .confirm-actions .project-primary { border-color: #202124; }
@@ -7771,6 +7781,7 @@
     let assetActionTargetId = null;
     let assetActionPayload = null;
     let pendingAssetFolderCreate = null;
+    let armedAssetFolderDelete = null;
     let automationFilter = 'all';
     let automationEditorMode = 'create';
     let editingAutomationId = null;
@@ -11883,8 +11894,13 @@
         const addControl = canAddFolder
           ? `<button class="asset-folder-tree-add" type="button" title="新建文件夹" aria-label="在“${escapeProjectHtml(name)}”下新建文件夹" data-asset-folder-add="${escapeProjectHtml(folderId)}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>`
           : '';
+        const deleteArmed = armedAssetFolderDelete?.id === folderId;
+        const deleteControl = canAddFolder && folder
+          ? `<button class="asset-folder-tree-delete${deleteArmed ? ' confirming' : ''}" type="button" title="${deleteArmed ? '再次点击确认删除' : '删除文件夹'}" aria-label="${deleteArmed ? `再次点击确认删除“${escapeProjectHtml(name)}”` : `删除“${escapeProjectHtml(name)}”文件夹`}" data-asset-folder-delete="${escapeProjectHtml(folderId)}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"/></svg></button>`
+          : '';
+        const actionControls = canAddFolder ? `<span class="asset-folder-tree-actions">${addControl}${deleteControl}</span>` : '';
         return `<div class="asset-folder-tree-row${folderId === validSelection ? ' selected' : ''}${canAddFolder ? ' can-add-folder' : ''}" role="treeitem" tabindex="0" aria-level="${depth + 1}" aria-selected="${folderId === validSelection}"${expansion} data-asset-folder-select="${escapeProjectHtml(folderId)}" data-asset-folder-parent="${escapeProjectHtml(parentId)}" style="--folder-depth:${depth}">
-          ${caret}<span aria-hidden="true">${folderIconHtml()}</span>${nameControl}${addControl}
+          ${caret}<span aria-hidden="true">${folderIconHtml()}</span>${nameControl}${actionControls}
         </div>`;
       };
       rows.push(rowHtml(null, 0));
@@ -11921,6 +11937,46 @@
       projectAssets = projectAssets.filter(item => item.id !== pending.id);
       pendingAssetFolderCreate = null;
       return pending;
+    }
+
+    function clearArmedAssetFolderDelete() {
+      if (!armedAssetFolderDelete) return;
+      window.clearTimeout(armedAssetFolderDelete.timer);
+      armedAssetFolderDelete = null;
+      assetActionHelp.textContent = '';
+    }
+
+    function deleteAssetFolderFromDestination(projectId, folderId) {
+      const folder = projectAssets.find(item => item.id === folderId && item.projectId === projectId && item.kind === 'folder');
+      if (!folder) return;
+      const removed = assetDescendantIds(folder.id);
+      const contentCount = removed.size - 1;
+      if (contentCount && armedAssetFolderDelete?.id !== folder.id) {
+        clearArmedAssetFolderDelete();
+        armedAssetFolderDelete = {
+          id: folder.id,
+          timer: window.setTimeout(() => {
+            armedAssetFolderDelete = null;
+            assetActionHelp.textContent = '';
+            if (assetActionMode === 'save-artifact' && assetProjectSelect.value === projectId) {
+              renderAssetFolderTree(projectId, assetFolderSelect.value);
+            }
+          }, 5000)
+        };
+        assetActionHelp.textContent = `“${folder.name}”包含 ${contentCount} 项内容，再次点击删除图标以确认。`;
+        renderAssetFolderTree(projectId, assetFolderSelect.value);
+        requestAnimationFrame(() => assetFolderTree.querySelector(`[data-asset-folder-delete="${CSS.escape(folder.id)}"]`)?.focus());
+        return;
+      }
+      clearArmedAssetFolderDelete();
+      projectAssets = projectAssets.filter(item => !removed.has(item.id));
+      removed.forEach(id => expandedMoveFolderIds.delete(id));
+      assetActionHelp.textContent = '';
+      assetFolderSelect.value = folder.parentId || '';
+      renderAssetFolderOptions(projectId, folder.parentId || '');
+      renderAssetFolderTree(projectId, folder.parentId || '');
+      requestAnimationFrame(() => focusAssetFolderTreeItem(folder.parentId || ''));
+      showToast(contentCount ? `已删除“${folder.name}”及其中 ${contentCount} 项内容` : `已删除文件夹“${folder.name}”`);
     }
 
     function startAssetFolderCreate(projectId, parentId = '') {
@@ -11995,6 +12051,7 @@
     function closeAssetAction() {
       const returnFocusId = assetActionTargetId;
       discardPendingAssetFolderCreate();
+      clearArmedAssetFolderDelete();
       assetActionOverlay.classList.remove('open');
       assetActionOverlay.setAttribute('aria-hidden', 'true');
       assetActionMode = '';
@@ -14452,6 +14509,7 @@
         finishAssetFolderCreate(false);
         if (pendingAssetFolderCreate) return;
       }
+      clearArmedAssetFolderDelete();
       const projectId = option.dataset.assetMoveProject;
       renderAssetDestination(projectId, '', true);
       assetActionHelp.textContent = '';
@@ -14479,15 +14537,25 @@
         if (pendingAssetFolderCreate) return;
       }
       const folderId = row.dataset.assetFolderSelect || '';
+      const deleteButton = event.target.closest('[data-asset-folder-delete]');
+      if (deleteButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        const projectId = assetProjectSelect.value || currentConversationProjectId();
+        deleteAssetFolderFromDestination(projectId, deleteButton.dataset.assetFolderDelete || '');
+        return;
+      }
       const addButton = event.target.closest('[data-asset-folder-add]');
       if (addButton) {
         event.preventDefault();
         event.stopPropagation();
+        clearArmedAssetFolderDelete();
         const projectId = assetProjectSelect.value || currentConversationProjectId();
         startAssetFolderCreate(projectId, addButton.dataset.assetFolderAdd || '');
         return;
       }
       if (event.target.closest('[data-asset-folder-rename]')) return;
+      clearArmedAssetFolderDelete();
       const toggle = event.target.closest('[data-asset-folder-toggle]');
       if (toggle) {
         event.preventDefault();
@@ -14516,7 +14584,7 @@
         }
         return;
       }
-      if (event.target.closest('[data-asset-folder-add]')) return;
+      if (event.target.closest('[data-asset-folder-add], [data-asset-folder-delete]')) return;
       const row = event.target.closest('[data-asset-folder-select]');
       if (!row || !['move', 'save-artifact'].includes(assetActionMode)) return;
       const rows = [...assetFolderTree.querySelectorAll('[data-asset-folder-select]')];
