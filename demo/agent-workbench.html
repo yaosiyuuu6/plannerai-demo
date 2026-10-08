@@ -5429,6 +5429,7 @@
       cursor: pointer;
       transition: background-color .16s ease, color .16s ease;
     }
+    .asset-folder-tree-row.can-add-folder { grid-template-columns: 18px 20px minmax(0, 1fr) 32px; }
     .asset-folder-tree-row:hover { background: #f5f5f5; }
     .asset-folder-tree-row.selected { background: #e6f4ff; color: #0958d9; }
     .asset-folder-tree-row:focus-visible { outline: 2px solid #1677ff; outline-offset: -2px; }
@@ -5443,6 +5444,46 @@
     .asset-folder-tree-caret .icon { width: 14px; height: 14px; transition: transform .16s ease; }
     .asset-folder-tree-row[aria-expanded="true"] .asset-folder-tree-caret .icon { transform: rotate(90deg); }
     .asset-folder-tree-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .asset-folder-tree-rename {
+      min-width: 0;
+      height: 30px;
+      border: 1px solid #1677ff;
+      border-radius: 5px;
+      background: #fff;
+      color: #262626;
+      padding: 0 7px;
+      font: inherit;
+      font-size: 14px;
+      outline: 0;
+      box-shadow: 0 0 0 2px rgba(22,119,255,.12);
+    }
+    .asset-folder-tree-add {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #8c8c8c;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      cursor: pointer;
+      transition: opacity .16s ease, background-color .16s ease, color .16s ease;
+    }
+    .asset-folder-tree-add .icon { width: 17px; height: 17px; }
+    .asset-folder-tree-row:hover .asset-folder-tree-add,
+    .asset-folder-tree-row:focus-within .asset-folder-tree-add,
+    .asset-folder-tree-add:focus-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .asset-folder-tree-add:hover { background: #e5e6e8; color: #262626; }
+    .asset-folder-tree-add:focus-visible { outline: 2px solid #1677ff; outline-offset: 1px; }
+    @media (hover: none) {
+      .asset-folder-tree-add { opacity: 1; pointer-events: auto; }
+    }
     .asset-move-folder-pane .asset-folder-tree { min-height: 0; max-height: none; flex: 1; border: 0; border-radius: 0; padding: 0; }
     .asset-action-dialog .confirm-actions .project-primary { border-color: #202124; }
     .asset-action-dialog .confirm-actions .project-primary:disabled { opacity: .42; cursor: not-allowed; }
@@ -7729,6 +7770,7 @@
     let assetActionMode = '';
     let assetActionTargetId = null;
     let assetActionPayload = null;
+    let pendingAssetFolderCreate = null;
     let automationFilter = 'all';
     let automationEditorMode = 'create';
     let editingAutomationId = null;
@@ -11826,6 +11868,8 @@
       const rowHtml = (folder, depth, parentId = '') => {
         const folderId = folder?.id || '';
         const name = folder?.name || '项目根目录';
+        const canAddFolder = assetActionMode === 'save-artifact';
+        const isPendingCreate = pendingAssetFolderCreate?.id === folderId;
         const children = childrenByParent.get(folderId) || [];
         const hasChildren = Boolean(folder && children.length);
         const expanded = hasChildren && expandedMoveFolderIds.has(folderId);
@@ -11833,9 +11877,15 @@
         const caret = hasChildren
           ? `<span class="asset-folder-tree-caret" data-asset-folder-toggle="${escapeProjectHtml(folderId)}" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></span>`
           : '<span class="asset-folder-tree-caret" aria-hidden="true"></span>';
-        return `<button class="asset-folder-tree-row${folderId === validSelection ? ' selected' : ''}" type="button" role="treeitem" aria-level="${depth + 1}" aria-selected="${folderId === validSelection}"${expansion} data-asset-folder-select="${escapeProjectHtml(folderId)}" data-asset-folder-parent="${escapeProjectHtml(parentId)}" style="--folder-depth:${depth}">
-          ${caret}<span aria-hidden="true">${folderIconHtml()}</span><span class="asset-folder-tree-name">${escapeProjectHtml(name)}</span>
-        </button>`;
+        const nameControl = isPendingCreate
+          ? `<input class="asset-folder-tree-rename" type="text" value="${escapeProjectHtml(name)}" aria-label="文件夹名称" data-asset-folder-rename="${escapeProjectHtml(folderId)}">`
+          : `<span class="asset-folder-tree-name">${escapeProjectHtml(name)}</span>`;
+        const addControl = canAddFolder
+          ? `<button class="asset-folder-tree-add" type="button" title="新建文件夹" aria-label="在“${escapeProjectHtml(name)}”下新建文件夹" data-asset-folder-add="${escapeProjectHtml(folderId)}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>`
+          : '';
+        return `<div class="asset-folder-tree-row${folderId === validSelection ? ' selected' : ''}${canAddFolder ? ' can-add-folder' : ''}" role="treeitem" tabindex="0" aria-level="${depth + 1}" aria-selected="${folderId === validSelection}"${expansion} data-asset-folder-select="${escapeProjectHtml(folderId)}" data-asset-folder-parent="${escapeProjectHtml(parentId)}" style="--folder-depth:${depth}">
+          ${caret}<span aria-hidden="true">${folderIconHtml()}</span>${nameControl}${addControl}
+        </div>`;
       };
       rows.push(rowHtml(null, 0));
       function appendChildren(parentId, depth) {
@@ -11857,6 +11907,86 @@
       assetFolderTree.querySelector(`[data-asset-folder-select="${CSS.escape(folderId)}"]`)?.focus({ preventScroll: true });
     }
 
+    function nextAssetFolderName(projectId, parentId) {
+      const baseName = '新建文件夹';
+      let name = baseName;
+      let suffix = 2;
+      while (assetNameExists(projectId, parentId, name)) name = `${baseName} ${suffix++}`;
+      return name;
+    }
+
+    function discardPendingAssetFolderCreate() {
+      if (!pendingAssetFolderCreate) return null;
+      const pending = pendingAssetFolderCreate;
+      projectAssets = projectAssets.filter(item => item.id !== pending.id);
+      pendingAssetFolderCreate = null;
+      return pending;
+    }
+
+    function startAssetFolderCreate(projectId, parentId = '') {
+      if (assetActionMode !== 'save-artifact' || !projectId || pendingAssetFolderCreate) {
+        assetFolderTree.querySelector('[data-asset-folder-rename]')?.focus();
+        return;
+      }
+      const folder = {
+        id: `asset-folder-${Date.now().toString(36)}`,
+        projectId,
+        parentId,
+        kind: 'folder',
+        name: nextAssetFolderName(projectId, parentId),
+        type: '文件夹',
+        updatedBy: '姚晨恺',
+        updatedAt: Date.now()
+      };
+      projectAssets.push(folder);
+      pendingAssetFolderCreate = { id: folder.id, projectId, parentId };
+      if (parentId) expandedMoveFolderIds.add(parentId);
+      assetFolderSelect.value = folder.id;
+      assetActionHelp.textContent = '';
+      renderAssetFolderOptions(projectId, folder.id);
+      renderAssetFolderTree(projectId, folder.id);
+      requestAnimationFrame(() => {
+        const input = assetFolderTree.querySelector(`[data-asset-folder-rename="${CSS.escape(folder.id)}"]`);
+        input?.focus();
+        input?.select();
+      });
+    }
+
+    function finishAssetFolderCreate(cancel = false, nameOverride = null) {
+      if (!pendingAssetFolderCreate) return;
+      const pending = pendingAssetFolderCreate;
+      const folder = projectAssets.find(item => item.id === pending.id);
+      const input = assetFolderTree.querySelector(`[data-asset-folder-rename="${CSS.escape(pending.id)}"]`);
+      const name = String(nameOverride ?? input?.value ?? '').trim();
+      if (cancel) {
+        discardPendingAssetFolderCreate();
+        assetFolderSelect.value = pending.parentId;
+        renderAssetFolderOptions(pending.projectId, pending.parentId);
+        renderAssetFolderTree(pending.projectId, pending.parentId);
+        requestAnimationFrame(() => focusAssetFolderTreeItem(pending.parentId));
+        return;
+      }
+      if (!folder || !name) {
+        assetActionHelp.textContent = '请输入文件夹名称。';
+        input?.focus();
+        return;
+      }
+      if (assetNameExists(pending.projectId, pending.parentId, name, pending.id)) {
+        assetActionHelp.textContent = '当前目录已有同名文件夹。';
+        input.focus();
+        input.select();
+        return;
+      }
+      folder.name = name;
+      folder.updatedAt = Date.now();
+      pendingAssetFolderCreate = null;
+      assetActionHelp.textContent = '';
+      renderAssetFolderOptions(pending.projectId, pending.id);
+      renderAssetFolderTree(pending.projectId, pending.id);
+      requestAnimationFrame(() => focusAssetFolderTreeItem(pending.id));
+      showToast(`已创建文件夹“${name}”`);
+    }
+
     function setAssetDialogField(element, label, visible) {
       element.hidden = !visible;
       label.hidden = !visible;
@@ -11864,6 +11994,7 @@
 
     function closeAssetAction() {
       const returnFocusId = assetActionTargetId;
+      discardPendingAssetFolderCreate();
       assetActionOverlay.classList.remove('open');
       assetActionOverlay.setAttribute('aria-hidden', 'true');
       assetActionMode = '';
@@ -14317,6 +14448,10 @@
     assetMoveProjectList.addEventListener('click', event => {
       const option = event.target.closest('[data-asset-move-project]');
       if (!option || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      if (pendingAssetFolderCreate) {
+        finishAssetFolderCreate(false);
+        if (pendingAssetFolderCreate) return;
+      }
       const projectId = option.dataset.assetMoveProject;
       renderAssetDestination(projectId, '', true);
       assetActionHelp.textContent = '';
@@ -14339,7 +14474,20 @@
     assetFolderTree.addEventListener('click', event => {
       const row = event.target.closest('[data-asset-folder-select]');
       if (!row || !['move', 'save-artifact'].includes(assetActionMode)) return;
+      if (pendingAssetFolderCreate && !event.target.closest('[data-asset-folder-rename]')) {
+        finishAssetFolderCreate(false);
+        if (pendingAssetFolderCreate) return;
+      }
       const folderId = row.dataset.assetFolderSelect || '';
+      const addButton = event.target.closest('[data-asset-folder-add]');
+      if (addButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        const projectId = assetProjectSelect.value || currentConversationProjectId();
+        startAssetFolderCreate(projectId, addButton.dataset.assetFolderAdd || '');
+        return;
+      }
+      if (event.target.closest('[data-asset-folder-rename]')) return;
       const toggle = event.target.closest('[data-asset-folder-toggle]');
       if (toggle) {
         event.preventDefault();
@@ -14356,6 +14504,19 @@
       requestAnimationFrame(() => focusAssetFolderTreeItem(folderId));
     });
     assetFolderTree.addEventListener('keydown', event => {
+      const renameInput = event.target.closest('[data-asset-folder-rename]');
+      if (renameInput) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          finishAssetFolderCreate(false);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+          finishAssetFolderCreate(true);
+        }
+        return;
+      }
+      if (event.target.closest('[data-asset-folder-add]')) return;
       const row = event.target.closest('[data-asset-folder-select]');
       if (!row || !['move', 'save-artifact'].includes(assetActionMode)) return;
       const rows = [...assetFolderTree.querySelectorAll('[data-asset-folder-select]')];
@@ -14396,11 +14557,22 @@
         }
       }
     });
+    assetFolderTree.addEventListener('focusout', event => {
+      if (!event.target.closest('[data-asset-folder-rename]')) return;
+      const name = event.target.value;
+      requestAnimationFrame(() => {
+        if (pendingAssetFolderCreate && !document.activeElement?.closest?.('[data-asset-folder-rename]')) finishAssetFolderCreate(false, name);
+      });
+    });
     assetProjectSelect.addEventListener('change', () => renderAssetFolderOptions(assetProjectSelect.value, ''));
     assetActionCancel.addEventListener('click', closeAssetAction);
     assetActionOverlay.addEventListener('click', event => { if (event.target === assetActionOverlay) closeAssetAction(); });
     assetActionForm.addEventListener('submit', event => {
       event.preventDefault();
+      if (pendingAssetFolderCreate) {
+        finishAssetFolderCreate(false);
+        if (pendingAssetFolderCreate) return;
+      }
       const target = assetActionTargetId ? projectAssets.find(item => item.id === assetActionTargetId) : null;
       const name = assetNameInput.value.trim();
       if (['new-folder', 'rename', 'save-artifact'].includes(assetActionMode) && !name) {
