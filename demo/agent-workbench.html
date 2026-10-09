@@ -5178,7 +5178,6 @@
       font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     .instruction-editor { white-space: pre-wrap; overflow-wrap: anywhere; overflow-y: auto; max-height: 55vh; }
-    .instruction-editor-footer #instructionEditorHint { margin-right: auto; }
     .instruction-editor:focus { border-color: #1677ff; outline: 3px solid rgba(22,119,255,.12); background: #fff; }
     .instruction-editor-footer { justify-content: flex-end; margin-top: 12px; color: #8c8c8c; font-size: 12px; }
     .project-automation-list { display: grid; gap: 8px; }
@@ -5549,8 +5548,7 @@
     @media (max-width: 900px) {
       .project-detail-page { width: min(100% - 32px, 720px); padding-top: 20px; }
       .project-detail-head,
-      .project-asset-toolbar,
-      .instruction-editor-footer { align-items: flex-start; flex-direction: column; }
+      .project-asset-toolbar { align-items: flex-start; flex-direction: column; }
       .project-detail-tabs { gap: 14px; overflow-x: auto; }
       .project-asset-summary { width: 100%; justify-content: space-between; }
       .asset-table th:first-child { width: auto; }
@@ -6637,9 +6635,8 @@
                 <span class="instruction-state" id="projectInstructionState">已保存</span>
               </div>
               <label class="instruction-editor-label" for="projectInstructionEditor">Agent.md</label>
-              <div class="instruction-editor" id="projectInstructionEditor" contenteditable="true" role="textbox" aria-label="项目指令" aria-multiline="true" aria-describedby="instructionEditorHint" spellcheck="false"></div>
+              <div class="instruction-editor" id="projectInstructionEditor" contenteditable="true" role="textbox" aria-label="项目指令" aria-multiline="true" spellcheck="false"></div>
               <div class="instruction-editor-footer">
-                <span id="instructionEditorHint">输入 @ 引用文档、表格或项目资产，输入 / 使用 Skill</span>
                 <button class="project-primary" id="projectInstructionSave" type="button">保存指令</button>
               </div>
             </section>
@@ -7789,8 +7786,8 @@
     let automationRepeatValue = 'daily';
     let automationDirty = false;
     let projects = [
-      { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false, instruction: '# 项目目标\n\n你是 2027 产品规划项目的协作 Agent。\n\n- 回答前先检查项目资产中的规划文档与会议材料。\n- 明确区分已确认决策、待验证假设和下一步行动。\n- 新产物优先使用可评审的结构化格式。' },
-      { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' }
+      { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' },
+      { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false, instruction: '# 项目目标\n\n你是 2027 产品规划项目的协作 Agent。\n\n- 回答前先检查项目资产中的规划文档与会议材料。\n- 明确区分已确认决策、待验证假设和下一步行动。\n- 新产物优先使用可评审的结构化格式。' }
     ];
     let projectAssets = [
       { id: 'asset-finance-system', projectId: 'project-finance', parentId: '', kind: 'folder', name: '系统文件', type: '文件夹', updatedBy: '姚晨恺', updatedAt: Date.now() - 86400000 * 3 },
