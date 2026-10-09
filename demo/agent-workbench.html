@@ -7785,6 +7785,9 @@
     let automationConfirmAction = null;
     let automationRepeatValue = 'daily';
     let automationDirty = false;
+    const PROJECT_ORDER_STORAGE_KEY = 'plannerai-project-order';
+    const PROJECT_ORDER_VERSION_KEY = 'plannerai-project-order-version';
+    const PROJECT_ORDER_VERSION = '2';
     let projects = [
       { id: 'project-finance', name: '财务数据工作台', createdAt: Date.now() - 86400000 * 19, lastActive: Date.now() - 7200000, collapsed: false, instruction: '# 财务数据工作台\n\n- 使用项目中的最新口径和字段映射。\n- 对金额、日期和来源进行交叉核验。\n- 无法确认的数据必须明确标注，不得猜测。' },
       { id: 'project-planning', name: '2027 产品规划', createdAt: Date.now() - 86400000 * 8, lastActive: Date.now() - 1800000, collapsed: false, instruction: '# 项目目标\n\n你是 2027 产品规划项目的协作 Agent。\n\n- 回答前先检查项目资产中的规划文档与会议材料。\n- 明确区分已确认决策、待验证假设和下一步行动。\n- 新产物优先使用可评审的结构化格式。' }
@@ -7843,8 +7846,19 @@
       }
     ];
     try {
-      const savedProjectOrder = JSON.parse(localStorage.getItem('plannerai-project-order') || '[]');
+      let savedProjectOrder = JSON.parse(localStorage.getItem(PROJECT_ORDER_STORAGE_KEY) || '[]');
       if (Array.isArray(savedProjectOrder)) {
+        if (localStorage.getItem(PROJECT_ORDER_VERSION_KEY) !== PROJECT_ORDER_VERSION) {
+          const fixedProjectIds = ['project-finance', 'project-planning'];
+          const existingIndexes = fixedProjectIds
+            .map(projectId => savedProjectOrder.indexOf(projectId))
+            .filter(index => index >= 0);
+          const insertionIndex = existingIndexes.length ? Math.min(...existingIndexes) : savedProjectOrder.length;
+          savedProjectOrder = savedProjectOrder.filter(projectId => !fixedProjectIds.includes(projectId));
+          savedProjectOrder.splice(Math.min(insertionIndex, savedProjectOrder.length), 0, ...fixedProjectIds);
+          localStorage.setItem(PROJECT_ORDER_STORAGE_KEY, JSON.stringify(savedProjectOrder));
+          localStorage.setItem(PROJECT_ORDER_VERSION_KEY, PROJECT_ORDER_VERSION);
+        }
         projects.sort((a, b) => {
           const aIndex = savedProjectOrder.indexOf(a.id);
           const bIndex = savedProjectOrder.indexOf(b.id);
@@ -11565,7 +11579,10 @@
     }
 
     function saveProjectOrder() {
-      try { localStorage.setItem('plannerai-project-order', JSON.stringify(projects.map(project => project.id))); } catch (error) {}
+      try {
+        localStorage.setItem(PROJECT_ORDER_STORAGE_KEY, JSON.stringify(projects.map(project => project.id)));
+        localStorage.setItem(PROJECT_ORDER_VERSION_KEY, PROJECT_ORDER_VERSION);
+      } catch (error) {}
     }
 
     function reorderProject(sourceId, targetId, placeAfter = false) {
