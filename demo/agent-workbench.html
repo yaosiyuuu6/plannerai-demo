@@ -409,6 +409,7 @@
     }
     .history-list { padding: 0 8px 12px; overflow: auto; flex: 1; }
     .conversation-group { margin: 6px 0 10px; }
+    .conversation-group[hidden] { display: none; }
     .conversation-group[data-project-draggable="true"] .conversation-group-header { cursor: grab; }
     .conversation-group[data-project-draggable="true"].dragging { opacity: .45; }
     .conversation-group[data-project-draggable="true"].drag-before { border-radius: 8px; box-shadow: 0 -2px 0 #1677ff; }
@@ -832,10 +833,11 @@
     .project-card-icon .icon { width: 22px; height: 22px; }
     .project-card-title { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 650; color: #202124; }
     .project-card-meta { margin-top: 5px; color: #8c8c8c; font-size: 12px; }
-    .project-card-actions { display: flex; gap: 4px; opacity: 0; }
-    .project-card:hover .project-card-actions, .project-card:focus-within .project-card-actions { opacity: 1; }
-    .project-card-action { width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: #6b7280; display: grid; place-items: center; cursor: pointer; }
+    .project-card-actions { display: flex; gap: 4px; }
+    .project-card:hover .project-card-action, .project-card:focus-within .project-card-action { opacity: 1; }
+    .project-card-action { opacity: 0; width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: #6b7280; display: grid; place-items: center; cursor: pointer; }
     .project-card-action:hover { background: #f0f0f0; color: #202124; }
+    .project-card[data-sidebar-hidden="true"] [data-project-card-action="visibility"] { opacity: 1; }
     .project-card-action.danger:hover { background: #fff1f0; color: #cf1322; }
     .project-card-action .icon { width: 17px; height: 17px; }
     .project-empty-state { grid-column: 1 / -1; padding: 84px 20px; text-align: center; color: #8c8c8c; }
@@ -859,7 +861,7 @@
       .project-card { transition: none; }
     }
     @media (hover: none) {
-      .project-header-actions, .project-card-actions { opacity: 1; pointer-events: auto; }
+      .project-header-actions, .project-card-action { opacity: 1; pointer-events: auto; }
     }
     .settings-view {
       flex: 1;
@@ -7215,6 +7217,10 @@
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>
       查看项目
     </button>
+    <button class="history-menu-item" type="button" role="menuitem" data-project-menu-action="hide">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.8 5.2A11.8 11.8 0 0 1 12 5c7 0 10 7 10 7a17 17 0 0 1-3.1 4.2M6.2 6.2C3.4 8.3 2 12 2 12s3 7 10 7a11.6 11.6 0 0 0 5.8-1.6"/></svg>
+      隐藏项目
+    </button>
     <button class="history-menu-item" type="button" role="menuitem" data-project-menu-action="rename">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
       重命名
@@ -7785,6 +7791,7 @@
     let automationConfirmAction = null;
     let automationRepeatValue = 'daily';
     let automationDirty = false;
+    const PROJECT_VISIBILITY_STORAGE_KEY = 'plannerai-hidden-projects';
     const PROJECT_ORDER_STORAGE_KEY = 'plannerai-project-order';
     const PROJECT_ORDER_VERSION_KEY = 'plannerai-project-order-version';
     const PROJECT_ORDER_VERSION = '2';
@@ -7866,6 +7873,7 @@
         });
       }
     } catch (error) {}
+    restoreProjectVisibility();
     const financialQuestions = Object.freeze([
       Object.freeze({
         id: 'statementScope',
@@ -11010,6 +11018,42 @@
       return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"/></svg>';
     }
 
+    function projectVisibilityIconHtml(hidden) {
+      const paths = hidden
+        ? '<path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.8 5.2A11.8 11.8 0 0 1 12 5c7 0 10 7 10 7a17 17 0 0 1-3.1 4.2M6.2 6.2C3.4 8.3 2 12 2 12s3 7 10 7a11.6 11.6 0 0 0 5.8-1.6"/>'
+        : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>';
+      return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
+    }
+
+    function saveProjectVisibility() {
+      try {
+        localStorage.setItem(PROJECT_VISIBILITY_STORAGE_KEY, JSON.stringify(projects.filter(project => project.hiddenInSidebar).map(project => project.id)));
+      } catch (error) {}
+    }
+
+    function restoreProjectVisibility() {
+      try {
+        const hiddenIds = JSON.parse(localStorage.getItem(PROJECT_VISIBILITY_STORAGE_KEY) || '[]');
+        if (!Array.isArray(hiddenIds)) return;
+        projects.forEach(project => { project.hiddenInSidebar = hiddenIds.includes(project.id); });
+      } catch (error) {}
+    }
+
+    function toggleProjectVisibility(projectId, origin = 'grid') {
+      const project = projects.find(item => item.id === projectId);
+      if (!project) return;
+      project.hiddenInSidebar = !project.hiddenInSidebar;
+      saveProjectVisibility();
+      closeProjectContextMenu();
+      renderProjectSidebar();
+      renderProjectGrid(projectSearch.value);
+      requestAnimationFrame(() => {
+        if (origin === 'grid') projectGrid.querySelector(`[data-project-card="${CSS.escape(projectId)}"] [data-project-card-action="visibility"]`)?.focus();
+        else historyList.querySelector('[data-sidebar-section-toggle="sidebar-projects"]')?.focus();
+      });
+      showToast(project.hiddenInSidebar ? '项目已隐藏，可在“项目”模块中恢复显示' : '项目已在左侧边栏显示');
+    }
+
     function projectRows(projectId) {
       return [...historyList.querySelectorAll('.history-row')].filter(row => (row.dataset.projectId || '') === (projectId || ''));
     }
@@ -11053,6 +11097,7 @@
       const section = document.createElement('section');
       section.className = `conversation-group${project.collapsed ? ' collapsed' : ''}`;
       section.dataset.groupId = project.id;
+      section.hidden = Boolean(project.hiddenInSidebar);
       section.dataset.projectDraggable = 'true';
       section.draggable = true;
       const safeName = escapeProjectHtml(project.name);
@@ -11098,7 +11143,9 @@
         const allProjectRows = rows.filter(row => row.dataset.projectId === project.id);
         projectBody.append(groupSection(project, allProjectRows.filter(row => !row.classList.contains('pinned')), allProjectRows.length));
       });
-      if (!projects.length) projectBody.innerHTML = '<div class="sidebar-section-empty">暂无项目</div>';
+      if (!projects.some(project => !project.hiddenInSidebar)) {
+        projectBody.insertAdjacentHTML('beforeend', `<div class="sidebar-section-empty">${projects.length ? '项目均已隐藏，可在“项目”模块中恢复' : '暂无项目'}</div>`);
+      }
       historyList.append(projectSection);
 
       const generalRows = rows.filter(row => !row.dataset.projectId && !row.classList.contains('pinned'));
@@ -11122,10 +11169,11 @@
       projectGrid.innerHTML = visible.map(project => {
         const count = projectRows(project.id).length;
         const created = new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' }).format(new Date(project.createdAt));
-        return `<article class="project-card${highlightedProjectId === project.id ? ' highlight' : ''}" data-project-card="${escapeProjectHtml(project.id)}" draggable="${!normalized}" tabindex="0" role="button" aria-label="打开项目 ${escapeProjectHtml(project.name)}${normalized ? '' : '，按 Alt 加上下方向键调整顺序'}" title="${normalized ? '清除搜索后可拖动排序' : '拖动调整项目顺序'}">
+        return `<article class="project-card${highlightedProjectId === project.id ? ' highlight' : ''}" data-project-card="${escapeProjectHtml(project.id)}" data-sidebar-hidden="${Boolean(project.hiddenInSidebar)}" draggable="${!normalized}" tabindex="0" role="button" aria-label="打开项目 ${escapeProjectHtml(project.name)}${normalized ? '' : '，按 Alt 加上下方向键调整顺序'}" title="${normalized ? '清除搜索后可拖动排序' : '拖动调整项目顺序'}">
           <div class="project-card-icon">${folderIconHtml()}</div>
           <div><h3 class="project-card-title">${escapeProjectHtml(project.name)}</h3><div class="project-card-meta">${count} 个对话 · 创建于 ${created}</div></div>
           <div class="project-card-actions">
+            <button class="project-card-action" type="button" data-project-card-action="visibility" data-project-id="${escapeProjectHtml(project.id)}" aria-label="${project.hiddenInSidebar ? '在侧边栏显示' : '从侧边栏隐藏'}${escapeProjectHtml(project.name)}" aria-pressed="${Boolean(project.hiddenInSidebar)}" title="${project.hiddenInSidebar ? '在侧边栏显示项目' : '从侧边栏隐藏项目'}">${projectVisibilityIconHtml(project.hiddenInSidebar)}</button>
             <button class="project-card-action" type="button" data-project-card-action="rename" data-project-id="${escapeProjectHtml(project.id)}" aria-label="重命名${escapeProjectHtml(project.name)}" title="重命名"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button>
             <button class="project-card-action danger" type="button" data-project-card-action="delete" data-project-id="${escapeProjectHtml(project.id)}" aria-label="删除${escapeProjectHtml(project.name)}" title="删除"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 15H6L5 6"/></svg></button>
           </div>
@@ -12254,7 +12302,7 @@
       projectContextMenu.setAttribute('aria-hidden', 'false');
       const rect = button.getBoundingClientRect();
       const menuWidth = 176;
-      const menuHeight = 120;
+      const menuHeight = 158;
       const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8));
       const top = rect.bottom + menuHeight + 8 > window.innerHeight
         ? Math.max(8, rect.top - menuHeight - 4)
@@ -13921,6 +13969,7 @@
       const projectId = projectMenuProjectId;
       if (!action || !projectId) return;
       event.stopPropagation();
+      if (action === 'hide') toggleProjectVisibility(projectId, 'sidebar');
       if (action === 'view') {
         closeProjectContextMenu();
         openProjectManager(projectId);
@@ -14153,6 +14202,7 @@
       const action = event.target.closest('[data-project-card-action]');
       if (action) {
         event.stopPropagation();
+        if (action.dataset.projectCardAction === 'visibility') toggleProjectVisibility(action.dataset.projectId);
         if (action.dataset.projectCardAction === 'rename') openProjectForm('rename', action.dataset.projectId);
         if (action.dataset.projectCardAction === 'delete') openDeleteProject(action.dataset.projectId);
         return;
@@ -14253,6 +14303,7 @@
       automationTasks.forEach(task => { if (task.location === project.id) task.location = 'conversation'; });
       projects = projects.filter(item => item.id !== project.id);
       saveProjectOrder();
+      saveProjectVisibility();
       closeDeleteProject();
       renderProjectSidebar();
       renderProjectGrid();
