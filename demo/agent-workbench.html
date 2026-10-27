@@ -5635,7 +5635,14 @@
     .asset-preview-paper p { white-space: pre-wrap; }
     .asset-preview-head { padding: 16px 18px; border-bottom: 1px solid #ececec; }
     .asset-preview-head h3 { margin: 0; }
-    .asset-preview-head p { margin-top: 4px; font-size: 12px; }
+    .asset-preview-window-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+    .asset-preview-window-actions button { display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+    .asset-preview-window-actions .icon { width: 18px; height: 18px; stroke-width: 1.7; }
+    #assetPreviewExpand .restore-glyph { display: none; }
+    #assetPreviewExpand[aria-pressed="true"] .expand-glyph { display: none; }
+    #assetPreviewExpand[aria-pressed="true"] .restore-glyph { display: inline; }
+    .asset-preview-window-actions button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    @media (max-width: 640px) { #assetPreviewExpand { display: none; } }
     .asset-preview-head button {
       width: 34px;
       height: 34px;
@@ -7271,8 +7278,13 @@
   <section class="asset-preview-shell" id="assetPreviewOverlay" role="region" hidden aria-labelledby="assetPreviewTitle" aria-hidden="true">
     <div class="asset-preview-dialog">
       <div class="asset-preview-head">
-        <div><h3 id="assetPreviewTitle">文件预览</h3><p id="assetPreviewMeta"></p></div>
-        <button id="assetPreviewClose" type="button" aria-label="关闭文件预览">×</button>
+        <div><h3 id="assetPreviewTitle">文件预览</h3></div>
+        <div class="asset-preview-window-actions">
+          <button id="assetPreviewExpand" type="button" aria-label="全屏预览" title="全屏预览" aria-pressed="false" aria-controls="artifact">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><g class="expand-glyph"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></g><g class="restore-glyph"><path d="M3 8h5V3M16 3v5h5M21 16h-5v5M8 21v-5H3"/></g></svg>
+          </button>
+          <button id="assetPreviewClose" type="button" aria-label="关闭文件预览" title="关闭文件预览"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+        </div>
       </div>
       <div class="asset-preview-body" id="assetPreviewBody"></div>
     </div>
@@ -7795,7 +7807,7 @@
     const assetActionSubmit = document.getElementById('assetActionSubmit');
     const assetPreviewOverlay = document.getElementById('assetPreviewOverlay');
     const assetPreviewTitle = document.getElementById('assetPreviewTitle');
-    const assetPreviewMeta = document.getElementById('assetPreviewMeta');
+    const assetPreviewExpand = document.getElementById('assetPreviewExpand');
     const assetPreviewBody = document.getElementById('assetPreviewBody');
     const assetPreviewClose = document.getElementById('assetPreviewClose');
     const automationBtn = document.getElementById('automationBtn');
@@ -9161,6 +9173,9 @@
       artifactExpandToggle.setAttribute('aria-label', artifactMaximized ? '恢复产物区大小' : '放大产物区');
       artifactExpandToggle.setAttribute('title', artifactMaximized ? '恢复产物区大小' : '放大产物区');
       artifactResizeHandle.setAttribute('aria-disabled', String(artifactMaximized));
+      assetPreviewExpand.setAttribute('aria-pressed', String(artifactMaximized));
+      assetPreviewExpand.setAttribute('aria-label', artifactMaximized ? '退出全屏' : '全屏预览');
+      assetPreviewExpand.title = artifactMaximized ? '退出全屏' : '全屏预览';
     }
 
     function setAgentSidebarCollapsed(on) {
@@ -12379,8 +12394,6 @@
     function openAssetPreview(item) {
       if (!item || item.kind === 'folder') return;
       assetPreviewTitle.textContent = item.name;
-      const size = Number.isFinite(item.sizeBytes) ? formatStorageBytes(assetSizeBytes(item)) : item.size;
-      assetPreviewMeta.textContent = `${item.type || '文件'}${size ? ` · ${size}` : ''}`;
       assetPreviewBody.innerHTML = `<article class="asset-preview-paper"><h4>${escapeProjectHtml(item.name)}</h4><p>${escapeProjectHtml(item.content || '这是上传文件的演示预览。实际产品将在此按文件类型展示可访问内容。')}</p><p>该文件已属于项目资产，可在项目内对话中输入 @ 后引用。</p></article>`;
       exitAutomationEditorMode();
       artifact.classList.add('asset-preview-mode', 'open');
@@ -15034,6 +15047,7 @@
       }
     });
     assetPreviewClose.addEventListener('click', closeAssetPreview);
+    assetPreviewExpand.addEventListener('click', () => setArtifactMaximized(!artifactMaximized));
 
 
     conversationLocationSelect.addEventListener('change', () => {
