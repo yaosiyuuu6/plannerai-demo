@@ -3236,6 +3236,80 @@
       .daily-live-spinner { animation: none; }
     }
     .answer-text { margin: 0; }
+    .sql-code-block {
+      min-width: 0;
+      margin: 16px 0;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      background: var(--soft);
+    }
+    .sql-code-head {
+      min-height: 40px;
+      padding: 6px 10px 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sql-code-language { color: #8c8c8c; font-size: 12px; font-weight: 500; }
+    .sql-code-actions { display: flex; align-items: center; gap: 4px; }
+    .sql-code-action {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #8c8c8c;
+    }
+    .sql-code-action:hover,
+    .sql-code-action:focus-visible { background: #f0f0f0; color: #595959; }
+    .sql-code-action:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .sql-code-action .icon { width: 16px; height: 16px; stroke-width: 1.7; }
+    .sql-code-tooltip {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 8px);
+      z-index: 5;
+      padding: 6px 9px;
+      border-radius: 6px;
+      background: #262626;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .sql-code-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 10px;
+      border: 4px solid transparent;
+      border-top-color: #262626;
+    }
+    .sql-code-action:hover .sql-code-tooltip,
+    .sql-code-action:focus-visible .sql-code-tooltip { visibility: visible; opacity: 1; }
+    .sql-code-block pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #262626;
+      font: 12px/1.8 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      tab-size: 2;
+    }
+    .sql-code-block code { font: inherit; }
+    .sql-keyword { color: #0958d9; }
+    .sql-string { color: #389e0d; }
     .citation {
       color: var(--primary);
       text-decoration: none;
@@ -5183,6 +5257,12 @@
     .asset-kind-icon.sheet { color: #16a34a; }
     .asset-kind-icon .icon { width: 17px; height: 17px; }
     .asset-cell-muted { color: #737373; font-size: 12px; }
+    .asset-upload-state { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .asset-upload-state.uploading { color: #1677ff; }
+    .asset-upload-state .icon { width: 13px; height: 13px; }
+    .asset-upload-state.uploading .icon { animation: asset-upload-spin 1s linear infinite; }
+    .asset-name-button:disabled { color: #262626; cursor: default; }
+    @keyframes asset-upload-spin { to { transform: rotate(360deg); } }
     .asset-more { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 7px; display: grid; place-items: center; background: transparent; color: #737373; }
     .asset-more:hover,
     .asset-more[aria-expanded="true"] { background: #e5edf8; color: #262626; }
@@ -5196,6 +5276,7 @@
     .asset-folder-empty td { height: 40px; color: #737373; font-size: 12px; padding-left: calc(36px + var(--asset-depth, 0) * 22px); }
     @media (prefers-reduced-motion: reduce) {
       .asset-table tbody tr { transition: none; }
+      .asset-upload-state.uploading .icon { animation: none; }
     }
 
     .instruction-state {
@@ -5606,7 +5687,8 @@
       .project-asset-actions { width: 100%; }
       .project-asset-actions .project-secondary { flex: 1; }
       .asset-table th:nth-child(2), .asset-table td:nth-child(2),
-      .asset-table th:nth-child(4), .asset-table td:nth-child(4) { display: none; }
+      .asset-table th:nth-child(3), .asset-table td:nth-child(3) { display: none; }
+      .asset-table th:nth-child(4) { width: 100px; }
       .asset-table th:first-child { width: auto; }
       .composer-location-strip { align-items: flex-start; flex-direction: column; gap: 2px; padding-block: 7px; }
       .artifact-save-project span { display: none; }
@@ -6300,6 +6382,30 @@
           <div class="bubble ai">
             <p class="answer-text">港股股权激励披露口径需要优先覆盖授予对象、授予条件、行权安排和会计影响。规划文档里应把规则来源、发布日期、适用范围和核验状态作为字段记录。<a class="citation" href="https://www.hkexnews.hk/" target="_blank" rel="noreferrer">[1]</a><a class="citation" href="https://www.sfc.hk/" target="_blank" rel="noreferrer">[2]</a></p>
             <p class="answer-text" style="margin-top: 8px;">我已在右侧生成“港股股权激励披露口径规划文档”，并同步补充字段映射表。文档新增“外部数据源判断”“字段设计建议”和“规则核验状态”三部分；字段表新增外部口径来源 URL、发布日期、采用原因和核验状态，方便后续质检和回溯。<a class="citation" href="https://www.hkexnews.hk/" target="_blank" rel="noreferrer">[1]</a></p>
+            <p class="answer-text" style="margin-top: 16px;">以下 SQL 示例用于查询字段映射表中待核验的披露规则：</p>
+            <div class="sql-code-block" aria-label="SQL 代码示例">
+              <div class="sql-code-head">
+                <span class="sql-code-language">SQL</span>
+                <div class="sql-code-actions" role="group" aria-label="SQL 代码操作">
+                  <button class="sql-code-action" type="button" data-sql-action="copy" aria-label="复制 SQL" aria-describedby="sqlCopyTooltip">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+                    <span class="sql-code-tooltip" id="sqlCopyTooltip" role="tooltip">复制 SQL</span>
+                  </button>
+                  <button class="sql-code-action" type="button" data-sql-action="open" aria-label="在Cloud db中打开" aria-describedby="sqlOpenTooltip">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                    <span class="sql-code-tooltip" id="sqlOpenTooltip" role="tooltip">在Cloud db中打开</span>
+                  </button>
+                </div>
+              </div>
+              <pre><code><span class="sql-keyword">SELECT</span>
+  rule_name,
+  source_url,
+  published_at,
+  verification_status
+<span class="sql-keyword">FROM</span> disclosure_rule_mapping
+<span class="sql-keyword">WHERE</span> verification_status = <span class="sql-string">'待核验'</span>
+<span class="sql-keyword">ORDER BY</span> published_at <span class="sql-keyword">DESC</span>;</code></pre>
+            </div>
             <div class="source-list" aria-label="网站来源">
               <a class="source-link" href="https://www.hkexnews.hk/" target="_blank" rel="noreferrer">
                 <span class="source-number">[1]</span>
@@ -7836,6 +7942,8 @@
     let assetMenuAssetId = null;
     let assetMenuTrigger = null;
     let assetCopySequence = 0;
+    let projectUploadRunning = false;
+    let projectUploadTarget = null;
     const expandedAssetFolderIds = new Set();
     const expandedMoveFolderIds = new Set();
     let assetActionMode = '';
@@ -10762,6 +10870,7 @@
       const projectItems = projectId
         ? projectAssetItems(projectId)
           .filter(item => item.kind !== 'folder')
+          .filter(item => !item.uploadState)
           .map(item => ({
             type: 'project-asset',
             value: item.name,
@@ -11606,16 +11715,22 @@
         const expanded = folder && expandedAssetFolderIds.has(item.id);
         const assetId = escapeProjectHtml(item.id);
         const assetName = escapeProjectHtml(item.name);
+        const pending = Boolean(item.uploadState);
+        const uploading = item.uploadState === 'uploading';
+        const uploadLabel = uploading ? '上传中' : '等待上传';
+        const updatedCell = pending
+          ? `<span class="asset-upload-state ${uploading ? 'uploading' : 'waiting'}" role="status"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${uploading ? '<path d="M20 12a8 8 0 1 1-8-8"/>' : '<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>'}</svg>${uploadLabel}</span>`
+          : formatProjectTime(item.updatedAt);
         const disclosure = folder
           ? `<button class="asset-disclosure" type="button" data-asset-toggle="${assetId}" aria-expanded="${expanded}" aria-label="${expanded ? '收起' : '展开'} ${assetName}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>`
           : '<span class="asset-disclosure" aria-hidden="true"></span>';
-        const icon = folder ? assetKindIconHtml(item) : `<button class="asset-preview-trigger" type="button" data-asset-preview="${assetId}" aria-label="预览 ${assetName}" title="预览 ${assetName}">${assetKindIconHtml(item)}</button>`;
-        return `<tr data-asset-id="${assetId}" draggable="true" style="--asset-depth: ${depth}">
-        <td><div class="asset-name-cell">${disclosure}${icon}<button class="asset-name-button" type="button" data-asset-select="${assetId}" title="${assetName} · ${folder ? '双击重命名' : '点击预览，双击重命名'}"><span>${assetName}</span></button></div></td>
+        const icon = folder || pending ? assetKindIconHtml(item) : `<button class="asset-preview-trigger" type="button" data-asset-preview="${assetId}" aria-label="预览 ${assetName}" title="预览 ${assetName}">${assetKindIconHtml(item)}</button>`;
+        return `<tr data-asset-id="${assetId}" draggable="${!pending}" style="--asset-depth: ${depth}">
+        <td><div class="asset-name-cell">${disclosure}${icon}<button class="asset-name-button" type="button" data-asset-select="${assetId}" ${pending ? 'disabled' : ''} title="${assetName} · ${pending ? uploadLabel : folder ? '双击重命名' : '点击预览，双击重命名'}"><span>${assetName}</span></button></div></td>
         <td class="asset-cell-muted">${escapeProjectHtml(item.type || '文件')}</td>
         <td class="asset-cell-muted asset-size">${folder ? '—' : Number.isFinite(item.sizeBytes) ? formatStorageBytes(assetSizeBytes(item)) : escapeProjectHtml(item.size || '—')}</td>
-        <td class="asset-cell-muted">${formatProjectTime(item.updatedAt)}</td>
-        <td><button class="asset-more" type="button" data-asset-menu="${assetId}" aria-label="${assetName}的更多操作" title="更多操作" aria-haspopup="menu" aria-controls="assetContextMenu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></td>
+        <td class="asset-cell-muted">${updatedCell}</td>
+        <td>${pending ? '' : `<button class="asset-more" type="button" data-asset-menu="${assetId}" aria-label="${assetName}的更多操作" title="更多操作" aria-haspopup="menu" aria-controls="assetContextMenu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>`}</td>
       </tr>`;
       }).join('') : '<tr class="asset-empty-row"><td colspan="5">暂无项目资产，可以新建文件夹或上传文件。</td></tr>';
       syncProjectAssetSelection();
@@ -12763,6 +12878,19 @@
         event.preventDefault();
         closeAutomationModelMenu();
         automationModelToggle.focus();
+      }
+    });
+
+    messages.addEventListener('click', async event => {
+      const button = event.target.closest('[data-sql-action]');
+      if (!button || button.disabled) return;
+      const code = button.closest('.sql-code-block')?.querySelector('code');
+      if (!code) return;
+      if (button.dataset.sqlAction === 'copy') {
+        const copied = await writeTextToClipboard(code.textContent);
+        showToast(copied ? 'SQL 已复制' : '复制失败，请手动选择代码复制');
+      } else if (button.dataset.sqlAction === 'open') {
+        showToast('暂未配置 Cloud db 地址');
       }
     });
 
@@ -14476,29 +14604,66 @@
       input.focus();
       input.select();
     });
-    projectUploadFile.addEventListener('click', () => projectUploadInput.click());
+    async function processProjectUploadQueue() {
+      if (projectUploadRunning) return;
+      projectUploadRunning = true;
+      let completed = 0;
+      try {
+        let item;
+        while ((item = projectAssets.find(asset => asset.uploadState === 'waiting'))) {
+          item.uploadState = 'uploading';
+          if (currentProjectDetailId === item.projectId) renderProjectAssets();
+          // Demo only: keep each upload visible before advancing the queue.
+          await new Promise(resolve => setTimeout(resolve, 2500));
+          if (!projectAssets.includes(item)) continue;
+          delete item.uploadState;
+          item.updatedAt = Date.now();
+          completed += 1;
+          if (currentProjectDetailId === item.projectId) renderProjectAssets();
+          syncMentionPanelContext();
+        }
+        if (completed) showToast(`已上传 ${completed} 个文件`);
+      } finally {
+        projectUploadRunning = false;
+      }
+    }
+
+    projectUploadFile.addEventListener('click', () => {
+      projectUploadTarget = { projectId: currentProjectDetailId, parentId: currentAssetFolderId };
+      projectUploadInput.click();
+    });
     projectUploadInput.addEventListener('change', () => {
       const files = [...projectUploadInput.files];
+      const target = projectUploadTarget || { projectId: currentProjectDetailId, parentId: currentAssetFolderId };
+      projectUploadTarget = null;
+      projectUploadInput.value = '';
       if (!files.length) return;
+      if (!projects.some(project => project.id === target.projectId)) return;
+      if (target.parentId && !projectAssets.some(item => item.id === target.parentId && item.projectId === target.projectId && item.kind === 'folder')) target.parentId = '';
+      const batchId = crypto.randomUUID();
+      const uploadedItems = [];
       files.forEach((file, index) => {
-        const extension = file.name.split('.').pop()?.toLowerCase() || '';
+        const extension = file.name.includes('.') ? file.name.split('.').pop()?.toLowerCase() || '' : '';
         const kind = assetKindFromExtension(extension);
         let name = file.name;
         let copyIndex = 2;
-        while (assetNameExists(currentProjectDetailId, currentAssetFolderId, name)) {
+        while (assetNameExists(target.projectId, target.parentId, name)) {
           const dot = file.name.lastIndexOf('.');
           name = dot > 0 ? `${file.name.slice(0, dot)} (${copyIndex})${file.name.slice(dot)}` : `${file.name} (${copyIndex})`;
           copyIndex += 1;
         }
         const size = file.size >= 1048576 ? `${(file.size / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(file.size / 1024))} KB`;
-        projectAssets.push({ id: `asset-upload-${Date.now().toString(36)}-${index}`, projectId: currentProjectDetailId, parentId: currentAssetFolderId, kind, name, type: assetTypeFromExtension(extension), size, sizeBytes: file.size, updatedBy: '姚晨恺', updatedAt: Date.now(), content: '这是本次选择上传的本地文件。Demo 仅保存文件名称和元数据，不会上传到服务器。' });
+        const item = { id: `asset-upload-${batchId}-${index}`, projectId: target.projectId, parentId: target.parentId, kind, name, type: assetTypeFromExtension(extension), size, sizeBytes: file.size, uploadState: 'waiting', updatedBy: '姚晨恺', updatedAt: Date.now(), content: '这是本次选择上传的本地文件。Demo 仅保存文件名称和元数据，不会上传到服务器。' };
+        projectAssets.push(item);
+        uploadedItems.push(item);
       });
-      projectUploadInput.value = '';
-      selectedAssetId = projectAssets[projectAssets.length - 1].id;
-      revealAssetFolder(currentAssetFolderId);
-      renderProjectAssets();
-      syncMentionPanelContext();
-      showToast(`已上传 ${files.length} 个文件`);
+      if (currentProjectDetailId === target.projectId) {
+        selectedAssetId = uploadedItems[0].id;
+        revealAssetFolder(target.parentId);
+        renderProjectAssets();
+        projectAssetRows.querySelector(`[data-asset-id="${CSS.escape(selectedAssetId)}"]`)?.scrollIntoView({ block: 'nearest' });
+      }
+      processProjectUploadQueue();
     });
     projectAssetTableWrap.addEventListener('click', event => {
       if (event.target.closest('tr[data-asset-id]') || event.target.closest('.asset-folder-empty')) return;
@@ -14514,7 +14679,7 @@
       const row = event.target.closest('tr[data-asset-id]');
       if (!row) return;
       const item = projectAssets.find(asset => asset.id === row.dataset.assetId);
-      if (!item) return;
+      if (!item || item.uploadState) return;
       selectProjectAsset(item.id);
       if (event.target.closest('[data-asset-toggle]')) {
         toggleAssetFolder(item.id);
@@ -14524,7 +14689,7 @@
     });
     projectAssetRows.addEventListener('dblclick', event => {
       const name = event.target.closest('[data-asset-select]');
-      if (!name || draggedAssetId) return;
+      if (!name || name.disabled || draggedAssetId) return;
       event.preventDefault();
       event.stopPropagation();
       selectProjectAsset(name.dataset.assetSelect);
@@ -14535,6 +14700,7 @@
       if (!row) return;
       event.preventDefault();
       event.stopPropagation();
+      if (projectAssets.find(item => item.id === row.dataset.assetId)?.uploadState) return;
       openAssetContextMenu(row.dataset.assetId, event.clientX, event.clientY);
     });
     projectAssetRows.addEventListener('keydown', event => {
@@ -14542,7 +14708,7 @@
       if (!row) return;
       if (event.key === 'Tab') { event.stopPropagation(); return; }
       const item = projectAssetItems().find(asset => asset.id === row.dataset.assetId);
-      if (!item) return;
+      if (!item || item.uploadState) return;
       if (event.altKey && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
         event.preventDefault();
         event.stopPropagation();
@@ -14583,7 +14749,7 @@
       const row = event.target.closest('tr[data-asset-id]');
       if (!row) return;
       const item = projectAssetItems().find(asset => asset.id === row.dataset.assetId);
-      if (!item) return;
+      if (!item || item.uploadState) { event.preventDefault(); return; }
       closeAssetContextMenu();
       selectProjectAsset(item.id);
       draggedAssetId = item.id;
