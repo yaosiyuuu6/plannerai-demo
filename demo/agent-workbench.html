@@ -4156,7 +4156,6 @@
     }
     .mention-scope-header[hidden] { display: none; }
     .mention-scope-title { color: #595959; }
-    .mention-scope-hint { margin-left: auto; color: #8c8c8c; }
     .mention-pop .skill-shell { display: none; }
     .mention-results {
       flex: 1;
@@ -7155,7 +7154,6 @@
               <div class="mention-shell" id="mentionShell">
                 <div class="mention-scope-header" id="mentionScopeHeader" hidden>
                   <span class="mention-scope-title" id="mentionScopeTitle"></span>
-                  <span class="mention-scope-hint" id="mentionScopeHint">Shift+Tab返回</span>
                 </div>
                 <div class="mention-results" id="mentionRows" role="listbox" aria-label="引用搜索结果"></div>
               </div>
@@ -13288,15 +13286,6 @@
           }
         }
         if (suggestPop.classList.contains('open') && suggestPop.classList.contains('mention-pop')) {
-          if (event.key === 'Tab' && event.shiftKey && mentionResultScope) {
-            event.preventDefault();
-            event.stopPropagation();
-            mentionResultScope = null;
-            mentionResultScopeLabel = '';
-            activeMentionIndex = 0;
-            renderMentionResults({ scrollTop: 0 });
-            return;
-          }
           const items = filteredMentionItems();
           if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
             event.preventDefault();
