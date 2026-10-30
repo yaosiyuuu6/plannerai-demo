@@ -4142,11 +4142,24 @@
     .mention-pop .mention-shell {
       height: 100%;
       min-height: 0;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr);
+      display: flex;
+      flex-direction: column;
     }
+    .mention-scope-header {
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .mention-scope-header[hidden] { display: none; }
+    .mention-scope-title { color: #595959; }
+    .mention-scope-hint { margin-left: auto; color: #8c8c8c; }
     .mention-pop .skill-shell { display: none; }
     .mention-results {
+      flex: 1;
       min-height: 0;
       max-height: none;
       overflow-y: auto;
@@ -4174,6 +4187,16 @@
     }
     .mention-pop .suggest-row:hover,
     .mention-pop .suggest-row.active { background: var(--primary-bg); }
+    .mention-pop .mention-more-row {
+      height: 36px;
+      margin: 3px 0 6px;
+      border-radius: 18px;
+      background: transparent;
+      color: #8c8c8c;
+      font-size: 12px;
+    }
+    .mention-pop .mention-more-row:hover,
+    .mention-pop .mention-more-row.active { background: #e6f4ff; color: #1677ff; }
     .mention-pop .suggest-title strong { color: #262626; font-weight: 500; }
     .mention-pop .suggest-space { color: #8c8c8c; }
     .mention-pop .icon { width: 15px; height: 15px; color: #737373; }
@@ -7130,6 +7153,10 @@
           <div class="composer" id="composer">
             <div class="suggest-pop" id="suggestPop">
               <div class="mention-shell" id="mentionShell">
+                <div class="mention-scope-header" id="mentionScopeHeader" hidden>
+                  <span class="mention-scope-title" id="mentionScopeTitle"></span>
+                  <span class="mention-scope-hint" id="mentionScopeHint">Shift+Tab返回</span>
+                </div>
                 <div class="mention-results" id="mentionRows" role="listbox" aria-label="引用搜索结果"></div>
               </div>
               <div class="skill-shell" id="skillShell">
@@ -7891,6 +7918,10 @@
     let currentMentionQuery = '';
     let activeMentionIndex = 0;
     let mentionTriggerRange = null;
+    const mentionGroupPreviewLimit = 5;
+    let mentionResultScope = null;
+    let mentionResultScopeLabel = '';
+    let mentionScopeContext = '';
     let vanishDialogReturnFocus = null;
     let vanishConnection = {
       connected: false,
@@ -8136,7 +8167,14 @@
         ['doc', 'LR1105 非经常性损益录入规则', 'v1.0.1', '财务分部'],
         ['table', 'STK032 股东明细表', '股东属性、国籍与持股信息', '股票分部'],
         ['table', 'PUB000 港股激励数据字段映射表', '字段、口径和来源映射', '海外分部'],
-        ['qa', 'ADTD-2706', [], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认']
+        ['qa', 'ADTD-2706', [], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认'],
+        ['qa', 'ADTD-2707', [], '港股权息组规则确认：股权激励授予日期与公告日期口径确认'],
+        ['qa', 'ADTD-2708', [], '海外股票组规则确认：证券代码变更后的历史记录关联方式'],
+        ['qa', 'ADTD-2709', [], 'A股权息组规则确认：分红方案实施日期缺失时的录入方式'],
+        ['qa', 'ADTD-2710', [], '港股权息组规则确认：股权激励行权条件变更的字段更新范围'],
+        ['qa', 'ADTD-2711', [], '海外股票组规则确认：机构名称变更后的主表与明细表映射'],
+        ['qa', 'ADTD-2712', [], 'A股权息组规则确认：回购注销数量与公告披露数量差异核验'],
+        ['qa', 'ADTD-2713', [], '港股权息组规则确认：股权激励方案终止后的状态维护']
       ],
       '/': [
         ['skill', '生成报告', '基于引用材料生成结构化报告', 'Personal'],
@@ -10901,35 +10939,61 @@
       }
 
       const groups = [];
-      if (projectItems.length) groups.push({ type: 'project-asset', label: '项目资产', items: projectItems.slice(0, 20) });
+      if (projectItems.length) groups.push({ type: 'project-asset', label: '项目资产', items: projectItems });
 
       const documentItems = currentIdentity === 'planning'
         ? knowledgeDocuments
           .filter(item => mentionMatches(query, item.title, item.knowledgeBase, item.path))
-          .slice(0, 20)
           .map(item => ({ type: 'doc', value: item.title, item, kind: 'knowledge', metadata: item }))
         : suggestions['@']
           .filter(item => item[0] === 'doc' && mentionMatches(query, item))
-          .slice(0, 20)
           .map(suggestionMentionResult);
       if (documentItems.length) groups.push({ type: 'doc', label: currentIdentity === 'planning' ? '知识库' : '规则文档', items: documentItems });
 
       const tableItems = suggestions['@']
         .filter(item => item[0] === 'table' && mentionMatches(query, item))
-        .slice(0, 20)
         .map(suggestionMentionResult);
       if (tableItems.length) groups.push({ type: 'table', label: '涉及表', items: tableItems });
 
       const qaItems = suggestions['@']
         .filter(item => item[0] === 'qa' && mentionMatches(query, item))
-        .slice(0, 20)
         .map(suggestionMentionResult);
       if (qaItems.length) groups.push({ type: 'qa', label: '人工问答', items: qaItems });
       return groups;
     }
 
+    function visibleMentionResultGroups() {
+      const context = JSON.stringify([currentMentionQuery, currentIdentity, activePromptInput.id,
+        currentProjectDetailId, automationLocation.value, currentConversationProjectId()]);
+      if (context !== mentionScopeContext) {
+        mentionResultScope = null;
+        mentionResultScopeLabel = '';
+        mentionScopeContext = context;
+      }
+      const groups = mentionResultGroups();
+      if (mentionResultScope) return groups.filter(group => group.type === mentionResultScope);
+      return groups.map(group => ({
+        ...group,
+        items: group.type !== 'project-asset' && group.items.length > mentionGroupPreviewLimit
+          ? [...group.items.slice(0, mentionGroupPreviewLimit), {
+            type: 'mention-more', groupType: group.type, label: group.label, total: group.items.length
+          }]
+          : group.items
+      }));
+    }
+
     function filteredMentionItems() {
-      return mentionResultGroups().flatMap(group => group.items);
+      return visibleMentionResultGroups().flatMap(group => group.items);
+    }
+
+    function focusMentionPrompt() {
+      activePromptInput.focus();
+      if (!mentionTriggerRange) return;
+      const caret = mentionTriggerRange.cloneRange();
+      caret.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(caret);
     }
 
     function mentionRowText(item) {
@@ -10948,9 +11012,9 @@
     }
 
     function updateMentionPanelNaturalHeight(resultCount, groupCount = 0) {
-      const resultHeight = resultCount > 0
+      const resultHeight = (resultCount > 0
         ? Math.min(resultCount, 6) * 44 + groupCount * 28 + 12
-        : 108;
+        : 108) + (mentionResultScope ? 42 : 0);
       suggestPop.style.setProperty('--suggest-natural-height', `${resultHeight}px`);
     }
 
@@ -11006,12 +11070,12 @@
       suggestPop.classList.toggle('suggest-below', openBelow);
       suggestPop.classList.toggle('caret-anchored', caretAnchored);
       if (caretAnchored) {
-        document.body.append(suggestPop);
+        if (suggestPop.parentElement !== document.body) document.body.append(suggestPop);
         const width = Math.min(480, viewportWidth - 16);
         const left = Math.max(viewportLeft + 8, Math.min(anchor.left, viewportLeft + viewportWidth - width - 8));
         Object.assign(suggestPop.style, { position: 'fixed', zIndex: '1000', left: `${left}px`, right: 'auto', width: `${width}px`, top: openBelow ? `${anchor.bottom + gap}px` : 'auto', bottom: openBelow ? 'auto' : `${window.innerHeight - anchor.top + gap}px` });
       } else {
-        composer.prepend(suggestPop);
+        if (suggestPop.parentElement !== composer) composer.prepend(suggestPop);
         ['position', 'z-index', 'left', 'right', 'width', 'top', 'bottom'].forEach(key => suggestPop.style.removeProperty(key));
       }
       suggestPop.style.setProperty('--suggest-available-height', `${openBelow ? spaceBelow : spaceAbove}px`);
@@ -11065,6 +11129,9 @@
 
     function renderMentionResult(result, index) {
       const active = index === activeMentionIndex;
+      if (result.type === 'mention-more') {
+        return `<div class="suggest-row mention-more-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="查看更多${escapeHtml(result.label)}，共 ${result.total} 项" data-mention-index="${index}"><span aria-hidden="true"></span><span>查看更多</span></div>`;
+      }
       if (result.type === 'project-asset') {
         return `<div class="suggest-row project-asset-mention-row${active ? ' active' : ''}" role="option" aria-selected="${active}" aria-label="${escapeHtml(`${result.value}，${result.pathLabel}`)}" data-mention-index="${index}">
           ${mentionAssetIconHtml(result.item)}
@@ -11090,10 +11157,28 @@
       </div>`;
     }
 
-    function renderMentionResults() {
-      const groups = mentionResultGroups();
+    function updateActiveMentionRow({ scrollIntoView = false } = {}) {
+      mentionRows.querySelectorAll('[data-mention-index]').forEach(row => {
+        const active = Number(row.dataset.mentionIndex) === activeMentionIndex;
+        row.classList.toggle('active', active);
+        row.setAttribute('aria-selected', String(active));
+      });
+      if (!scrollIntoView) return;
+      const row = mentionRows.querySelector('.suggest-row.active');
+      if (!row) return;
+      const rowRect = row.getBoundingClientRect();
+      const listRect = mentionRows.getBoundingClientRect();
+      if (rowRect.top < listRect.top + 6) mentionRows.scrollTop += rowRect.top - listRect.top - 6;
+      else if (rowRect.bottom > listRect.bottom - 6) mentionRows.scrollTop += rowRect.bottom - listRect.bottom + 6;
+    }
+
+    function renderMentionResults({ scrollTop = null } = {}) {
+      const groups = visibleMentionResultGroups();
       const items = groups.flatMap(group => group.items);
-      updateMentionPanelNaturalHeight(items.length, groups.length);
+      const scopeGroup = mentionResultScope ? groups[0] : null;
+      document.getElementById('mentionScopeHeader').hidden = !mentionResultScope;
+      document.getElementById('mentionScopeTitle').textContent = scopeGroup?.label || mentionResultScopeLabel;
+      updateMentionPanelNaturalHeight(items.length, mentionResultScope ? 0 : groups.length);
       if (suggestPop.classList.contains('open')) requestAnimationFrame(updateSuggestPanelMetrics);
       activeMentionIndex = Math.min(activeMentionIndex, Math.max(items.length - 1, 0));
       if (!items.length) {
@@ -11102,10 +11187,11 @@
       }
       let index = 0;
       mentionRows.innerHTML = groups.map(group => `<div class="mention-group" role="group" aria-label="${escapeHtml(group.label)}">
-        <div class="mention-group-title" role="presentation">${escapeHtml(group.label)}</div>
+        ${mentionResultScope ? '' : `<div class="mention-group-title" role="presentation">${escapeHtml(group.label)}</div>`}
         ${group.items.map(result => renderMentionResult(result, index++)).join('')}
       </div>`).join('');
-      mentionRows.querySelector('.suggest-row.active')?.scrollIntoView({ block: 'nearest' });
+      updateActiveMentionRow({ scrollIntoView: true });
+      if (scrollTop !== null) mentionRows.scrollTop = scrollTop;
     }
 
     function referenceDisplayText(value, metadata = null) {
@@ -11167,10 +11253,23 @@
       const items = filteredMentionItems();
       const result = items[activeMentionIndex];
       if (!result) return;
+      if (result.type === 'mention-more') {
+        mentionResultScope = result.groupType;
+        mentionResultScopeLabel = result.label;
+        activeMentionIndex = 0;
+        renderMentionResults({ scrollTop: 0 });
+        focusMentionPrompt();
+        return;
+      }
       insertMentionReference(result.type, result.value, '@', result.metadata);
     }
 
     function openSuggest(kind) {
+      if (kind === '@' && (!suggestPop.classList.contains('open') || !suggestPop.classList.contains('mention-pop'))) {
+        mentionResultScope = null;
+        mentionResultScopeLabel = '';
+        mentionScopeContext = '';
+      }
       suggestPop.classList.toggle('mention-pop', kind === '@');
       suggestPop.classList.toggle('skill-pop', kind === '/');
       if (kind === '@') {
@@ -12458,6 +12557,9 @@
 
     function closeOverlays() {
       suggestPop.classList.remove('open');
+      mentionResultScope = null;
+      mentionResultScopeLabel = '';
+      mentionScopeContext = '';
       suggestPop.classList.remove('suggest-below');
       plusMenu.classList.remove('open');
       closeConversationActionMenu();
@@ -13186,16 +13288,25 @@
           }
         }
         if (suggestPop.classList.contains('open') && suggestPop.classList.contains('mention-pop')) {
+          if (event.key === 'Tab' && event.shiftKey && mentionResultScope) {
+            event.preventDefault();
+            event.stopPropagation();
+            mentionResultScope = null;
+            mentionResultScopeLabel = '';
+            activeMentionIndex = 0;
+            renderMentionResults({ scrollTop: 0 });
+            return;
+          }
           const items = filteredMentionItems();
           if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
             event.preventDefault();
             if (!items.length) return;
             const direction = event.key === 'ArrowDown' ? 1 : -1;
             activeMentionIndex = (activeMentionIndex + direction + items.length) % items.length;
-            renderMentionResults();
+            updateActiveMentionRow({ scrollIntoView: true });
             return;
           }
-          if ((event.key === 'Enter' || event.key === 'Tab') && items.length) {
+          if ((event.key === 'Enter' || (event.key === 'Tab' && !event.shiftKey)) && items.length) {
             event.preventDefault();
             selectActiveMention();
             return;
@@ -13251,12 +13362,13 @@
       const index = Number(row.dataset.mentionIndex);
       if (index === activeMentionIndex) return;
       activeMentionIndex = index;
-      renderMentionResults();
+      updateActiveMentionRow();
     });
 
     mentionRows.addEventListener('click', event => {
       const row = event.target.closest('[data-mention-index]');
       if (!row) return;
+      event.stopPropagation();
       activeMentionIndex = Number(row.dataset.mentionIndex);
       selectActiveMention();
     });
