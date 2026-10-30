@@ -7919,6 +7919,7 @@
     const mentionGroupPreviewLimit = 5;
     let mentionResultScope = null;
     let mentionResultScopeLabel = '';
+    let mentionResultScopePrefix = '';
     let mentionScopeContext = '';
     let vanishDialogReturnFocus = null;
     let vanishConnection = {
@@ -10974,11 +10975,12 @@
     }
 
     function visibleMentionResultGroups() {
-      const context = JSON.stringify([currentMentionQuery, currentIdentity, activePromptInput.id,
+      const context = JSON.stringify([currentIdentity, activePromptInput.id,
         currentProjectDetailId, automationLocation.value, currentConversationProjectId()]);
-      if (context !== mentionScopeContext) {
+      if (context !== mentionScopeContext || (mentionResultScope && !currentMentionQuery.startsWith(mentionResultScopePrefix))) {
         mentionResultScope = null;
         mentionResultScopeLabel = '';
+        mentionResultScopePrefix = '';
         mentionScopeContext = context;
       }
       const groups = mentionResultGroups();
@@ -11267,6 +11269,7 @@
       if (result.type === 'mention-more') {
         mentionResultScope = result.groupType;
         mentionResultScopeLabel = result.label;
+        mentionResultScopePrefix = currentMentionQuery;
         activeMentionIndex = 0;
         renderMentionResults({ scrollTop: 0 });
         focusMentionPrompt();
@@ -11279,6 +11282,7 @@
       if (kind === '@' && (!suggestPop.classList.contains('open') || !suggestPop.classList.contains('mention-pop'))) {
         mentionResultScope = null;
         mentionResultScopeLabel = '';
+        mentionResultScopePrefix = '';
         mentionScopeContext = '';
       }
       suggestPop.classList.toggle('mention-pop', kind === '@');
@@ -12570,6 +12574,7 @@
       suggestPop.classList.remove('open');
       mentionResultScope = null;
       mentionResultScopeLabel = '';
+      mentionResultScopePrefix = '';
       mentionScopeContext = '';
       suggestPop.classList.remove('suggest-below');
       plusMenu.classList.remove('open');
