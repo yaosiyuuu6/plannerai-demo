@@ -8165,6 +8165,13 @@
         ['doc', 'LR1105 非经常性损益录入规则', 'v1.0.1', '财务分部'],
         ['table', 'STK032 股东明细表', '股东属性、国籍与持股信息', '股票分部'],
         ['table', 'PUB000 港股激励数据字段映射表', '字段、口径和来源映射', '海外分部'],
+        ['table', 'LR426 日本股票证券基本资料', '证券代码、证券简称与上市状态', '海外股票组'],
+        ['table', 'PUB203 股票机构信息总表', '机构代码、机构名称与所属市场', '股票分部'],
+        ['table', 'GL027 港股股权激励方案明细', '授予对象、授予数量与行权条件', '港股权息组'],
+        ['table', 'GL042 股票回购注销明细', '回购数量、注销日期与方案状态', 'A股权息组'],
+        ['table', 'PUB202 股票数据源映射表', '来源链接、源字段与业务字段映射', '海外股票组'],
+        ['table', 'STK217 公司员工人数统计', '母公司、主要子公司与薪酬员工人数', 'A股权息组'],
+        ['table', 'STK218 股票分红实施明细', '分红方案、实施日期与派息金额', 'A股权息组'],
         ['qa', 'ADTD-2706', [], 'A股权息组规则确认：STK217母公司/主要子公司/当期领取薪酬员工人数规则确认'],
         ['qa', 'ADTD-2707', [], '港股权息组规则确认：股权激励授予日期与公告日期口径确认'],
         ['qa', 'ADTD-2708', [], '海外股票组规则确认：证券代码变更后的历史记录关联方式'],
@@ -8190,7 +8197,13 @@
       Object.freeze({ type: 'doc', id: 'kb-hk-005', title: '大模型表结构设计流程测试', knowledgeBase: '港股知识库', path: '05-产品比对 / 操作手册' }),
       Object.freeze({ type: 'doc', id: 'kb-overseas-001', title: '海外股票公司行动规划方案', knowledgeBase: '海外股票', path: '02-规划方案 / 公司行动' }),
       Object.freeze({ type: 'doc', id: 'kb-overseas-002', title: '海外市场业务流程说明', knowledgeBase: '海外股票', path: '03-业务总结 / 市场流程' }),
-      Object.freeze({ type: 'doc', id: 'kb-overseas-003', title: '海外证券数据源操作手册', knowledgeBase: '海外股票', path: '05-产品比对 / 操作手册' })
+      Object.freeze({ type: 'doc', id: 'kb-overseas-003', title: '海外证券数据源操作手册', knowledgeBase: '海外股票', path: '05-产品比对 / 操作手册' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-006', title: '港股回购注销数据处理方案', knowledgeBase: '港股知识库', path: '02-规划方案 / 回购注销' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-004', title: '日本股票证券代码变更映射规范', knowledgeBase: '海外股票', path: '02-规划方案 / 证券代码' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-005', title: '机构信息主表与明细表关联方案', knowledgeBase: '海外股票', path: '02-规划方案 / 机构信息' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-007', title: '股权激励行权条件变更处理方案', knowledgeBase: '港股知识库', path: '02-规划方案 / 股权激励' }),
+      Object.freeze({ type: 'doc', id: 'kb-hk-008', title: '股票分红实施日期缺失处理说明', knowledgeBase: '港股知识库', path: '02-规划方案 / 股票分红' }),
+      Object.freeze({ type: 'doc', id: 'kb-overseas-006', title: '海外股票数据源变更评审记录', knowledgeBase: '海外股票', path: '02-规划方案 / 数据源' })
     ]);
 
     const icons = {
