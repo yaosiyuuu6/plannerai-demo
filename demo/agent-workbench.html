@@ -6529,16 +6529,16 @@
     .vz-chat-source { display: inline-flex; align-items: center; flex: none; gap: 5px; padding: 3px 7px; border-radius: 5px; color: #737373; background: #f5f6f8; font-size: 11px; white-space: nowrap; }
     .vz-chat-source[hidden], .vz-chat-story[hidden] { display: none !important; }
     #messages.vanish-chat-mode > :not(#vanishChatStory) { display: none; }
-    #messages.vanish-chat-mode, .workspace.vanish-conversation-mode .composer-wrap { background: #f1f5fc; }
+    #messages.vanish-chat-mode, .workspace.vanish-conversation-mode .composer-wrap { padding-inline: 60px; }
     .vz-chat-story { width: min(100%, var(--conversation-width)); margin: 0 auto; display: grid; gap: 25px; }
     .vz-chat-turn { min-width: 0; }
-    .vz-chat-turn.outbound { display: flex; gap: 12px; align-items: flex-start; }
-    .vz-chat-reply-content { flex: 1; min-width: 0; }
+    .vz-chat-turn.outbound { position: relative; }
+    .vz-chat-reply-content { min-width: 0; }
     .vz-chat-author { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; color: #4e5969; font-size: 12px; }
     .vz-chat-author strong { font-weight: 500; }
     .vz-chat-meta { margin-top: 8px; color: #98a2b3; font-size: 11px; line-height: 1.6; }
     .vz-chat-turn.inbound .vz-chat-meta { text-align: right; }
-    .vz-chat-agent-avatar { display: block; flex: none; width: 36px; height: 36px; margin-top: 2px; border-radius: 50%; background: #fff; object-fit: contain; }
+    .vz-chat-agent-avatar { display: block; position: absolute; left: -48px; top: 2px; width: 36px; height: 36px; border-radius: 50%; background: #fff; object-fit: contain; }
     .vz-chat-turn.outbound .vz-chat-author { margin-bottom: 6px; color: #8c8c8c; line-height: 20px; }
     .vz-chat-turn.outbound .vz-chat-meta { margin-top: 6px; color: #8c8c8c; text-align: left; }
     .vz-chat-turn.inbound .vz-chat-author { justify-content: flex-end; }
