@@ -6529,16 +6529,20 @@
     .vz-chat-source { display: inline-flex; align-items: center; flex: none; gap: 5px; padding: 3px 7px; border-radius: 5px; color: #737373; background: #f5f6f8; font-size: 11px; white-space: nowrap; }
     .vz-chat-source[hidden], .vz-chat-story[hidden] { display: none !important; }
     #messages.vanish-chat-mode > :not(#vanishChatStory) { display: none; }
+    #messages.vanish-chat-mode, .workspace.vanish-conversation-mode .composer-wrap { background: #f1f5fc; }
     .vz-chat-story { width: min(100%, var(--conversation-width)); margin: 0 auto; display: grid; gap: 25px; }
     .vz-chat-turn { min-width: 0; }
+    .vz-chat-turn.outbound { display: grid; grid-template-columns: 36px minmax(0, 1fr); column-gap: 12px; align-items: start; }
     .vz-chat-author { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; color: #4e5969; font-size: 12px; }
     .vz-chat-author strong { font-weight: 500; }
     .vz-chat-meta { margin-top: 8px; color: #98a2b3; font-size: 11px; line-height: 1.6; }
     .vz-chat-turn.inbound .vz-chat-meta { text-align: right; }
-    .vz-chat-agent-avatar { display: block; width: 24px; height: 24px; flex: none; border-radius: 5px; object-fit: contain; }
+    .vz-chat-agent-avatar { display: block; grid-column: 1; grid-row: 1 / span 3; width: 36px; height: 36px; margin-top: 2px; border-radius: 50%; background: #fff; object-fit: contain; }
+    .vz-chat-turn.outbound .vz-chat-author { grid-column: 2; margin-bottom: 6px; color: #8c8c8c; line-height: 20px; }
+    .vz-chat-turn.outbound .vz-chat-meta { grid-column: 2; margin-top: 6px; color: #8c8c8c; text-align: left; }
     .vz-chat-turn.inbound .vz-chat-author { justify-content: flex-end; }
     .vz-chat-turn .user-message { width: 100%; }
-    .vz-chat-turn .bubble.ai { padding-top: 0; }
+    .vz-chat-turn.outbound .bubble.ai { grid-column: 2; width: fit-content; max-width: 100%; padding: 10px 14px; border-radius: 12px; background: #fff; line-height: 1.7; }
     .workspace.vanish-conversation-mode #panelToggle { display: none; }
     .vz-chat-notice { display: flex; align-items: center; gap: 7px; width: min(100%, var(--conversation-width)); min-height: 24px; margin: 0 auto 7px; padding: 0 4px; color: #8c8c8c; font-size: 12px; line-height: 1.6; }
     .vz-chat-notice[hidden], .workspace.shared-mode .vz-chat-notice { display: none; }
@@ -10542,7 +10546,7 @@
       closeOverlays(); closePluginDetail();
       createEmptyConversation(projectId);
       if (kind === 'automation') {
-        composerInput.replaceChildren(createComposerReference('skill', 'calendar', { id: 'skill-calendar', displayText: '/calendar' }), document.createTextNode(' 请调用这个skill辅助我创建定时任务'));
+        composerInput.replaceChildren(createComposerReference('skill', 'calendar', { id: 'skill-calendar' }), document.createTextNode(' 请调用这个skill辅助我创建定时任务'));
         composerInput.focus();
         const range = document.createRange();
         range.selectNodeContents(composerInput); range.collapse(false);
@@ -15697,7 +15701,7 @@
       const time = formatVanishMessageTime(message.sentAt);
       const body = escapeHtml(message.content).replaceAll('\n', '<br>');
       const avatar = outbound ? '<img class="vz-chat-agent-avatar" src="../images/logo.jpg" alt="数据部 Agent 的头像">' : '';
-      return `<article class="vz-chat-turn ${outbound ? 'outbound' : 'inbound'}" data-vz-message-id="${escapeHtml(message.messageId)}" data-vz-sender-code="${escapeHtml(sender.userCode || sender.agentBotId || '')}" data-message-origin="${workbench ? 'workbench' : 'vanish'}" aria-label="${escapeHtml(name)}的消息"><header class="vz-chat-author">${avatar}<strong>${escapeHtml(name)}</strong></header>${outbound ? `<div class="bubble ai">${body}</div>` : `<div class="user-message"><div class="bubble user">${body}</div></div>`}${time ? `<footer class="vz-chat-meta"><time datetime="${escapeHtml(message.sentAt)}">${time}</time></footer>` : ''}</article>`;
+      return `<article class="vz-chat-turn ${outbound ? 'outbound' : 'inbound'}" data-vz-message-id="${escapeHtml(message.messageId)}" data-vz-sender-code="${escapeHtml(sender.userCode || sender.agentBotId || '')}" data-message-origin="${workbench ? 'workbench' : 'vanish'}" aria-label="${escapeHtml(name)}的消息">${avatar}<header class="vz-chat-author"><strong>${escapeHtml(name)}</strong></header>${outbound ? `<div class="bubble ai">${body}</div>` : `<div class="user-message"><div class="bubble user">${body}</div></div>`}${time ? `<footer class="vz-chat-meta"><time datetime="${escapeHtml(message.sentAt)}">${time}</time></footer>` : ''}</article>`;
     }
     function vanishWorkbenchConversationKey(session) {
       return `${session.agentBotId || 'bot-data-department'}:${session.conversation.conversationId}`;
