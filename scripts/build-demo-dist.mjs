@@ -11,6 +11,10 @@ const publishFiles = Object.freeze([
   "demo/agent-workbench.html",
   "demo/agent-message-queue.html",
   "demo/agent-monitoring-dashboard.html",
+  "demo/assets/plugin-icons/atlassian.svg",
+  "demo/assets/plugin-icons/foxmail-wordmark.png",
+  "demo/assets/plugin-icons/seatable.png",
+  "demo/assets/plugin-icons/vanish.png",
   "images/logo.jpg",
 ]);
 
