@@ -2879,13 +2879,15 @@
       background: var(--primary);
       color: #fff;
     }
+    .bubble, .source-finder-answer {
+      line-height: 1.65;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
     .bubble {
       max-width: 86%;
       border-radius: 10px;
       padding: 12px 14px;
-      line-height: 1.65;
-      font-size: 14px;
-      overflow-wrap: anywhere;
     }
     .bubble.user { display: block; background: var(--primary-bg); align-self: flex-end; }
     .bubble.ai {
@@ -6142,26 +6144,18 @@
     .creation-menu button:hover, .creation-menu button:focus-visible { background: #f5f5f5; }
     .creation-menu .icon { width: 20px; height: 20px; }
     .creation-split button:focus-visible { outline: 2px solid #91caff; outline-offset: 2px; }
-    .agent-card-grid { padding-bottom: 32px; }
-    .skill-market-card.agent-config-card { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-height: 172px; padding: 16px; transition: border-color .16s, background .16s; }
-    .agent-config-card:hover { border-color: #bfbfbf; }
-    .agent-config-card.selected { border-color: #b6c8e5; background: #f8faff; }
-    .agent-card-open { display: grid; grid-template-columns: 36px minmax(0,1fr); align-items: start; gap: 12px; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; }
-    .agent-card-open:focus-visible { outline: 2px solid #91caff; outline-offset: 5px; border-radius: 4px; }
-    .agent-card-copy { min-width: 0; }
-    .agent-card-copy .skill-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .agent-card-copy .skill-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 0; margin-top: 5px; font-size: 12px; line-height: 1.65; }
-    .agent-card-open .robot-icon { width: 20px; height: 20px; }
-    .agent-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; color: #8c8c8c; font-size: 11px; }
-    .agent-card-delete { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 28px; margin-right: -5px; padding: 2px 5px; border: 0; border-radius: 4px; background: transparent; color: #737373; font: inherit; font-size: 12px; }
-    .agent-card-delete:hover { background: #fff1f0; color: #b42318; }
-    .agent-card-delete .icon { width: 14px; height: 14px; }
-    .agent-card-empty { grid-column: 1 / -1; }
+    .agent-list { padding-bottom: 32px; }
+    .agent-list .agent-list-row { min-height: 80px; }
+    .agent-list-row:hover { background: #fafafa; }
+    .agent-list-open { grid-template-columns: 36px minmax(0, 1fr); text-align: left; cursor: pointer; }
+    .agent-list-open .automation-task-title { font-size: 15px; font-weight: 600; }
+    .agent-list-description { color: #737373; line-height: 1.6; }
+    .agent-list-open .robot-icon { width: 25px; height: 25px; stroke-width: 1.55; }
+    .agent-list-open:focus-visible { outline: 2px solid #91caff; outline-offset: -2px; border-radius: 8px; }
+    .agent-list-empty { grid-column: 1 / -1; }
     .agent-delete-recovery { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 8px 12px; border-radius: 6px; background: #fafafa; color: #737373; font-size: 12px; }
     .agent-delete-recovery button { border: 0; background: transparent; color: #175cd3; font: inherit; }
-    .layout.agent-drawer-open .agent-card-grid { grid-template-columns: 1fr; }
-    .layout.agent-drawer-open .agent-config-card { min-height: 142px; padding: 13px; gap: 12px; }
-    .layout.agent-drawer-open .agent-card-copy .skill-desc { -webkit-line-clamp: 2; }
+    .layout.agent-drawer-open .agent-list-open .agent-list-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; overflow: hidden; overflow-wrap: anywhere; }
     .creation-dialog { width: 650px; }
     .creation-template-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 4px 22px 24px; }
     .creation-template { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-height: 128px; padding: 16px; border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; color: #262626; font: inherit; text-align: left; }
@@ -6180,12 +6174,6 @@
     #messages.creation-chat-mode > :not(#creationChatStory) { display: none !important; }
     .creation-chat-story { width: 100%; max-width: 820px; margin: 0 auto; padding: 16px 0 28px; }
     .creation-chat-story[hidden] { display: none !important; }
-    .creation-chat-intro { padding: 36px 12px 20px; }
-    .creation-chat-intro h2 { margin: 0 0 10px; font-size: 22px; }
-    .creation-chat-intro p { margin: 0; color: #8c8c8c; font-size: 14px; }
-    .creation-examples { display: grid; gap: 8px; margin-top: 22px; }
-    .creation-examples button { width: 100%; padding: 12px 14px; border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; color: #595959; font: inherit; font-size: 13px; text-align: left; }
-    .creation-examples button:hover { background: #fafafa; border-color: #bfbfbf; }
     .creation-chat-turn { margin: 16px 0; }
     .creation-chat-turn .user-message { margin-bottom: 16px; }
     .creation-chat-reply { padding: 8px 4px; }
@@ -6198,11 +6186,11 @@
     .creation-chat-success .icon { color: #067647; }
     .workspace.creation-mode #conversationLocationStrip, .workspace.creation-mode #panelToggle { display: none; }
     .vz-agent-page-head { margin-bottom: 24px; }
-    .vz-list-toolbar { margin: 0 0 16px; }
-    .vz-list-toolbar .project-search-wrap { width: 220px; }
-    .vz-list-toolbar .project-toolbar-actions { gap: 8px; }
-    .vz-list-heading { display: flex; align-items: center; gap: 12px; flex: none; }
-    .vz-list-heading h3 { font-size: 14px; font-weight: 600; }
+    .vz-list-toolbar { min-width: 0; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 12px; margin: 0 0 16px; }
+    .vz-list-toolbar .project-toolbar-actions { width: auto; flex: none; gap: 8px; }
+    .vz-list-toolbar .creation-main { white-space: nowrap; }
+    .vz-list-heading { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+    .vz-list-heading h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
     .vz-list-heading .vz-select { min-height: 32px; padding: 4px 8px; font-size: 12px; }
     .vz-agent-table [data-vz-open], .vz-agent-card[data-vz-open] { cursor: pointer; }
     .vz-agent-table tr.selected, .vz-agent-card.selected { background: #f0f6ff; }
@@ -6216,13 +6204,13 @@
     .vz-agent-editor-shell[hidden] { display: none !important; }
     .vz-agent-editor-shell .automation-editor-head h2 { flex: 1; }
     .layout.agent-drawer-open .vz-agent-page-head .settings-panel-subtitle { display: none; }
-    .layout.agent-drawer-open .vz-list-toolbar { flex-wrap: wrap; }
-    .layout.agent-drawer-open .vz-list-toolbar .project-toolbar-actions { width: 100%; justify-content: flex-end; flex-wrap: wrap; }
-    .layout.agent-drawer-open .vz-list-toolbar .project-toolbar-actions > .vz-btn { min-height: 34px; padding-inline: 7px; font-size: 12px; }
+    .layout.agent-drawer-open .settings-content { padding-inline: 20px; }
+    .layout.agent-drawer-open .vz-agent-page-head { margin-bottom: 16px; }
+    .layout.agent-drawer-open .vz-list-toolbar { gap: 8px; }
+    .layout.agent-drawer-open .vz-list-toolbar .creation-main { min-height: 34px; padding-inline: 10px; font-size: 12px; }
+    .layout.agent-drawer-open .vz-list-toolbar .creation-toggle { min-height: 34px; width: 28px; }
     .layout.agent-drawer-open .settings-tabs { padding-inline: 8px; gap: 2px; }
     .layout.agent-drawer-open .settings-tab { padding-inline: 8px; gap: 5px; }
-    .layout.agent-drawer-open .vz-list-toolbar .project-search-wrap { flex: 1 0 100%; width: auto; min-width: 0; }
-    .layout.agent-drawer-open .vz-list-toolbar .project-primary { flex: none; padding-inline: 10px; font-size: 13px; }
     .layout.agent-drawer-open .vz-agent-table { table-layout: fixed; }
     .layout.agent-drawer-open .vz-agent-table th:first-child { width: auto; }
     .layout.agent-drawer-open .vz-agent-table th:nth-child(3) { width: 82px; }
@@ -6312,6 +6300,7 @@
     .vz-agent-settings { padding: 22px 22px 36px; }
     .vz-agent-settings input, .vz-agent-settings textarea { scroll-margin-top: 8px; }
     .vz-agent-settings .vz-field-label { justify-content: flex-start; gap: 6px; }
+    .vz-agent-settings .vz-required-dot { width: 5px; height: 5px; flex: none; border-radius: 50%; background: #ff4d4f; }
     .vz-agent-settings .vz-field-label .vz-field-note { color: #8992a3; font-size: 12px; font-weight: 400; }
     .vz-agent-settings .vz-instruction { min-height: 168px; border: 1px solid #d4d9e2; border-radius: 13px; padding: 14px; font: inherit; font-size: 14px; }
     .vz-agent-settings .automation-help { font-size: 12px; }
@@ -6429,10 +6418,9 @@
     .vz-mcp-status.active { color: #067647; }
     .vz-mcp-status.active::before { background: currentColor; }
     .vz-mcp-settings .vz-field > span { margin-bottom: 8px; color: #737373; font-size: 12px; font-weight: 400; }
-    .vz-mcp-settings .plugin-textarea { min-height: 144px; padding: 12px; border-color: #e5e5e5; background: #fafafa; line-height: 1.65; }
+    .vz-mcp-settings .plugin-textarea { min-height: 280px; padding: 12px; border-color: #e5e5e5; background: #fafafa; line-height: 1.65; }
+    .vz-mcp-settings .plugin-textarea::placeholder { color: #8c8c8c; opacity: 1; }
     .vz-mcp-settings .plugin-textarea[aria-invalid="true"] { border-color: #d99b96; }
-    .vz-mcp-controls { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
-    .vz-mcp-controls .vz-btn { min-height: 32px; padding: 5px 10px; }
     .vz-mcp-settings .plugin-inline-status:empty { display: none; }
     .vz-mcp-config > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px; border-radius: 4px; color: #737373; font-size: 12px; cursor: pointer; list-style: none; }
     .vz-mcp-config > summary::-webkit-details-marker { display: none; }
@@ -6493,8 +6481,6 @@
     .vz-overview-state.active::before, .vz-overview-state.paused::before { background: currentColor; }
     .vz-shell a:focus-visible { outline: 2px solid #91caff; outline-offset: 2px; border-radius: 3px; }
     .vz-overview-empty { padding: 16px 0; color: var(--vz-muted); font-size: 12px; }
-    .vz-recovery { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fafafa; border: 1px solid #ececec; border-radius: 7px; margin-bottom: 16px; }
-    .vz-recovery > span { flex: 1; }
     .vz-agent-actions { gap: 2px; flex-wrap: nowrap; }
     .vz-agent-actions .vz-btn { min-height: 30px; padding: 3px 8px; font-size: 12px; }
     .vz-card-projects { display: flex; align-items: flex-start; gap: 7px; color: #8c8c8c; font-size: 12px; margin-top: 14px; }
@@ -6553,6 +6539,170 @@
     .vz-chat-notice-close:focus-visible { outline: 2px solid #91caff; outline-offset: 2px; }
     .vz-chat-notice-close .icon { width: 13px; height: 13px; }
 
+    /* AI 找源 demo */
+    .system-agent-row { margin-bottom: 20px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; }
+    .system-agent-row .agent-list-open { cursor: default; }
+    .system-agent-tag {
+      margin-right: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #595959;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    .source-finder-story {
+      width: min(100%, var(--conversation-width));
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+    .workspace:has(.source-finder-mode) .composer-bar { height: auto; min-height: 36px; flex-wrap: wrap; gap: 4px; }
+    .workspace:has(.source-finder-mode) .composer-actions { margin-inline-start: auto; }
+    @media (min-width: 641px) {
+      .workspace:has(.source-finder-mode) .chat-top { padding-inline-start: max(50px, var(--conversation-gutter)); }
+    }
+    #messages.source-finder-mode > :not(#sourceFinderStory), :is(.source-finder-story, .source-finder-log) [hidden],
+    .source-finder-story[hidden], .source-finder-module[hidden], .source-finder-result[hidden] { display: none; }
+    .source-finder-message { display: grid; justify-items: start; gap: 4px; }
+    .source-finder-message.user-message { display: flex; align-items: flex-end; }
+    .source-finder-message p { margin: 0; }
+    .source-finder-message > [data-source-finder-content] { width: 100%; min-width: 0; }
+    .source-finder-message .source-finder-completion { margin-top: 18px; }
+    .source-finder-run { width: 100%; }
+    .source-finder-run > .daily-run-body { gap: 18px; }
+    .source-finder-run .daily-stage-status { margin: 0; }
+    .source-finder-call { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .source-finder-waiting { margin: 0; color: #262626; font-size: 14px; line-height: 1.65; }
+    .source-finder-error { margin: 0 0 16px; color: #a8071a; font-size: 14px; line-height: 1.65; }
+    .source-finder-controls { display: grid; justify-items: start; gap: 10px; margin-top: 24px; color: #737373; font-size: 12px; }
+    .source-finder-copy, .source-finder-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: #667085;
+      cursor: pointer;
+    }
+    .source-finder-copy:hover, .source-finder-status:hover { background: #f5f6f8; color: #303949; }
+    .source-finder-copy .icon { width: 15px; height: 15px; }
+    .source-finder-status { width: fit-content; padding: 6px 8px; font-size: 13px; text-align: left; }
+    .source-finder-status > .robot-icon, .source-finder-agent-title > .robot-icon {
+      width: 17px;
+      height: 17px;
+      flex: none;
+      color: #9a6000;
+      fill: #ffdc6d;
+    }
+    .source-finder-status > .icon { width: 13px; height: 13px; flex: none; }
+    .source-finder-link { color: var(--primary); text-underline-offset: 3px; }
+    .artifact #reopenBtn { display: none; }
+    .artifact.source-finder-log-mode .artifact-actions { display: none; }
+    .artifact.source-finder-log-mode .artifact-meta { display: none; }
+    .artifact.source-finder-log-mode .artifact-body { background: #fff; }
+    .source-finder-agent-title { display: inline-flex; align-items: center; gap: 8px; }
+    .source-finder-detail-heading { display: flex; align-items: center; gap: 10px; }
+    .source-finder-back { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 4px; border: 0; border-radius: 5px; background: transparent; color: #737373; cursor: pointer; }
+    .source-finder-back:hover { background: #f5f5f5; color: #262626; }
+    .source-finder-back .icon { width: 20px; height: 20px; }
+    .source-finder-list { display: grid; gap: 28px; }
+    .source-finder-list-group h3 { margin: 0 0 10px; color: #737373; font-size: 13px; font-weight: 400; }
+    .source-finder-list-empty { margin: 0; color: #8c8c8c; font-size: 13px; line-height: 1.6; }
+    .source-finder-list-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; padding: 10px 4px; border: 0; border-radius: 6px; background: transparent; color: #262626; text-align: left; font: inherit; font-size: 14px; cursor: pointer; }
+    .source-finder-list-row:hover { background: #f7f7f7; }
+    .source-finder-list-row > .robot-icon { width: 24px; height: 24px; color: #9a6000; fill: #ffdc6d; }
+    .source-finder-list-row time { color: #737373; font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .source-finder-list-outcome { display: block; margin-top: 3px; color: #737373; font-size: 12px; }
+    .source-finder-log { color: #595959; font-size: 13px; line-height: 1.6; }
+    .source-finder-log ol { padding: 0; margin: 0; list-style: none; }
+    .module-switch {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .source-finder-module .module-close { cursor: pointer; padding: 2px; }
+    .layout.source-finder-result-mode { grid-template-columns: var(--platform-width) var(--module-width) minmax(0, 1fr); }
+    .layout.source-finder-result-mode > :is(.agent-sidebar, .workspace, .artifact, .artifact.open) { display: none; }
+    .source-finder-result {
+      grid-column: 3 / -1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+    .source-finder-result-head {
+      display: flex;
+      min-height: 47px;
+      align-items: end;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .source-finder-result-head h1 {
+      margin: 0 0 -1px;
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-bottom-color: #fff;
+      border-radius: 6px 6px 0 0;
+      background: #fff;
+      color: #0958d9;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .source-finder-result-head > span { align-self: center; color: #667085; font-size: 12px; }
+    .source-finder-result-body { flex: 1; min-height: 0; padding: 24px; overflow: auto; }
+    .source-finder-result-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+    .source-finder-filters, .source-finder-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    .source-finder-filters { padding: 3px; border-radius: 6px; background: #f5f5f5; }
+    .source-finder-filters > span { padding: 5px 8px; color: #595959; font-size: 12px; white-space: nowrap; }
+    .source-finder-filters > .selected { border-radius: 4px; background: white; color: #262626; box-shadow: 0 1px 2px #0002; font-weight: 600; }
+    .source-finder-tools { gap: 8px; font-size: 12px; color: #0958d9; }
+    .source-finder-tools progress { width: 66px; height: 6px; accent-color: var(--primary); }
+    .source-finder-tool { padding: 7px 11px; border-radius: 5px; background: #1677ff; color: #fff; }
+    .source-finder-table-wrap { overflow: auto; border: 1px solid var(--border); border-radius: 7px; }
+    .source-finder-table { min-width: 1060px; width: 100%; border-collapse: collapse; font-size: 13px; color: #262626; }
+    .source-finder-table :is(th, td) { padding: 10px 9px; border-right: 1px solid #f0f0f0; border-bottom: 1px solid #ededed; text-align: left; }
+    .source-finder-table th { background: #fafafa; white-space: nowrap; font-weight: 600; }
+    .source-finder-table td { height: 64px; overflow-wrap: anywhere; vertical-align: middle; }
+    .source-finder-table tr:last-child td { border-bottom: 0; }
+    .source-finder-table :is(th, td):last-child { border-right: 0; }
+    .source-finder-table :is(.source-finder-date, .source-finder-row-actions) { white-space: nowrap; }
+    .source-finder-site-badge { display: inline-block; padding: 1px 5px; background: #f6ffed; color: #38751a; border-radius: 3px; font-size: 12px; }
+    .source-finder-site-badge.missing { background: #fff1f0; color: #a8071a; }
+    .source-finder-table .source-finder-row-actions { line-height: 1.7; color: #0958d9; }
+    .source-finder-table .source-finder-delete { color: #a8071a; }
+    .source-finder-table .source-finder-processed { color: #595959; }
+    @media (max-width: 1100px) {
+      .layout.source-finder-result-mode { grid-template-columns: var(--platform-width) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+      .layout.source-finder-result-mode > .platform-nav { grid-row: 1 / -1; }
+      .layout.source-finder-result-mode > .business-module {
+        grid-column: 2; display: flex; gap: 6px; padding: 7px 12px;
+      }
+      .layout.source-finder-result-mode .business-module > .module-card:is(.source-finder-module, .source-finder-chat-module):not([hidden]) {
+        display: flex; min-width: 87px; margin: 0;
+      }
+      .source-finder-result { grid-column: 2; }
+    }
+    @media (max-width: 640px) {
+      .layout.source-finder-result-mode { grid-template-columns: minmax(0, 1fr); }
+      .layout.source-finder-result-mode > .business-module, .source-finder-result { grid-column: 1; }
+      .source-finder-result-body { padding: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -6627,10 +6777,19 @@
           <span class="module-title">团队总览</span>
           <button class="module-close" aria-label="关闭团队总览">×</button>
         </div>
-        <div class="module-card active">
-          <svg class="module-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 3 6 6 .9-4.5 4.3 1.1 6.3L12 17.5l-5.6 3 1.1-6.3L3 9.9 9 9Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-          <span class="module-title">新问答</span>
+        <div class="module-card active source-finder-chat-module" id="chatModule">
+          <button class="module-switch" id="chatModuleOpen" type="button" aria-current="page" aria-controls="workspace">
+            <svg class="module-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 3 6 6 .9-4.5 4.3 1.1 6.3L12 17.5l-5.6 3 1.1-6.3L3 9.9 9 9Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span class="module-title">新问答</span>
+          </button>
           <button class="module-close" aria-label="关闭新问答">×</button>
+        </div>
+        <div class="module-card source-finder-module" id="sourceFinderModule" hidden>
+          <button class="module-switch" id="sourceFinderModuleOpen" type="button" aria-controls="sourceFinderResult">
+            <svg class="module-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 3 6 6 .9-4.5 4.3 1.1 6.3L12 17.5l-5.6 3 1.1-6.3L3 9.9 9 9Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span class="module-title">AI找源</span>
+          </button>
+          <button class="module-close" id="sourceFinderModuleClose" type="button" aria-label="关闭 AI找源">×</button>
         </div>
 
         <div class="module-group">
@@ -7170,6 +7329,7 @@
           <section class="planning-story" id="planningStory" hidden aria-label="规划文档修改建议对话"></section>
           <section class="vz-chat-story" id="vanishChatStory" hidden aria-label="Vanish 会话消息"></section>
           <section class="creation-chat-story" id="creationChatStory" hidden aria-label="对话创建"></section>
+          <section class="source-finder-story" id="sourceFinderStory" hidden aria-label="AI找源演示对话"></section>
         </section>
 
         <section class="project-view" id="projectView" aria-label="项目管理">
@@ -7700,6 +7860,7 @@
           <div class="tab active" data-tab="report" role="tab" tabindex="0" aria-selected="true"><span>文</span><span>股权激励报告</span><button class="tab-close" aria-label="关闭报告">×</button></div>
           <div class="tab" data-tab="table" role="tab" tabindex="-1" aria-selected="false"><span>表</span><span>字段映射表</span><button class="tab-close" aria-label="关闭表格">×</button></div>
           <div class="tab" data-tab="manualQa" style="display:none" role="tab" tabindex="-1" aria-selected="false"><span>问</span><span>创建问题</span><button class="tab-close" aria-label="关闭创建问题">×</button></div>
+          <div class="tab" data-tab="sourceFinderLog" style="display:none" role="tab" tabindex="-1" aria-selected="false"><span data-tab-title>Agent</span><button class="tab-close" type="button" aria-label="关闭 Agent 日志">×</button></div>
           <button class="round-btn" id="reopenBtn" title="重新打开已关闭产物">＋</button>
         </div>
         <div class="artifact-head">
@@ -7807,6 +7968,13 @@
         <aside class="manual-issue-list" id="manualIssueList" aria-label="人工问答列表"></aside>
         <article class="manual-system-detail" id="manualSystemDetail"></article>
         <aside class="manual-system-properties" id="manualSystemProperties"></aside>
+      </section>
+      <section class="source-finder-result" id="sourceFinderResult" aria-labelledby="sourceFinderResultTitle" hidden>
+        <header class="source-finder-result-head">
+          <h1 id="sourceFinderResultTitle" tabindex="-1">LR1371 · 2025 年 6 月</h1>
+          <span>模拟数据</span>
+        </header>
+        <div class="source-finder-result-body" id="sourceFinderResultBody"></div>
       </section>
     </div>
   </div>
@@ -8103,6 +8271,11 @@
     const artifactMeta = document.getElementById('artifactMeta');
     const messages = document.getElementById('messages');
     const manualSystem = document.getElementById('manualSystem');
+    const sourceFinderStory = document.getElementById('sourceFinderStory');
+    const sourceFinderResult = document.getElementById('sourceFinderResult');
+    const sourceFinderModule = document.getElementById('sourceFinderModule');
+    const sourceFinderModuleOpen = document.getElementById('sourceFinderModuleOpen');
+    const chatModuleOpen = document.getElementById('chatModuleOpen');
     const planningStory = document.getElementById('planningStory');
     const dailyReportStory = document.getElementById('dailyReportStory');
     const financialExtractionStory = document.getElementById('financialExtractionStory');
@@ -8610,8 +8783,32 @@
     const tabs = {
       report: { open: true, title: '港股股权激励披露口径规划文档', meta: '未保存 · v3 · 当前活动窗口' },
       table: { open: true, title: '字段映射表', meta: '未保存 · v1 · 当前活动窗口' },
-      manualQa: { open: false, available: false, title: '创建问题', meta: '人工问答 · 未提交' }
+      manualQa: { open: false, available: false, title: '创建问题', meta: '人工问答 · 未提交' },
+      sourceFinderLog: { open: false, available: false, title: 'Agent', meta: '' }
     };
+    const sourceFinderRuns = new Map();
+    let sourceFinderListClock = null;
+    const sourceFinderSubmittedText = '基于sql找到1000条记录，已提交AI找源 Agent任务，将使用闲时资源运行，期间可以继续问答，如需取消也可直接和我说明';
+    const sourceFinderWaitingText = '已收到AI找源 Agent任务，我将使用闲时资源在18:00-次日6:00运行';
+    const sourceFinderStateLabels = { waiting: '待运行', running: '运行中', completed: '已完成', failed: '执行失败', cancelled: '已取消' };
+    const sourceFinderSteps = [
+      [0, 'browser.open', '打开数据源目录', '进入演示数据源目录，准备查询记录。'],
+      [1000, 'browser.fill', '填写查询条件', '数据源 LR1371，颁布日期 2025-06-01 至 2025-06-30。'],
+      [2700, 'browser.extract', '提取目录记录', '读取 8 条记录的标题、颁布日期和颁布者。'],
+      [4600, 'browser.inspect', '核对来源地址', '定位 5 个来源页面，标记 3 条待补充的站点地址。'],
+      [7000, 'browser.capture', '汇总验收结果', '已整理站点名称、站点地址和案例路径。']
+    ];
+    // All records and publisher names are fictional.
+    const sourceFinderRecords = [
+      ['鹿溪市公共数据开放管理办法', '27', '2025-07-01', '鹿溪市人民政府', '', 'missing'],
+      ['松岚市住房保障申请实施细则', '25', '2025-06-26', '松岚市住房保障局', 'songlan', 'processed'],
+      ['云汀市城市更新项目申报指引', '23', '', '云汀市建设局', '', 'missing'],
+      ['澄川市公共资源交易目录公告', '20', '2025-07-01', '澄川市公共资源交易中心', 'chengchuan', 'batch'],
+      ['临栖市地质灾害防治方案', '17', '2025-06-17', '临栖市自然资源局', 'linqi', 'processed'],
+      ['海桐市学前教育资助实施方案', '12', '', '海桐市教育局', 'haitong', 'batch'],
+      ['清屿市科技项目专项管理办法', '09', '2025-07-01', '清屿市科技局', '', 'missing'],
+      ['青禾市产业园区服务管理细则', '05', '2025-06-05', '青禾市发展改革局', 'qinghe', 'processed']
+    ];
 
     const agentSkillCatalog = [
       ['report', '生成报告', '基于引用材料生成结构化报告'],
@@ -8638,7 +8835,8 @@
       ['timeline', '时间线整理', '按时间整理事件及相关证据'],
       ['qa', '问答整理', '将资料整理为常见问题和回答'],
       ['presentation', '演示提纲', '生成演示文稿结构与讲述要点'],
-      ['calendar', 'calendar', '辅助创建定时任务，确认任务内容、运行位置和运行时间']
+      ['calendar', 'calendar', '辅助创建定时任务，确认任务内容、运行位置和运行时间'],
+      ['agent-creator', 'agent-creator', '辅助创建 Agent，配置名称、描述、工作指令、模型、Skill 和关联项目']
     ].map(([id, name, description]) => ({ id: `skill-${id}`, name, description }));
 
     const suggestions = {
@@ -8756,7 +8954,7 @@
     }
 
     function canShareConversation(state, generating, isShared) {
-      return state !== 'empty' && !generating && !isShared;
+      return state !== 'empty' && state !== 'source-finder' && !generating && !isShared;
     }
 
     function updateConversationActions() {
@@ -8773,13 +8971,15 @@
         ? '回答生成完成后可分享'
         : currentConversationState === 'empty'
           ? '对话中暂无内容'
-          : isShared ? '只读快照不可再次分享' : '';
+          : currentConversationState === 'source-finder' ? '演示对话仅在当前页面可用'
+            : isShared ? '只读快照不可再次分享' : '';
     }
 
     function setCurrentConversation(row, stateOverride) {
       currentConversationState = stateOverride || row?.dataset.historyState || 'conversation';
       currentConversationId = row?.dataset.conversationId || currentConversationId;
       conversationGenerating = currentConversationState === 'daily-report';
+      if (currentConversationState !== 'source-finder') clearSourceFinderView();
       updateConversationActions();
       syncConversationLocationUi();
     }
@@ -9223,6 +9423,7 @@
       const demoNames = { '舆情智员': '舆情 Agent', '研报智员': '研报 Agent', '跨项目协作智员': '跨项目协作 Agent', '个人研究助理': '个人研究 Agent', '我的研究助手': '我的研究 Agent' };
       return {
         id: value.id.slice(0, 100), name: demoNames[string('name')] || string('name'), description: string('description'), instruction: string('instruction'),
+        model: string('model') === 'GPT Luna' ? 'GPT Luna' : 'GLM-5.3 Flash',
         configMode: value.configMode === 'existing' || value.sourceAgentId ? 'existing' : 'custom', sourceAgentId: string('sourceAgentId'),
         projectIds: Array.isArray(value.projectIds) ? [...new Set(value.projectIds.filter(id => typeof id === 'string'))].slice(0, 100) : [],
         skillIds: Array.isArray(value.skillIds) ? [...new Set(value.skillIds.filter(id => typeof id === 'string'))].slice(0, 100) : [],
@@ -9265,8 +9466,8 @@
     let agentEditorFocusTimer = null;
     let vanishEditorDraft = null;
     let vanishEditorDirty = false;
+    const vanishEditorDrafts = new Map();
     let vanishResourcePicker = null;
-    let vanishAgentSearch = '';
     let vanishAgentListScrollTop = 0;
     let vanishConnectMode = 'new';
     const vanishImProfiles = new Map();
@@ -9306,17 +9507,28 @@
     let vanishConnectExpiresAt = 0;
     let vanishConnectTimer = null;
     let vanishExistingBot = 'demo-bot-business';
+    const VANISH_MCP_CONFIG_EXAMPLE = JSON.stringify({
+      mcpServers: {
+        vanish: {
+          type: 'http',
+          url: 'http://127.0.0.1:17477/mcp',
+          headers: { Authorization: 'Bearer 848a696eadb447e05c2f23276820aef6f311db0553dab586' }
+        }
+      }
+    }, null, 2);
     let vanishMcpDraft = '';
-    let vanishMcpConnecting = false;
-    let vanishMcpConnectionCompleted = false;
     let vanishMcpConfigExpanded = true;
-    let vanishMcpClickTimer = null;
     let vanishAgentClickTimer = null;
-    let vanishMcpTimer = null;
+    let vanishEditorConnectClickTimer = null;
     let vanishStorageAvailable = true;
     try {
-      const recovered = normalizeVanishAgent(JSON.parse(localStorage.getItem(VANISH_DRAFT_KEY)));
-      if (recovered) { vanishEditorDraft = recovered; vanishEditorDirty = true; }
+      const saved = JSON.parse(localStorage.getItem(VANISH_DRAFT_KEY));
+      for (const entry of Array.isArray(saved) ? saved : [saved]) {
+        const draft = normalizeVanishAgent(entry);
+        if (draft && userVanishAgents().some(agent => agent.id === draft.id)) {
+          vanishEditorDrafts.set(draft.id, draft);
+        }
+      }
     } catch (error) { /* Draft recovery is optional. */ }
 
     function isVanishAgentConfigured(agent) {
@@ -9334,7 +9546,7 @@
       visited.add(agent.id);
       const source = agents.find(item => item.id === agent.sourceAgentId);
       const config = resolveVanishAgentConfig(source, agents, visited);
-      return config ? { ...agent, instruction: config.instruction, projectIds: [...config.projectIds], skillIds: [...config.skillIds], description: agent.description || config.description } : null;
+      return config ? { ...agent, instruction: config.instruction, model: config.model || 'GLM-5.3 Flash', projectIds: [...config.projectIds], skillIds: [...config.skillIds], description: agent.description || config.description } : null;
     }
     function connectedVanishAgents() {
       const unique = new Map();
@@ -9355,15 +9567,20 @@
       catch (error) { vanishStorageAvailable = false; showToast('保存失败，请重试'); return false; }
     }
     function cacheVanishDraft() {
+      const draftId = vanishEditorDraft?.id;
+      if (draftId && userVanishAgents().some(agent => agent.id === draftId)) {
+        if (vanishEditorDirty) vanishEditorDrafts.set(draftId, vanishEditorDraft);
+        else vanishEditorDrafts.delete(draftId);
+      }
       try {
-        if (vanishEditorDirty && vanishEditorDraft) localStorage.setItem(VANISH_DRAFT_KEY, JSON.stringify(vanishEditorDraft));
+        if (vanishEditorDrafts.size) localStorage.setItem(VANISH_DRAFT_KEY, JSON.stringify([...vanishEditorDrafts.values()]));
         else localStorage.removeItem(VANISH_DRAFT_KEY);
         return true;
       } catch (error) { return false; }
     }
     function captureVanishDraft() {
       if (!vanishEditorDraft || agentEditorShell.hidden) return;
-      for (const [field, id] of [['name', 'vzName'], ['description', 'vzDescription'], ['instruction', 'vzInstruction']]) {
+      for (const [field, id] of [['name', 'vzName'], ['description', 'vzDescription'], ['instruction', 'vzInstruction'], ['model', 'vzModel']]) {
         const input = document.getElementById(id);
         if (input) vanishEditorDraft[field] = input.value;
       }
@@ -9374,7 +9591,7 @@
       if (artifact.classList.contains('agent-editor-mode')) closeAgentEditor(false);
       captureVanishDraft(); cacheVanishDraft();
       if (!workspace.classList.contains('settings-mode')) openSettings();
-      vanishView = 'list'; vanishAgentSearch = ''; vanishAgentListScrollTop = 0;
+      vanishView = 'list'; vanishAgentListScrollTop = 0;
       setSettingsTab('agents');
       if (agentId && agentId !== VANISH_DEFAULT_AGENT_ID) beginVanishEditor(agentId);
       else requestAnimationFrame(() => agentConfigPane.querySelector('.settings-panel-title')?.focus());
@@ -9390,6 +9607,7 @@
 
     function exitAgentEditorMode() {
       if (agentEditorShell.hidden && vanishView !== 'edit') return;
+      clearTimeout(vanishEditorConnectClickTimer); vanishEditorConnectClickTimer = null;
       clearTimeout(agentEditorFocusTimer);
       captureVanishDraft(); cacheVanishDraft(); closeVanishConnectDialog(false); closeVanishResourcePicker(false);
       vanishView = 'list';
@@ -9427,16 +9645,13 @@
       if (restoreFocus) requestAnimationFrame(() => (returnTarget || pluginConfigPane.querySelector('[data-vz-action="manage-agents"]'))?.focus());
     }
 
-    function completeVanishMcpConfiguration() {
-      vanishMcpConnectionCompleted = true;
-      vanishMcpConfigExpanded = false;
-    }
     function renderVanishMcpForm() {
-      return `<details class="vz-mcp-config" id="vanishMcpConfigDetails" ${vanishMcpConfigExpanded ? 'open' : ''}><summary id="vanishMcpConfigSummary"><span>MCP 配置信息</span><span class="vz-mcp-config-toggle"><span class="vz-mcp-config-open-text">展开</span><span class="vz-mcp-config-close-text">收起</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></span></summary><div class="vz-mcp-config-body"><label class="vz-field" for="vanishPluginConfig"><span class="sr-only">MCP 配置信息</span><textarea class="plugin-textarea" id="vanishPluginConfig" spellcheck="false" aria-invalid="false" aria-describedby="vanishPluginStatus" placeholder='粘贴从 Vanish 复制的 MCP 配置信息'>${escapeHtml(vanishMcpDraft)}</textarea></label><div class="plugin-inline-status" id="vanishPluginStatus" role="status" aria-live="polite"></div></div></details>`;
+      const invalid = Boolean(vanishMcpDraft.trim()) && !isValidVanishMcpConfig(vanishMcpDraft);
+      return `<details class="vz-mcp-config" id="vanishMcpConfigDetails" ${vanishMcpConfigExpanded ? 'open' : ''}><summary id="vanishMcpConfigSummary"><span>MCP 配置信息</span><span class="vz-mcp-config-toggle"><span class="vz-mcp-config-open-text">展开</span><span class="vz-mcp-config-close-text">收起</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></span></summary><div class="vz-mcp-config-body"><label class="vz-field" for="vanishPluginConfig"><span class="sr-only">MCP 配置信息</span><textarea class="plugin-textarea" id="vanishPluginConfig" spellcheck="false" aria-invalid="${invalid}" aria-describedby="vanishPluginStatus" placeholder="${escapeHtml(VANISH_MCP_CONFIG_EXAMPLE)}">${escapeHtml(vanishMcpDraft)}</textarea></label><div class="plugin-inline-status${invalid ? ' error' : ''}" id="vanishPluginStatus" role="status" aria-live="polite">${invalid ? '配置无效，请粘贴完整的 Vanish MCP JSON 配置。' : ''}</div></div></details>`;
     }
 
     function renderAgentManagement() {
-      return `<div class="vz-shell" data-layout="${vanishLayout}"><div class="settings-panel-head vz-agent-page-head"><div><h2 class="settings-panel-title" tabindex="-1">Agent</h2><p class="settings-panel-subtitle">配置独立指令、项目和 Skill，也可连接 Vanish 智员。</p></div></div>${renderVanishAgentList()}</div>`;
+      return `<div class="vz-shell" data-layout="${vanishLayout}"><div class="settings-panel-head vz-agent-page-head"><div><h2 class="settings-panel-title" tabindex="-1">Agent</h2><p class="settings-panel-subtitle">配置工作指令、模型、Skill 和项目资料，也可连接 Vanish 智员。</p></div></div>${renderVanishAgentList()}</div>`;
     }
 
     function refreshAgentManagement(focusSelector = '') {
@@ -9459,15 +9674,14 @@
       updatePluginCards();
     }
     function renderVanishMcp() {
-      const connected = pluginState.vanish.connected;
-      const status = `<span class="vz-mcp-status ${connected && !vanishMcpConnecting ? 'active' : ''}" aria-live="polite">${vanishMcpConnecting ? '连接中' : connected ? '已连接' : '未连接'}</span>`;
-      const controls = `<div class="vz-mcp-controls">${connected ? '<button class="plugin-button vz-btn" type="button" data-vz-action="mcp-disconnect">断开连接</button>' : `<button class="plugin-button vz-btn primary" type="button" data-vz-action="mcp-connect" ${vanishMcpConnecting ? 'disabled' : ''}>${vanishMcpConnecting ? '正在连接…' : '连接'}</button>`}</div>`;
-      return `<div class="vz-shell"><section class="vz-mcp-settings" aria-labelledby="vzMcpTitle"><div class="vz-section-title"><div class="vz-mcp-title"><h4 id="vzMcpTitle">Vanish MCP</h4>${status}</div>${controls}</div>${renderVanishMcpForm()}</section>${renderVanishAgentConnection()}</div>`;
+      const configured = pluginState.vanish.capabilities.mcp;
+      const status = `<span class="vz-mcp-status ${configured ? 'active' : ''}" id="vanishMcpConfigStatus" role="status" aria-live="polite">${configured ? '已配置' : '未配置'}</span>`;
+      return `<div class="vz-shell"><section class="vz-mcp-settings" aria-labelledby="vzMcpTitle"><div class="vz-section-title"><div class="vz-mcp-title"><h4 id="vzMcpTitle">Vanish MCP</h4>${status}</div></div>${renderVanishMcpForm()}</section>${renderVanishAgentConnection()}</div>`;
     }
 
     function renderVanishAgentConnection() {
       const defaultAgent = vanishAgents.find(agent => agent.id === VANISH_DEFAULT_AGENT_ID);
-      const agents = [defaultAgent, ...connectedVanishAgents().filter(agent => agent.id !== VANISH_DEFAULT_AGENT_ID)].filter(Boolean);
+      const agents = [defaultAgent, ...vanishAgents.filter(agent => !agent.deletedAt && agent.botId && agent.id !== VANISH_DEFAULT_AGENT_ID)].filter(Boolean);
       const rows = agents.map(agent => {
         const connected = Boolean(agent.botId), isDefault = agent.id === VANISH_DEFAULT_AGENT_ID;
         const info = connected ? vanishImProfiles.get(agent.botId) || { profile: null, status: 'idle' } : { profile: null, status: 'idle' };
@@ -9538,45 +9752,73 @@
 
     function renderVanishAgentList() {
       const deleted = vanishAgents.filter(agent => agent.deletedAt).sort((a, b) => b.deletedAt - a.deletedAt)[0];
-      return `${vanishView !== 'edit' && vanishEditorDraft && vanishEditorDirty ? `<div class="vz-recovery"><span>“${escapeHtml(vanishEditorDraft.name || '新 Agent')}”有未保存的配置</span><button class="plugin-button vz-btn quiet" type="button" data-vz-action="discard">放弃编辑</button><button class="plugin-button vz-btn" type="button" data-vz-action="recover">继续编辑</button></div>` : ''}
-        <div class="project-toolbar vz-list-toolbar"><div class="vz-list-heading"><h3>我的 Agent（${userVanishAgents().length}）</h3></div><div class="project-toolbar-actions"><label class="project-search-wrap">${vzIcon('search')}<input class="project-search" id="vzAgentSearch" type="search" aria-label="搜索 Agent 或关联项目" placeholder="搜索 Agent" autocomplete="off" value="${escapeHtml(vanishAgentSearch)}"></label>${renderCreationButton('agent')}</div></div>
+      return `<article class="automation-task-row agent-list-row system-agent-row">
+          <div class="automation-task-open agent-list-open">
+            <span class="automation-clock">${vzIcon('robot', true)}</span>
+            <span class="automation-task-copy"><span class="automation-task-title">AI找源 Agent</span><span class="automation-task-schedule agent-list-description">查找指定数据源的记录，核对站点名称和来源地址。</span></span>
+          </div>
+          <span class="system-agent-tag">系统</span>
+        </article>
+        <div class="project-toolbar vz-list-toolbar"><div class="vz-list-heading"><h3>我的 Agent（${userVanishAgents().length}）</h3></div><div class="project-toolbar-actions">${renderCreationButton('agent')}</div></div>
         ${deleted ? `<div class="agent-delete-recovery"><span>已删除 ${escapeHtml(deleted.name)}</span><button type="button" data-vz-action="restore-agent" data-vz-id="${escapeHtml(deleted.id)}">撤销删除</button></div>` : ''}
-        <div class="skill-market-grid agent-card-grid" id="vzAgentResults" aria-label="我的 Agent" aria-live="polite">${renderVanishAgentResults()}</div>`;
+        <div class="automation-task-list agent-list" id="vzAgentResults" aria-label="我的 Agent" aria-live="polite">${renderVanishAgentResults()}</div>`;
     }
 
     function renderVanishAgentResults() {
-      const query = vanishAgentSearch.trim().toLocaleLowerCase();
-      const filtered = userVanishAgents().filter(agent => [agent.name, agent.description, ...vzProjectNames(agent)].join(' ').toLocaleLowerCase().includes(query));
-      if (!filtered.length) return `<div class="vz-empty agent-card-empty"><span class="vz-avatar">${vzIcon('robot', true)}</span><h4>${userVanishAgents().length ? '没有找到匹配的 Agent' : '创建你的第一个 Agent'}</h4><p>${userVanishAgents().length ? '试试其他名称或项目。' : '描述你想完成的工作，创建专属 Agent。'}</p><button class="plugin-button vz-btn" type="button" data-vz-action="${userVanishAgents().length ? 'reset-filter' : 'create'}">${userVanishAgents().length ? '清除搜索' : '新建 Agent'}</button></div>`;
-      return filtered.map(agent => {
+      const agents = userVanishAgents();
+      if (!agents.length) return `<div class="vz-empty agent-list-empty"><span class="vz-avatar">${vzIcon('robot', true)}</span><h4>创建你的第一个 Agent</h4><p>描述你想完成的工作，创建专属 Agent。</p><button class="plugin-button vz-btn" type="button" data-vz-action="create">新建 Agent</button></div>`;
+      return agents.map(agent => {
         const config = resolveVanishAgentConfig(agent);
-        return `<article class="skill-market-card agent-config-card ${vanishView === 'edit' && vanishEditorDraft?.id === agent.id ? 'selected' : ''}" aria-label="${escapeHtml(agent.name)}">
-          <button class="agent-card-open" type="button" data-vz-open="${escapeHtml(agent.id)}" aria-label="查看 ${escapeHtml(agent.name)} 详情"><span class="skill-icon">${vzIcon('robot', true)}</span><span class="agent-card-copy"><strong class="skill-name">${escapeHtml(agent.name)}</strong><span class="skill-desc">${escapeHtml(agent.description || config?.description || '未填写简介')}</span></span></button>
-          <div class="agent-card-footer"><span title="${escapeHtml(vzProjectSummary(agent))}">${config?.projectIds.length || 0} 个项目 · ${config?.skillIds.length || 0} 个 Skill</span><button class="agent-card-delete" type="button" data-vz-action="delete-agent" data-vz-id="${escapeHtml(agent.id)}" aria-label="删除 ${escapeHtml(agent.name)}">${creationIcon('delete')}删除</button></div>
+        return `<article class="automation-task-row agent-list-row${vanishView === 'edit' && vanishEditorDraft?.id === agent.id ? ' selected' : ''}" data-agent-id="${escapeHtml(agent.id)}" aria-label="${escapeHtml(agent.name)}">
+          <button class="automation-task-open agent-list-open" type="button" data-vz-open="${escapeHtml(agent.id)}" aria-label="查看 ${escapeHtml(agent.name)} 详情"><span class="automation-clock">${vzIcon('robot', true)}</span><span class="automation-task-copy"><span class="automation-task-title">${escapeHtml(agent.name)}</span><span class="automation-task-schedule agent-list-description">${escapeHtml(agent.description || config?.description || '未填写描述')}</span></span></button>
+          <button class="automation-more" type="button" data-vz-menu="${escapeHtml(agent.id)}" aria-label="${escapeHtml(agent.name)}的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>
+          <div class="automation-task-menu" role="menu" aria-label="${escapeHtml(agent.name)}的操作" aria-hidden="true"><button type="button" role="menuitem" tabindex="-1" data-vz-action="edit" data-vz-id="${escapeHtml(agent.id)}">${creationIcon('chat')}编辑</button><button class="danger" type="button" role="menuitem" tabindex="-1" data-vz-action="delete-agent" data-vz-id="${escapeHtml(agent.id)}">${creationIcon('delete')}删除</button></div>
         </article>`;
       }).join('');
     }
 
+    function closeAgentListMenus(restoreFocus = false) {
+      let trigger;
+      agentConfigPane.querySelectorAll('[data-vz-menu][aria-expanded="true"]').forEach(button => {
+        trigger = button;
+        button.setAttribute('aria-expanded', 'false');
+        const menu = button.closest('[data-agent-id]').querySelector('[role="menu"]');
+        menu.classList.remove('open', 'opens-up'); menu.setAttribute('aria-hidden', 'true');
+      });
+      if (restoreFocus) trigger?.focus();
+    }
+    function openAgentListMenu(button, focusLast = false) {
+      const wasOpen = button.getAttribute('aria-expanded') === 'true';
+      closeAgentListMenus();
+      if (wasOpen) return;
+      const menu = button.closest('[data-agent-id]').querySelector('[role="menu"]');
+      button.setAttribute('aria-expanded', 'true');
+      menu.classList.add('open'); menu.setAttribute('aria-hidden', 'false');
+      const bottom = Math.min(window.innerHeight, agentConfigPane.closest('.settings-content').getBoundingClientRect().bottom);
+      if (menu.getBoundingClientRect().bottom > bottom - 12) menu.classList.add('opens-up');
+      const items = menu.querySelectorAll('[role="menuitem"]');
+      (focusLast ? items[items.length - 1] : items[0])?.focus({ preventScroll: true });
+    }
+
     function beginVanishEditor(id = '') {
+      clearTimeout(vanishEditorConnectClickTimer); vanishEditorConnectClickTimer = null;
       if (!AGENT_MANAGEMENT_ENABLED || id === VANISH_DEFAULT_AGENT_ID) return;
       const wasOpen = vanishView === 'edit';
-      if (wasOpen) captureVanishDraft();
-      else vanishAgentListScrollTop = document.querySelector('.settings-content').scrollTop;
       const agent = vanishAgents.find(item => item.id === id && !item.deletedAt);
       if (id && !agent) return;
-      if (vanishEditorDirty && vanishEditorDraft && (!id || vanishEditorDraft.id !== id)) {
-        showToast('请先保存当前配置，或关闭详情后放弃编辑');
-        if (wasOpen) agentEditorShell.querySelector('[data-vz-action="save"]')?.focus();
-        else refreshAgentManagement('[data-vz-action="recover"]');
-        return;
-      }
       if (wasOpen && vanishEditorDraft?.id === id && artifact.classList.contains('agent-editor-mode')) { document.getElementById('vzName')?.focus(); return; }
+      if (wasOpen) { captureVanishDraft(); cacheVanishDraft(); }
+      else vanishAgentListScrollTop = document.querySelector('.settings-content').scrollTop;
       if (artifact.classList.contains('asset-preview-mode')) setArtifactVisible(false);
       exitAutomationEditorMode();
-      if (!vanishEditorDirty || !vanishEditorDraft || vanishEditorDraft.id !== id) {
-        vanishEditorDraft = agent ? JSON.parse(JSON.stringify(agent)) : { id: `vz-${Date.now().toString(36)}`, configMode: 'custom', sourceAgentId: '', name: '', description: '', instruction: '', projectIds: [], skillIds: [], botId: '', botName: '', visibility: '', updatedAt: Date.now() };
-        vanishEditorDirty = false;
+      const cachedDraft = vanishEditorDrafts.get(id);
+      if (agent) {
+        vanishEditorDraft = JSON.parse(JSON.stringify(cachedDraft || agent));
+        Object.assign(vanishEditorDraft, { botId: agent.botId, botName: agent.botName, visibility: agent.visibility });
+      } else {
+        vanishEditorDraft = { id: `vz-${Date.now().toString(36)}`, configMode: 'custom', sourceAgentId: '', name: '', description: '', instruction: '', model: 'GLM-5.3 Flash', projectIds: [], skillIds: [], botId: '', botName: '', visibility: '', updatedAt: Date.now() };
       }
+      vanishEditorDirty = Boolean(cachedDraft);
       vanishSourceChoosing = false; vanishSourceSearch = '';
       vanishView = 'edit';
       if (artifactMaximized) setArtifactMaximized(false);
@@ -9591,11 +9833,12 @@
       const agent = vanishEditorDraft;
       if (agent.configMode === 'existing') return renderExistingVanishAgentEditor();
       return `<div class="automation-editor-form vz-agent-settings" role="form" aria-label="Agent 设置">
-        <div class="automation-field"><label class="automation-label vz-field-label" for="vzName">名称 <span class="vz-field-note">必填</span></label><input id="vzName" data-vz-field required maxlength="30" placeholder="例如：财务研究助手" value="${escapeHtml(agent.name)}"></div>
-        <div class="automation-field"><label class="automation-label vz-field-label" for="vzDescription">简介 <span class="vz-field-note">选填</span></label><input id="vzDescription" data-vz-field maxlength="120" placeholder="简要说明这个 Agent 可以做什么" value="${escapeHtml(agent.description)}"></div>
-        <div class="automation-field"><label class="automation-label vz-field-label" for="vzInstruction">指令 <b aria-hidden="true">*</b></label><textarea class="vz-input vz-instruction" id="vzInstruction" data-vz-field required maxlength="6000" placeholder="描述 Agent 需要完成的工作，以及回答时应遵循的要求">${escapeHtml(agent.instruction)}</textarea></div>
-        ${renderVanishResourceField('projects')}
+        <div class="automation-field"><label class="automation-label vz-field-label" for="vzName">名称 <span class="vz-required-dot" aria-hidden="true"></span></label><input id="vzName" data-vz-field required maxlength="30" placeholder="例如：财务研究助手" value="${escapeHtml(agent.name)}"></div>
+        <div class="automation-field"><label class="automation-label vz-field-label" for="vzDescription">描述 <span class="vz-field-note">选填</span></label><input id="vzDescription" data-vz-field maxlength="120" placeholder="简要说明这个 Agent 的用途和适用场景" value="${escapeHtml(agent.description)}"></div>
+        <div class="automation-field"><label class="automation-label vz-field-label" for="vzInstruction">工作指令 <span class="vz-required-dot" aria-hidden="true"></span></label><textarea class="vz-input vz-instruction" id="vzInstruction" data-vz-field required maxlength="6000" placeholder="定义职责、工作步骤、输出要求和边界">${escapeHtml(agent.instruction)}</textarea></div>
+        <div class="automation-field"><label class="automation-label vz-field-label" for="vzModel">模型 <span class="vz-required-dot" aria-hidden="true"></span></label><select id="vzModel" data-vz-field required>${Object.keys(modelEffortSupport).map(model => `<option value="${escapeHtml(model)}"${model === (agent.model || 'GLM-5.3 Flash') ? ' selected' : ''}>${escapeHtml(model)}</option>`).join('')}</select></div>
         ${renderVanishResourceField('skills')}
+        ${renderVanishResourceField('projects')}
         <section class="automation-field" id="vzPreview" aria-labelledby="vzConnectionTitle">${renderVanishPreview()}</section>
       </div>`;
     }
@@ -9613,7 +9856,7 @@
       const source = vanishAgents.find(item => item.id === agent.sourceAgentId);
       const selecting = vanishSourceChoosing || !source;
       const effective = resolveVanishAgentConfig(agent);
-      return `<div class="automation-editor-form vz-agent-settings" role="form" aria-label="Agent 设置"><section class="automation-field"><div class="automation-label">${selecting ? '选择现有 Agent' : '使用的 Agent'}</div>${selecting ? `<label class="vz-picker-search">${vzIcon('search')}<input id="vzSourceSearch" type="search" aria-label="搜索现有 Agent" placeholder="搜索 Agent 名称或简介" value="${escapeHtml(vanishSourceSearch)}"></label><div class="vz-source-options" id="vzSourceOptions" role="listbox" aria-label="现有 Agent">${renderExistingVanishSourceOptions()}</div>` : `<div class="vz-source-selected"><span class="vz-avatar">${vzIcon('robot', true)}</span><div class="vz-source-copy"><strong>${escapeHtml(source.name)}</strong><small>${escapeHtml(source.description || '独立 Agent 配置')}</small><small>${effective?.projectIds.length || 0} 个项目 · ${effective?.skillIds.length || 0} 个 Skill</small></div><button class="plugin-button vz-btn" type="button" data-vz-action="change-source">更换</button></div>`}<p class="vz-source-note">指令、项目和 Skill 随来源 Agent 更新。</p></section>${source ? `<div class="automation-field"><label class="automation-label vz-field-label" for="vzName">名称 <span class="vz-field-note">必填</span></label><input id="vzName" data-vz-field required maxlength="30" value="${escapeHtml(agent.name)}"></div><section class="automation-field" id="vzPreview" aria-labelledby="vzConnectionTitle">${renderVanishPreview()}</section>` : ''}</div>`;
+      return `<div class="automation-editor-form vz-agent-settings" role="form" aria-label="Agent 设置"><section class="automation-field"><div class="automation-label">${selecting ? '选择现有 Agent' : '使用的 Agent'}</div>${selecting ? `<label class="vz-picker-search">${vzIcon('search')}<input id="vzSourceSearch" type="search" aria-label="搜索现有 Agent" placeholder="搜索 Agent 名称或简介" value="${escapeHtml(vanishSourceSearch)}"></label><div class="vz-source-options" id="vzSourceOptions" role="listbox" aria-label="现有 Agent">${renderExistingVanishSourceOptions()}</div>` : `<div class="vz-source-selected"><span class="vz-avatar">${vzIcon('robot', true)}</span><div class="vz-source-copy"><strong>${escapeHtml(source.name)}</strong><small>${escapeHtml(source.description || '独立 Agent 配置')}</small><small>${effective?.projectIds.length || 0} 个项目 · ${effective?.skillIds.length || 0} 个 Skill</small></div><button class="plugin-button vz-btn" type="button" data-vz-action="change-source">更换</button></div>`}<p class="vz-source-note">指令、项目和 Skill 随来源 Agent 更新。</p></section>${source ? `<div class="automation-field"><label class="automation-label vz-field-label" for="vzName">名称 <span class="vz-required-dot" aria-hidden="true"></span></label><input id="vzName" data-vz-field required maxlength="30" value="${escapeHtml(agent.name)}"></div><section class="automation-field" id="vzPreview" aria-labelledby="vzConnectionTitle">${renderVanishPreview()}</section>` : ''}</div>`;
     }
     function selectVanishSourceAgent(sourceId) {
       const source = availableVanishSourceAgents().find(agent => agent.id === sourceId);
@@ -9727,8 +9970,9 @@
       if (agent?.configMode === 'existing' && !effective) { setVanishEditorMessage('请选择一个有效的来源 Agent。', true); document.getElementById('vzSourceSearch')?.focus(); return false; }
       if (!agent?.name.trim()) { setVanishEditorMessage('请填写 Agent 名称。', true); document.getElementById('vzName')?.focus(); return false; }
       if (vanishAgents.some(item => !item.deletedAt && item.id !== agent.id && item.name.trim() === agent.name.trim())) { setVanishEditorMessage('已有同名 Agent，请换一个名称。', true); document.getElementById('vzName')?.focus(); return false; }
-      if (publishing && !effective.instruction.trim()) { setVanishEditorMessage('请先完善 Agent 的职责指令。', true); document.getElementById('vzInstruction')?.focus(); return false; }
-      if (publishing && effective.projectIds.some(id => !projects.some(project => project.id === id))) { setVanishEditorMessage('请先为 Agent 配置有效的工作项目。', true); agentEditorShell.querySelector('[data-vz-kind="projects"]')?.focus(); return false; }
+      if (!effective.instruction.trim()) { setVanishEditorMessage('请填写 Agent 的工作指令。', true); document.getElementById('vzInstruction')?.focus(); return false; }
+      if (!Object.hasOwn(modelEffortSupport, effective.model || 'GLM-5.3 Flash')) { setVanishEditorMessage('请选择有效的模型。', true); document.getElementById('vzModel')?.focus(); return false; }
+      if (effective.projectIds.some(id => !projects.some(project => project.id === id))) { setVanishEditorMessage('部分关联项目已移除，请重新选择。', true); agentEditorShell.querySelector('[data-vz-kind="projects"]')?.focus(); return false; }
       if (effective.skillIds.some(id => !agentSkillCatalog.some(skill => skill.id === id))) { setVanishEditorMessage('部分 Skill 已移除，请完善来源配置。', true); agentEditorShell.querySelector('[data-vz-kind="skills"]')?.focus(); return false; }
       return true;
     }
@@ -9756,10 +10000,40 @@
       overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false');
       refreshVanishConnectDialog(vanishConnectTargetId ? '[data-vz-auth="qr"]' : '#vzConnectAgent');
     }
+    function prepareVanishEditorConnection() {
+      captureVanishDraft();
+      if (!vanishEditorDraft || vanishEditorDraft.botId || vanishEditorDraft.deletedAt) return null;
+      let agent = vanishAgents.find(item => item.id === vanishEditorDraft.id && !item.deletedAt);
+      if (!agent) {
+        if (!commitVanishDraft(true) || !vanishStorageAvailable) return null;
+        agent = vanishAgents.find(item => item.id === vanishEditorDraft.id);
+      }
+      if (!canConnectVanishAgent(agent)) { setVanishEditorMessage('请先保存完整的 Agent 配置，再连接 Vanish 智员。', true); return null; }
+      vanishConnectOrigin = 'agent'; vanishConnectTargetId = agent.id;
+      return agent;
+    }
     function startVanishConnection() {
-      if (!commitVanishDraft(true)) return;
-      vanishConnectOrigin = 'agent'; vanishConnectTargetId = vanishEditorDraft.id;
+      if (!prepareVanishEditorConnection()) return;
       refreshAgentManagement(); showVanishConnectDialog();
+    }
+    function handleVanishEditorConnectClick(event) {
+      clearTimeout(vanishEditorConnectClickTimer); vanishEditorConnectClickTimer = null;
+      if (event.detail === 0) { startVanishConnection(); return; }
+      if (event.detail > 1) return;
+      const agentId = vanishEditorDraft?.id;
+      vanishEditorConnectClickTimer = setTimeout(() => {
+        vanishEditorConnectClickTimer = null;
+        if (!agentEditorShell.hidden && vanishEditorDraft?.id === agentId) startVanishConnection();
+      }, 500);
+    }
+    function finishVanishEditorPrototypeConnection() {
+      clearTimeout(vanishEditorConnectClickTimer); vanishEditorConnectClickTimer = null;
+      const agent = prepareVanishEditorConnection();
+      if (!agent) return;
+      completeVanishConnection();
+      if (!agent.botId) return;
+      closeVanishConnectDialog();
+      showToast(`${agent.name} 已连接 Vanish`);
     }
     function startVanishPluginConnection(agentId = VANISH_DEFAULT_AGENT_ID) {
       const agent = vanishAgents.find(item => item.id === agentId);
@@ -9803,15 +10077,6 @@
       refreshVanishImProfile(botId);
     }
 
-    function finishVanishMcpPrototypeConnection() {
-      clearTimeout(vanishMcpClickTimer); vanishMcpClickTimer = null;
-      clearTimeout(vanishMcpTimer); vanishMcpTimer = null;
-      vanishMcpDraft = vanishMcpDraft.replace(/Bearer\s+[^\s"']+/ig, 'Bearer ••••••••');
-      vanishMcpConnecting = false; pluginState.vanish.connected = true; pluginState.vanish.capabilities.mcp = true;
-      completeVanishMcpConfiguration();
-      refreshVanishMcp('[data-vz-action="mcp-disconnect"]');
-      updatePluginCards(); showToast('Vanish MCP 已连接');
-    }
     function finishVanishDefaultPrototypeConnection() {
       clearTimeout(vanishAgentClickTimer); vanishAgentClickTimer = null;
       const agent = vanishAgents.find(item => item.id === VANISH_DEFAULT_AGENT_ID);
@@ -9822,37 +10087,38 @@
       closeVanishConnectDialog();
       showToast('数据部 Agent 已连接 Vanish');
     }
-    function connectVanishMcpPrototype() {
-      if (vanishMcpConnecting) return;
-      const wasExpanded = document.getElementById('vanishMcpConfigDetails').open;
-      vanishMcpConfigExpanded = true;
-      document.getElementById('vanishMcpConfigDetails').open = true;
-      const input = document.getElementById('vanishPluginConfig');
-      const raw = input.value.trim();
-      if (!wasExpanded && !raw) { input.focus(); return; }
-      let endpoint = '', token = '';
+    function isValidVanishMcpConfig(raw) {
       try {
         const config = JSON.parse(raw);
-        const server = Object.values(config.mcpServers || {})[0] || config;
-        endpoint = server.url || ''; token = server.headers?.Authorization || server.headers?.authorization || '';
-      } catch (error) {
-        endpoint = raw.match(/https?:\/\/[^\s"']+/)?.[0] || '';
-        token = raw.match(/Bearer\s+[^\s"']+/i)?.[0] || '';
-      }
-      try {
-        const url = new URL(endpoint);
-        if (!['http:', 'https:'].includes(url.protocol) || !/^Bearer\s+\S+/i.test(token)) throw new Error('invalid');
-      } catch (error) { input.setAttribute('aria-invalid', 'true'); setPluginInlineStatus('vanishPluginStatus', raw ? '配置无效，请重新从 Vanish 复制。' : '请粘贴完整的 MCP 配置信息。', 'error'); input.focus(); return; }
-      vanishMcpDraft = raw.replace(/Bearer\s+[^\s"']+/ig, 'Bearer ••••••••');
-      vanishMcpConnecting = true; refreshVanishMcp();
-      clearTimeout(vanishMcpTimer);
-      vanishMcpTimer = setTimeout(finishVanishMcpPrototypeConnection, 450);
+        const server = config.mcpServers ? config.mcpServers.vanish : config;
+        if (!server || typeof server.url !== 'string') return false;
+        if (server.type && !['http', 'streamable-http', 'sse'].includes(server.type)) return false;
+        const url = new URL(server.url);
+        const token = server.headers?.Authorization || server.headers?.authorization;
+        return ['http:', 'https:'].includes(url.protocol) && typeof token === 'string' && /^Bearer\s+\S+$/i.test(token.trim());
+      } catch (error) { return false; }
+    }
+    function updateVanishMcpConfiguration(input) {
+      vanishMcpDraft = input.value;
+      const configured = isValidVanishMcpConfig(vanishMcpDraft);
+      pluginState.vanish.connected = configured;
+      pluginState.vanish.capabilities.mcp = configured;
+      const status = document.getElementById('vanishMcpConfigStatus');
+      status.textContent = configured ? '已配置' : '未配置';
+      status.classList.toggle('active', configured);
+      const invalid = Boolean(vanishMcpDraft.trim()) && !configured;
+      input.setAttribute('aria-invalid', String(invalid));
+      setPluginInlineStatus('vanishPluginStatus', invalid ? '配置无效，请粘贴完整的 Vanish MCP JSON 配置。' : '', invalid ? 'error' : '');
+      updatePluginCards();
     }
     function handleVanishAction(event) {
+      const menuButton = event.target.closest('[data-vz-menu]');
+      if (menuButton) { openAgentListMenu(menuButton); return; }
       const row = event.target.closest('[data-vz-open]');
-      if (row && !event.target.closest('[data-vz-action]')) return beginVanishEditor(row.dataset.vzOpen);
+      if (row && !event.target.closest('[data-vz-action]')) { closeAgentListMenus(); return beginVanishEditor(row.dataset.vzOpen); }
       const button = event.target.closest('[data-vz-action]');
       if (!button) return;
+      closeAgentListMenus(true);
       const action = button.dataset.vzAction;
       if (action === 'manage-agents' || action === 'agent-detail') { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); if (vzConnectOverlay.classList.contains('open')) closeVanishConnectDialog(false); openAgentManagement(action === 'agent-detail' ? button.dataset.vzId : ''); return; }
       if (action === 'close-connect') { closeVanishConnectDialog(); return; }
@@ -9883,12 +10149,9 @@
       if (action === 'change-source') { captureVanishDraft(); vanishSourceChoosing = true; vanishSourceSearch = ''; refreshAgentManagement('#vzSourceSearch'); return; }
       if (action === 'edit') return beginVanishEditor(button.dataset.vzId);
       if (action === 'close-agent') { closeAgentEditor(); return; }
-      if (action === 'recover') return beginVanishEditor(vanishEditorDraft.id);
-      if (action === 'discard') { vanishEditorDraft = null; vanishEditorDirty = false; cacheVanishDraft(); refreshAgentManagement('[data-vz-action="create"]'); }
       if (action === 'save') { const creating = !vanishAgents.some(agent => agent.id === vanishEditorDraft.id); if (commitVanishDraft(Boolean(vanishEditorDraft.botId))) { if (creating && vanishStorageAvailable) { closeAgentEditor(); showToast('Agent 已创建'); } else { refreshAgentManagement('[data-vz-action="save"]'); setVanishEditorMessage(vanishStorageAvailable ? '已保存' : '保存失败，请重试', !vanishStorageAvailable); } } }
-      if (action === 'connect') startVanishConnection();
+      if (action === 'connect') { handleVanishEditorConnectClick(event); return; }
       if (action === 'disconnect') { disconnectVanishBot(vanishEditorDraft?.botId); return; }
-      if (action === 'reset-filter') { vanishAgentSearch = ''; refreshAgentManagement('#vzAgentSearch'); }
       if (action === 'expire-qr' || action === 'deny-qr') { clearTimeout(vanishConnectTimer); vanishConnectStage = action === 'expire-qr' ? 'expired' : 'denied'; refreshVanishConnectDialog('[data-vz-action="refresh-qr"]'); }
       if (action === 'refresh-qr') { vanishConnectStage = 'waiting'; resetVanishConnectionExpiry(); refreshVanishConnectDialog('[data-vz-auth="qr"]'); }
       if (action === 'connected-done') closeVanishConnectDialog();
@@ -9897,17 +10160,6 @@
         if (input.value.trim().length < 8) { document.getElementById('vzManualStatus').textContent = '请填写有效的连接令牌。'; input.focus(); return; }
         input.value = ''; completeVanishConnection();
       }
-      if (action === 'mcp-connect') {
-        clearTimeout(vanishMcpClickTimer); vanishMcpClickTimer = null;
-        if (event.detail > 1) return;
-        if (event.detail === 0) { connectVanishMcpPrototype(); return; }
-        // Preserve the button until a possible prototype double-click completes.
-        vanishMcpClickTimer = setTimeout(() => {
-          vanishMcpClickTimer = null;
-          if (activePluginId === 'vanish' && pluginDetailOverlay.classList.contains('open') && !pluginState.vanish.connected) connectVanishMcpPrototype();
-        }, 500);
-      }
-      if (action === 'mcp-disconnect') { clearTimeout(vanishMcpTimer); vanishMcpConnecting = false; vanishMcpConfigExpanded = true; vanishMcpDraft = ''; pluginState.vanish.connected = false; pluginState.vanish.capabilities.mcp = false; refreshVanishMcp('#vanishPluginConfig'); showToast('Vanish MCP 已断开'); }
     }
     const vzResourceOverlay = document.getElementById('vzResourceOverlay');
     vzResourceOverlay.addEventListener('click', event => {
@@ -9989,12 +10241,11 @@
     });
     pluginConfigPane.addEventListener('dblclick', event => {
       if (activePluginId !== 'vanish') return;
-      if (event.target.closest('[data-vz-action="mcp-connect"]')) { event.preventDefault(); finishVanishMcpPrototypeConnection(); return; }
       const button = event.target.closest('[data-vz-action="plugin-connect"]');
       if (button?.dataset.vzId === VANISH_DEFAULT_AGENT_ID) { event.preventDefault(); finishVanishDefaultPrototypeConnection(); }
     });
     pluginConfigPane.addEventListener('input', event => {
-      if (event.target.id === 'vanishPluginConfig') { vanishMcpDraft = event.target.value; event.target.setAttribute('aria-invalid', 'false'); setPluginInlineStatus('vanishPluginStatus', ''); }
+      if (event.target.id === 'vanishPluginConfig') updateVanishMcpConfiguration(event.target);
     });
     pluginConfigPane.addEventListener('toggle', event => {
       if (event.target.id === 'vanishMcpConfigDetails') vanishMcpConfigExpanded = event.target.open;
@@ -10006,6 +10257,10 @@
     }, true);
     agentConfigPane.addEventListener('click', handleVanishAction);
     agentEditorShell.addEventListener('click', handleVanishAction);
+    agentEditorShell.addEventListener('dblclick', event => {
+      if (!event.target.closest('[data-vz-action="connect"]')) return;
+      event.preventDefault(); finishVanishEditorPrototypeConnection();
+    });
     agentEditorShell.addEventListener('keydown', event => {
       if (!['ArrowDown', 'ArrowUp'].includes(event.key) || !event.target.closest('#vzSourceOptions, #vzSourceSearch')) return;
       const options = [...agentEditorShell.querySelectorAll('#vzSourceOptions [role="option"]')];
@@ -10015,12 +10270,23 @@
       options[(index + (event.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length].focus();
     });
     agentConfigPane.addEventListener('keydown', event => {
+      const trigger = event.target.closest('[data-vz-menu]');
+      if (trigger && ['ArrowDown', 'ArrowUp'].includes(event.key)) { event.preventDefault(); event.stopPropagation(); openAgentListMenu(trigger, event.key === 'ArrowUp'); return; }
+      const menu = event.target.closest('.automation-task-menu.open');
+      if (menu) {
+        if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeAgentListMenus(true); return; }
+        if (event.key === 'Tab') { closeAgentListMenus(); return; }
+        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+          event.preventDefault(); event.stopPropagation();
+          const items = [...menu.querySelectorAll('[role="menuitem"]')], index = items.indexOf(document.activeElement);
+          items[event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus(); return;
+        }
+      }
       const row = event.target.closest('[data-vz-open]');
       if (!row || row.tagName === 'BUTTON' || event.target !== row || !['Enter', ' '].includes(event.key)) return;
       event.preventDefault(); beginVanishEditor(row.dataset.vzOpen);
     });
     function handleAgentInput(event) {
-      if (event.target.id === 'vzAgentSearch') { vanishAgentSearch = event.target.value; document.getElementById('vzAgentResults').innerHTML = renderVanishAgentResults(); }
       if (event.target.id === 'vzSourceSearch') { vanishSourceSearch = event.target.value; document.getElementById('vzSourceOptions').innerHTML = renderExistingVanishSourceOptions(); }
       if (event.target.matches('[data-vz-field]')) {
         captureVanishDraft(); vanishEditorDirty = true; const cached = cacheVanishDraft();
@@ -10031,6 +10297,13 @@
     }
     agentConfigPane.addEventListener('input', handleAgentInput);
     agentEditorShell.addEventListener('input', handleAgentInput);
+    agentEditorShell.addEventListener('change', event => { if (event.target.id === 'vzModel') handleAgentInput(event); });
+    agentConfigPane.addEventListener('focusout', event => {
+      if (!event.relatedTarget?.closest('[data-vz-menu][aria-expanded="true"], #vzAgentResults .automation-task-menu.open')) closeAgentListMenus();
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('[data-vz-menu], #vzAgentResults .automation-task-menu')) closeAgentListMenus();
+    });
     agentConfigPane.addEventListener('change', event => {
             if (event.target.name === 'vzConnectMode') { vanishConnectMode = event.target.value; refreshAgentManagement(`[name="vzConnectMode"][value="${vanishConnectMode}"]`); }
       if (event.target.name === 'vzExistingBot') vanishExistingBot = event.target.value;
@@ -10055,7 +10328,7 @@
       const plugin = pluginCatalog[pluginId];
       if (!plugin) return;
       activePluginId = pluginId;
-      if (pluginId === 'vanish') vanishMcpConfigExpanded = !vanishMcpConnectionCompleted && !pluginState.vanish.connected;
+      if (pluginId === 'vanish') vanishMcpConfigExpanded = !pluginState.vanish.capabilities.mcp;
       document.querySelector('.plugin-drawer-body').append(pluginConfigPane);
       pluginDetailOverlay.dataset.plugin = pluginId;
       pluginDrawerReturnFocus = document.activeElement;
@@ -10073,7 +10346,6 @@
     }
 
     function closePluginDetail() {
-      clearTimeout(vanishMcpClickTimer); vanishMcpClickTimer = null;
       clearTimeout(vanishAgentClickTimer); vanishAgentClickTimer = null;
       if (activePluginId === 'vanish') vanishMcpDraft = document.getElementById('vanishPluginConfig')?.value ?? vanishMcpDraft;
       pluginDetailOverlay.classList.remove('open');
@@ -10445,7 +10717,6 @@
       if (restoreFocus) trigger?.focus();
     }
     function creationCanStart(kind) {
-      if (kind === 'agent' && vanishEditorDirty) { showToast('请先保存或放弃当前 Agent 的编辑'); return false; }
       if (kind === 'automation' && !automationEditorShell.hidden && automationDirty) { showToast('请先保存当前定时任务的修改'); return false; }
       return true;
     }
@@ -10483,7 +10754,7 @@
       if (!creationCanStart(kind)) return;
       if (kind === 'agent') {
         openAgentManagement(); beginVanishEditor();
-        Object.assign(vanishEditorDraft, { name: draft.name || '', description: draft.description || '', instruction: draft.instruction || '', projectIds: draft.projectIds || [], skillIds: draft.skillIds || [] });
+        Object.assign(vanishEditorDraft, { name: draft.name || '', description: draft.description || '', instruction: draft.instruction || '', model: draft.model || 'GLM-5.3 Flash', projectIds: draft.projectIds || [], skillIds: draft.skillIds || [] });
         vanishEditorDirty = Boolean(draft.name || draft.instruction); cacheVanishDraft(); refreshAgentManagement('#vzName');
       } else {
         if (!projectId || !workspace.classList.contains('project-mode')) openAutomationManager();
@@ -10519,12 +10790,15 @@
       const dependents = userVanishAgents().filter(item => item.sourceAgentId === agentId).map(item => ({ item, config: resolveVanishAgentConfig(item) }));
       dependents.forEach(({ item, config }) => {
         if (!config) return;
-        const configuration = { configMode: 'custom', sourceAgentId: '', instruction: config.instruction, projectIds: [...config.projectIds], skillIds: [...config.skillIds], description: item.description || config.description };
+        const configuration = { configMode: 'custom', sourceAgentId: '', instruction: config.instruction, model: config.model || 'GLM-5.3 Flash', projectIds: [...config.projectIds], skillIds: [...config.skillIds], description: item.description || config.description };
         Object.assign(item, configuration);
         if (vanishEditorDraft?.id === item.id) Object.assign(vanishEditorDraft, configuration);
+        const cachedDraft = vanishEditorDrafts.get(item.id);
+        if (cachedDraft?.sourceAgentId === agentId) Object.assign(cachedDraft, configuration);
       });
       const botId = agent.botId;
       agent.deletedAt = Date.now(); agent.botId = ''; agent.botName = ''; agent.visibility = '';
+      vanishEditorDrafts.delete(agentId);
       if (botId) { vanishImProfileRequests.set(botId, (vanishImProfileRequests.get(botId) || 0) + 1); vanishImProfiles.delete(botId); }
       if (vanishEditorDraft?.id === agentId) { vanishEditorDraft = null; vanishEditorDirty = false; closeAgentEditor(false); }
       saveVanishAgentState(); cacheVanishDraft(); refreshAgentManagement('#agentCreateBtn'); refreshVanishImSection();
@@ -10546,20 +10820,13 @@
       if (!creationCanStart(kind)) return;
       closeOverlays(); closePluginDetail();
       createEmptyConversation(projectId);
-      if (kind === 'automation') {
-        composerInput.replaceChildren(createComposerReference('skill', 'calendar', { id: 'skill-calendar' }), document.createTextNode(' 请调用这个skill辅助我创建定时任务'));
-        composerInput.focus();
-        const range = document.createRange();
-        range.selectNodeContents(composerInput); range.collapse(false);
-        const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
-        return;
-      }
-      const row = activeConversationRow();
+      const skill = kind === 'agent' ? 'agent-creator' : 'calendar';
       const label = kind === 'agent' ? 'Agent' : '定时任务';
-      row.dataset.historyState = 'creation';
-      row.querySelector('.history-title').textContent = `新建 ${label}`;
-      creationSessions.set(row.dataset.conversationId, { kind, projectId, turns: [], draft: null, createdId: '' });
-      renderProjectSidebar(); loadCreationConversation(row); composerInput.focus();
+      composerInput.replaceChildren(createComposerReference('skill', skill, { id: `skill-${skill}` }), document.createTextNode(` 请调用这个skill辅助我创建${label}`));
+      composerInput.focus();
+      const range = document.createRange();
+      range.selectNodeContents(composerInput); range.collapse(false);
+      const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
     }
     function loadCreationConversation(row) {
       const session = creationSessions.get(row.dataset.conversationId);
@@ -10592,16 +10859,20 @@
       const index = text.lastIndexOf(name);
       return index >= 0 && !/(不(?:再)?(?:使用|关联|需要)?|不要|取消(?:关联)?|移除)\s*$/.test(text.slice(Math.max(0, index - 12), index));
     }
-    function parseCreationDraft(kind, text, projectId = '') {
+    function parseCreationDraft(kind, text, projectId = '', defaultModel = 'GLM-5.3 Flash') {
       const named = [...text.matchAll(/(?:名为|命名为|名字(?:叫|是)|名称[为是：:]?|叫做?)\s*[“「"‘']?([^”」"’'\n，,。；;]{1,30})/g)].at(-1)?.[1]?.trim();
       const domain = ['财务', '舆情', '研报', '质检', '项目协作', '研究', '资料整理'].find(word => text.includes(word));
       let name = named || `${domain || (kind === 'agent' ? '工作' : '工作简报')}${kind === 'agent' ? ' Agent' : '任务'}`;
       if (kind === 'agent' && !/agent$/i.test(name)) name = `${name.replace(/智员$/, '').trim()} Agent`;
       const projectIds = projects.filter(project => creationResourceSelected(text, project.name)).map(project => project.id);
-      const skillIds = agentSkillCatalog.filter(skill => creationResourceSelected(text, skill.name)).map(skill => skill.id);
+      const skillIds = agentSkillCatalog.filter(skill => skill.id !== 'skill-agent-creator' && creationResourceSelected(text, skill.name)).map(skill => skill.id);
       const requirements = text.replace(/^(?:请|帮我|请帮我)?(?:创建|新建)[^，,。\n]+[，,。]\s*/, '').trim() || text;
       const draft = { name: name.slice(0, 30), description: requirements.replace(/\s+/g, ' ').slice(0, 120), instruction: requirements.slice(0, 6000), projectIds, skillIds };
-      if (kind === 'agent') return draft;
+      if (kind === 'agent') {
+        const selectedModel = [...text.matchAll(/GPT Luna|GLM-5\.3 Flash/gi)].at(-1)?.[0];
+        draft.model = selectedModel ? /^GPT Luna$/i.test(selectedModel) ? 'GPT Luna' : 'GLM-5.3 Flash' : defaultModel;
+        return draft;
+      }
       const times = [...text.matchAll(/(凌晨|上午|早上|早晨|中午|下午|晚上)?\s*([0-2]?\d|[零一二两三四五六七八九十]{1,3})(?:[:：]([0-5]\d)|点(?:([0-5]?\d|[零一二两三四五六七八九十]{1,3})分?|(半))?)/g)];
       const time = times.at(-1); let hour = time ? creationNumber(time[2]) : NaN;
       if (time && ['下午','晚上'].includes(time[1]) && hour < 12) hour += 12;
@@ -10638,16 +10909,18 @@
       const china = new Date(next.valueOf() + 8 * 3600000), pad = value => String(value).padStart(2, '0');
       return `${pad(china.getUTCMonth()+1)}月${pad(china.getUTCDate())}日 ${pad(china.getUTCHours())}:${pad(china.getUTCMinutes())}`;
     }
-    function beginCalendarCreationConversation() {
+    function beginSkillCreationConversation() {
       const row = activeConversationRow();
-      const calendar = composerInput.querySelector('[data-ref-type="skill"][data-ref-id="skill-calendar"]');
-      if (!row || row.dataset.historyState !== 'empty' || !calendar) return false;
+      const skill = composerInput.querySelector('[data-ref-type="skill"][data-ref-id="skill-calendar"], [data-ref-type="skill"][data-ref-id="skill-agent-creator"]');
+      if (!row || row.dataset.historyState !== 'empty' || !skill) return false;
+      const kind = skill.dataset.refId === 'skill-agent-creator' ? 'agent' : 'automation';
+      const title = kind === 'agent' ? '创建 Agent' : '创建定时任务';
       row.dataset.historyState = 'creation';
-      row.querySelector('.history-title').textContent = '创建定时任务';
-      row.querySelector('.history-more')?.setAttribute('aria-label', '创建定时任务的更多操作');
-      creationSessions.set(row.dataset.conversationId, { kind: 'automation', projectId: row.dataset.projectId || '', turns: [], draft: null, createdId: '' });
+      row.querySelector('.history-title').textContent = title;
+      row.querySelector('.history-more')?.setAttribute('aria-label', `${title}的更多操作`);
+      creationSessions.set(row.dataset.conversationId, { kind, projectId: row.dataset.projectId || '', turns: [], draft: null, createdId: '' });
       activeCreationConversationId = row.dataset.conversationId;
-      conversationTitle.textContent = '创建定时任务';
+      conversationTitle.textContent = title;
       renderProjectSidebar(); syncConversationLocationUi();
       return true;
     }
@@ -10655,10 +10928,11 @@
       const session = creationSessions.get(activeCreationConversationId);
       if (!session) return;
       if (!text) { showToast('请描述想创建的内容'); composerInput.focus(); return; }
-      const requirement = session.kind === 'automation' ? text.replace(/^\/?calendar\s*/, '').trim() : text;
-      const bootstrap = session.kind === 'automation' && (!requirement || requirement.replace(/\s+/g, '').replace(/[。！!]+$/, '') === '请调用这个skill辅助我创建定时任务');
+      const label = session.kind === 'agent' ? 'Agent' : '定时任务';
+      const requirement = text.replace(session.kind === 'agent' ? /^\/?agent-creator\s*/ : /^\/?calendar\s*/, '').trim();
+      const bootstrap = !requirement || requirement.replace(/\s+/g, '').replace(/[。！!]+$/, '') === `请调用这个skill辅助我创建${label}`;
       const combined = [...session.turns.filter(turn => turn.draft).map(turn => turn.requirement || turn.prompt), requirement].join('\n');
-      session.draft = bootstrap ? null : parseCreationDraft(session.kind, combined, session.projectId);
+      session.draft = bootstrap ? null : parseCreationDraft(session.kind, combined, session.projectId, currentModel.textContent.trim());
       session.createdId = '';
       session.turns.push({ prompt: text, promptHtml: renderComposerContent(), requirement, draft: JSON.parse(JSON.stringify(session.draft)) });
       setTaskMode(true, true); setArtifactVisible(false);
@@ -10671,18 +10945,13 @@
       const session = creationSessions.get(activeCreationConversationId);
       if (!session) return;
       const label = session.kind === 'agent' ? 'Agent' : '定时任务';
-      const examples = ['创建一个名为“财务研究 Agent”的助手，使用财务数据工作台的资料，提取研究观点并生成报告。', '创建一个项目协作 Agent，整理项目进展、风险和待办。'];
       const story = document.getElementById('creationChatStory');
-      if (!session.turns.length) {
-        if (session.kind === 'automation') { story.innerHTML = ''; return; }
-        story.innerHTML = `<div class="creation-chat-intro"><h2>用一句话创建 ${label}</h2><p>告诉我它需要完成什么工作，也可以说明要使用的项目和 Skill。</p><div class="creation-examples">${examples.map((example, index) => `<button type="button" data-creation-example="${index}">${escapeHtml(example)}</button>`).join('')}</div></div>`;
-        story.dataset.examples = JSON.stringify(examples); return;
-      }
+      if (!session.turns.length) { story.innerHTML = ''; return; }
       story.innerHTML = session.turns.map((turn, index) => {
         const prompt = `<div class="user-message"><div class="bubble user">${turn.promptHtml || escapeHtml(turn.prompt)}</div></div>`;
-        if (!turn.draft) return `<section class="creation-chat-turn">${prompt}<div class="creation-chat-reply"><p>你希望定时任务完成什么工作？请告诉我任务内容、运行频率和时间。</p></div></section>`;
+        if (!turn.draft) return `<section class="creation-chat-turn">${prompt}<div class="creation-chat-reply"><p>${session.kind === 'agent' ? '你希望这个 Agent 完成什么工作？可以说明名称、工作要求，以及要使用的模型、Skill 和项目资料。模型默认使用当前选择，Skill 和关联项目可以留空。' : '你希望定时任务完成什么工作？请告诉我任务内容、运行频率和时间。'}</p></div></section>`;
         const draft = turn.draft, latest = index === session.turns.length - 1;
-        const summary = `<dl class="creation-draft-summary"><dt>名称</dt><dd>${escapeHtml(draft.name)}</dd><dt>工作内容</dt><dd>${escapeHtml(draft.instruction)}</dd>${session.kind === 'agent' ? `<dt>关联项目</dt><dd>${draft.projectIds.length ? draft.projectIds.map(id => escapeHtml(projects.find(project => project.id === id)?.name || '')).join('、') : '未关联'}</dd><dt>Skill</dt><dd>${draft.skillIds.length ? draft.skillIds.map(id => escapeHtml(agentSkillCatalog.find(skill => skill.id === id)?.name || '')).join('、') : '未选择'}</dd>` : `<dt>运行计划</dt><dd>${draft.needsSchedule ? '待补充' : escapeHtml(automationSchedule(draft))}</dd><dt>运行位置</dt><dd>${escapeHtml(automationLocationLabel(draft.location))}</dd>`}</dl>`;
+        const summary = `<dl class="creation-draft-summary"><dt>名称</dt><dd>${escapeHtml(draft.name)}</dd>${session.kind === 'agent' ? `<dt>描述</dt><dd>${escapeHtml(draft.description || '未填写')}</dd>` : ''}<dt>${session.kind === 'agent' ? '工作指令' : '工作内容'}</dt><dd>${escapeHtml(draft.instruction)}</dd>${session.kind === 'agent' ? `<dt>模型</dt><dd>${escapeHtml(draft.model)}</dd><dt>Skill</dt><dd>${draft.skillIds.length ? draft.skillIds.map(id => escapeHtml(agentSkillCatalog.find(skill => skill.id === id)?.name || '')).join('、') : '未选择'}</dd><dt>关联项目</dt><dd>${draft.projectIds.length ? draft.projectIds.map(id => escapeHtml(projects.find(project => project.id === id)?.name || '')).join('、') : '未关联'}</dd>` : `<dt>运行计划</dt><dd>${draft.needsSchedule ? '待补充' : escapeHtml(automationSchedule(draft))}</dd><dt>运行位置</dt><dd>${escapeHtml(automationLocationLabel(draft.location))}</dd>`}</dl>`;
         const actions = !latest ? '' : session.createdId ? `<div class="creation-chat-success">${creationIcon('check')}<span>${label} 已创建</span><button class="plugin-button vz-btn" type="button" data-creation-view>查看 ${label}</button></div>` : `<div class="creation-draft-actions"><button class="plugin-button vz-btn" type="button" data-creation-adjust>调整配置</button>${draft.needsSchedule ? '' : `<button class="plugin-button vz-btn primary" type="button" data-creation-confirm>确认创建</button>`}</div>`;
         return `<section class="creation-chat-turn">${prompt}<div class="creation-chat-reply"><p>${latest && session.createdId ? '已创建，可随时打开详情继续调整。' : draft.needsSchedule ? '还需要明确运行频率和时间，例如“每天上午9点”。也可以进入配置补充。' : '已整理好配置，你可以继续补充要求，或确认创建。'}</p>${summary}${actions}</div></section>`;
       }).join('');
@@ -10756,8 +11025,6 @@
     });
     document.getElementById('creationChatStory').addEventListener('click', event => {
       const session = creationSessions.get(activeCreationConversationId); if (!session) return;
-      const example = event.target.closest('[data-creation-example]');
-      if (example) { composerInput.textContent = JSON.parse(document.getElementById('creationChatStory').dataset.examples)[Number(example.dataset.creationExample)]; composerInput.focus(); return; }
       if (event.target.closest('[data-creation-confirm]')) { confirmCreationDraft(); return; }
       if (event.target.closest('[data-creation-adjust]')) { openCreationConfig(session.kind, session.draft, session.projectId); return; }
       if (event.target.closest('[data-creation-view]')) {
@@ -10893,6 +11160,7 @@
     }
 
     function setArtifactVisible(on, preserveTitle = false) {
+      if (!on) stopSourceFinderListClock();
       if (artifact.classList.contains('agent-editor-mode')) exitAgentEditorMode();
       if (artifact.classList.contains('asset-preview-mode')) {
         artifact.classList.remove('asset-preview-mode');
@@ -11019,26 +11287,49 @@
       renderArtifact();
     }
 
-    const artifactRenderers = { report: reportHtml, table: tableHtml, manualQa: manualQaHtml };
+    const artifactRenderers = { report: reportHtml, table: tableHtml, manualQa: manualQaHtml, sourceFinderLog: sourceFinderLogHtml };
 
     function renderArtifact() {
+      stopSourceFinderListClock();
       const openTabs = Object.entries(tabs).filter(([, value]) => value.open);
       artifact.classList.toggle('no-tabs', openTabs.length === 0);
       if (openTabs.length > 0 && (!tabs[activeTab] || !tabs[activeTab].open)) activeTab = openTabs[0][0];
+      artifact.classList.toggle('source-finder-log-mode', activeTab === 'sourceFinderLog' && tabs.sourceFinderLog.open);
       document.querySelectorAll('.tab').forEach(tab => {
         const key = tab.dataset.tab;
         const isActive = key === activeTab && tabs[key].open;
         tab.style.display = tabs[key].open ? 'flex' : 'none';
-        tab.querySelector('span:nth-of-type(2)').textContent = tabs[key].title;
+        tab.querySelector('[data-tab-title], span:nth-of-type(2)').textContent = tabs[key].title;
         tab.classList.toggle('active', isActive);
         tab.setAttribute('aria-selected', String(isActive));
         tab.tabIndex = isActive ? 0 : -1;
       });
-      if (openTabs.length === 0) return;
+      if (openTabs.length === 0) {
+        setArtifactVisible(false, true);
+        return;
+      }
       artifactTitle.textContent = tabs[activeTab].title;
+      if (activeTab === 'sourceFinderLog') {
+        const run = activeSourceFinderRun();
+        if (run?.panelView !== 'list') {
+          artifactTitle.innerHTML = `<span class="source-finder-detail-heading">
+            <button class="source-finder-back" id="sourceFinderBack" type="button" aria-label="返回 Agent 列表" title="返回 Agent 列表">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+            </button>
+            <span class="source-finder-agent-title">${vzIcon('robot', true)}<span>AI找源Agent</span></span>
+          </span>`;
+        }
+      }
       artifactMeta.textContent = tabs[activeTab].meta;
       artifactBody.innerHTML = artifactRenderers[activeTab]();
       updateArtifactActions();
+      if (artifactVisible && activeTab === 'sourceFinderLog' && activeSourceFinderRun()?.panelView === 'list') {
+        sourceFinderListClock = setInterval(() => {
+          const run = activeSourceFinderRun();
+          if (run && run.panelView === 'list') refreshSourceFinderList(run);
+          else stopSourceFinderListClock();
+        }, 1000);
+      }
     }
 
     function manualQaHtml() {
@@ -12478,11 +12769,368 @@
         </dl>`;
     }
 
+    function matchesSourceFinderDemo(text) {
+      const normalized = text.toLowerCase().replace(/\s+/g, '');
+      if (normalized === '找源') return true;
+      return normalized.includes('2025年6月') && /\blr1371(?![a-z\d])/.test(normalized)
+        && normalized.includes('调用ai找源agent');
+    }
+
+    function activeSourceFinderRun() {
+      if (currentConversationState !== 'source-finder' || activeConversationRow()?.dataset.conversationId !== currentConversationId) return null;
+      return sourceFinderRuns.get(currentConversationId) || null;
+    }
+
+    function clearSourceFinderView() {
+      stopSourceFinderListClock();
+      sourceFinderStory.hidden = true;
+      messages.classList.remove('source-finder-mode');
+      tabs.sourceFinderLog.open = false;
+      tabs.sourceFinderLog.available = false;
+    }
+
+    function sourceFinderMessageHtml(turn, index) {
+      let body = escapeHtml(turn.text).replace(/\n/g, '<br>');
+      if (turn.kind === 'submission') {
+        body = `<p>${body}</p>
+          <div class="source-finder-call">
+            <button class="source-finder-status" id="sourceFinderStatus" type="button" aria-controls="artifact">
+              ${vzIcon('robot', true)}<span data-source-finder-task-state></span>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+            </button>
+          </div>`;
+      } else if (turn.kind === 'completed') {
+        body = '<a class="source-finder-link" data-source-finder-result href="#sourceFinderResult">查看找源结果</a><p>已完成，请验收</p>';
+      }
+      return `<article class="source-finder-message ${turn.role === 'user' ? 'user-message' : ''}" data-source-finder-turn="${index}">
+        <div class="${turn.role === 'user' ? 'bubble user' : 'source-finder-answer'}" data-source-finder-content>${body}</div>
+        <button class="source-finder-copy" data-source-finder-copy="${index}" type="button" aria-label="复制消息" title="复制消息">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><rect x="4" y="4" width="11" height="11" rx="2"/></svg>
+        </button>
+      </article>`;
+    }
+
+    function sourceFinderRunHtml(body, run) {
+      const settled = sourceFinderIsSettled(run);
+      return `<details class="daily-live-run source-finder-run" data-source-finder-run data-state="${run.state}"${settled ? '' : ' open'}>
+        <summary class="daily-live-head">
+          <span class="daily-run-label">
+            <svg class="daily-live-spinner" viewBox="0 0 24 24" aria-hidden="true"${run.state !== 'running' ? ' hidden' : ''}><path d="M21 12a9 9 0 1 1-3.2-6.9"/></svg>
+            <span data-source-finder-run-state>${sourceFinderStateLabels[run.state]} · ${run.elapsed}秒</span>
+          </span>
+          <span class="daily-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="daily-run-body">${body}</div>
+      </details>`;
+    }
+
+    function loadSourceFinderConversation(row) {
+      const run = sourceFinderRuns.get(row.dataset.conversationId);
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory();
+      clearFinancialExtractionStory();
+      clearSourceFinderView();
+      tabs.report.open = tabs.table.open = false;
+      tabs.sourceFinderLog.available = run.logViewed;
+      conversationTitle.textContent = row.querySelector('.history-title').textContent;
+      setTaskMode(true, true);
+      setArtifactVisible(false);
+      sourceFinderStory.innerHTML = '';
+      sourceFinderStory.hidden = false;
+      messages.classList.add('source-finder-mode');
+      renderSourceFinderProgress(run);
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+    }
+
+    function startSourceFinderRun(text) {
+      const activeRun = activeSourceFinderRun();
+      if (activeRun && !sourceFinderIsSettled(activeRun)) {
+        showToast(`AI找源 Agent任务${sourceFinderStateLabels[activeRun.state]}`);
+        return;
+      }
+      if (activeConversationRow()?.dataset.historyState !== 'empty') createEmptyConversation(currentConversationProjectId());
+      const row = activeConversationRow();
+      row.dataset.historyState = 'source-finder';
+      row.querySelector('.history-title').textContent = 'LR1371 数据找源';
+      row.querySelector('.history-more')?.setAttribute('aria-label', 'LR1371 数据找源的更多操作');
+      const run = {
+        conversationId: row.dataset.conversationId, state: 'waiting', step: -1, logViewed: false,
+        createdAt: Date.now(), panelView: 'detail',
+        startedAt: null, elapsed: 0, timer: null, reason: '',
+        turns: [{ role: 'user', text }, { role: 'ai', kind: 'submission', text: sourceFinderSubmittedText }]
+      };
+      sourceFinderRuns.set(row.dataset.conversationId, run);
+      composerInput.textContent = '';
+      openHistoryRow(row);
+    }
+
+    function sourceFinderIsSettled(run) {
+      return ['completed', 'failed', 'cancelled'].includes(run.state);
+    }
+
+    function beginSourceFinderExecution(run) {
+      if (run.state !== 'waiting') return;
+      run.state = 'running';
+      run.startedAt = Date.now();
+      run.step = 0;
+      run.timer = setInterval(() => {
+        const elapsedMs = Date.now() - run.startedAt;
+        run.elapsed = Math.floor(elapsedMs / 1000);
+        run.step = sourceFinderSteps.findLastIndex(([delay]) => elapsedMs >= delay);
+        if (run.step === sourceFinderSteps.length - 1) finishSourceFinderExecution(run, 'completed');
+        else if (activeSourceFinderRun() === run) renderSourceFinderProgress(run);
+      }, 250);
+      if (activeSourceFinderRun() === run) renderSourceFinderProgress(run);
+    }
+
+    function finishSourceFinderExecution(run, state, reason = '') {
+      if (sourceFinderIsSettled(run)) return;
+      if (state === 'completed' || state === 'failed') {
+        if (run.state !== 'running') return;
+      } else if (state !== 'cancelled') return;
+      clearInterval(run.timer);
+      run.timer = null;
+      if (run.startedAt !== null) run.elapsed = Math.floor((Date.now() - run.startedAt) / 1000);
+      run.state = state;
+      run.reason = state === 'failed' ? String(reason).trim() || '来源站点访问超时，未能完成来源核验。' : '';
+      const text = state === 'completed' ? '查看找源结果\n已完成，请验收'
+        : state === 'failed' ? `AI找源 Agent任务执行失败：${run.reason}`
+          : '已取消AI找源 Agent任务。';
+      run.turns.push({ role: 'ai', kind: state, text });
+      if (activeSourceFinderRun() === run) renderSourceFinderProgress(run);
+    }
+
+    // The mock scheduler must allocate resources before any browser activity begins.
+    function handleSourceFinderSchedulerEvent({ conversationId, action, reason } = {}) {
+      const run = sourceFinderRuns.get(conversationId);
+      if (!run) return;
+      if (action === 'allocated') beginSourceFinderExecution(run);
+      else if (action === 'failed') finishSourceFinderExecution(run, 'failed', reason);
+    }
+
+    function sourceFinderReply(text, run) {
+      if (/状态|进度|多久|什么时候|几点|完成了吗/.test(text)) {
+        return run.state === 'waiting' ? sourceFinderWaitingText
+          : run.state === 'running' ? `AI找源 Agent正在执行，当前进度：${sourceFinderSteps[run.step][2]}。`
+            : run.state === 'failed' ? `AI找源 Agent任务执行失败：${run.reason}`
+              : run.state === 'cancelled' ? 'AI找源 Agent任务已取消。' : 'AI找源 Agent任务已完成，可点击结果链接验收。';
+      }
+      if (/LR1371|找源范围/i.test(text)) return '本次找源范围是 LR1371 数据源在 2025 年 6 月的记录，将核对站点名称、来源地址和案例路径。';
+      if (/什么是数据源|数据源是什么/.test(text)) return '数据源是数据的原始出处，例如官方网站、公开文件或数据库。本次任务会为目录记录补充可追溯的站点名称和来源地址。';
+      return '可以继续问答。你可以让我说明找源范围、查询任务状态，或直接告诉我取消AI找源 Agent任务。';
+    }
+
+    function submitSourceFinderMessage(text) {
+      const run = activeSourceFinderRun();
+      if (!run) return;
+      composerInput.textContent = '';
+      run.turns.push({ role: 'user', text });
+      const command = text.toLowerCase().replace(/[\s，。！？,.!?]/g, '');
+      const cancel = /^(?:请|帮我)?(?:取消|停止|终止)(?:(?:这个|当前|刚才的)?(?:ai找源agent)?(?:任务|找源任务|运行))?(?:吧|了)?$/.test(command)
+        || /^(?:不用找了|不用查了|不需要找了)$/.test(command);
+      if (cancel && !sourceFinderIsSettled(run)) finishSourceFinderExecution(run, 'cancelled');
+      else {
+        run.turns.push({ role: 'ai', text: cancel ? `AI找源 Agent任务${sourceFinderStateLabels[run.state]}，无需取消。` : sourceFinderReply(text, run) });
+        renderSourceFinderProgress(run);
+      }
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+    }
+
+    function updateSourceFinderRun(root, run) {
+      const details = root.querySelector('[data-source-finder-run]');
+      if (!details) return;
+      details.querySelector('[data-source-finder-run-state]').textContent = `${sourceFinderStateLabels[run.state]} · ${run.elapsed}秒`;
+      details.querySelector('.daily-live-spinner').toggleAttribute('hidden', run.state !== 'running');
+      if (sourceFinderIsSettled(run) && details.dataset.state === 'running') details.open = false;
+      details.dataset.state = run.state;
+    }
+
+    function renderSourceFinderProgress(run) {
+      if (activeSourceFinderRun() !== run) return;
+      const followLatest = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 140;
+      const rendered = sourceFinderStory.querySelectorAll('[data-source-finder-turn]').length;
+      run.turns.slice(rendered).forEach((turn, index) => {
+        sourceFinderStory.insertAdjacentHTML('beforeend', sourceFinderMessageHtml(turn, rendered + index));
+      });
+      sourceFinderStory.querySelector('[data-source-finder-task-state]').textContent = `AI找源Agent · ${sourceFinderStateLabels[run.state]}`;
+      if (followLatest) messages.scrollTop = messages.scrollHeight;
+      conversationMeta.textContent = sourceFinderStateLabels[run.state];
+      conversationGenerating = false;
+      updateConversationActions();
+      if (activeTab !== 'sourceFinderLog' || !tabs.sourceFinderLog.open) return;
+      if (run.panelView === 'list') {
+        refreshSourceFinderList(run);
+        return;
+      }
+      const panel = artifactBody.querySelector('.source-finder-log');
+      if (!panel || panel.dataset.state !== run.state) {
+        artifactBody.innerHTML = sourceFinderLogHtml();
+        return;
+      }
+      updateSourceFinderRun(artifactBody, run);
+      const group = artifactBody.querySelector('[data-source-finder-browser-group]');
+      if (!group) return;
+      artifactBody.querySelector('[data-source-finder-stage]').textContent = sourceFinderSteps[run.step][3];
+      group.querySelector('[data-source-finder-browser-label]').textContent = sourceFinderBrowserGroupLabel(run);
+      group.querySelector('summary > .daily-action-icon').toggleAttribute('hidden', sourceFinderIsSettled(run));
+      const list = artifactBody.querySelector('.source-finder-log ol');
+      if (list) list.insertAdjacentHTML('beforeend', sourceFinderLogEntries(run, list.children.length));
+    }
+
+    function sourceFinderBrowserIcon(hidden = false) {
+      return `<svg class="daily-action-icon" viewBox="0 0 24 24" aria-hidden="true"${hidden ? ' hidden' : ''}><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>`;
+    }
+
+    function sourceFinderLogEntries(run, start = 0) {
+      // The current operation appears in the group heading; list only earlier operations until completion.
+      return sourceFinderSteps.slice(start, run.step + (run.state === 'completed' ? 1 : 0)).map(([, action, title]) =>
+        `<li class="daily-action-row" data-browser-action="${action}">${sourceFinderBrowserIcon()}<span>${title}</span></li>`).join('');
+    }
+
+    function sourceFinderBrowserGroupLabel(run) {
+      if (run.state === 'completed') return `完成了 ${sourceFinderSteps.length} 项浏览器操作`;
+      if (sourceFinderIsSettled(run)) return `已执行 ${Math.max(0, run.step)} 项浏览器操作`;
+      return sourceFinderSteps[run.step][2];
+    }
+
+    function sourceFinderControlsHtml(run) {
+      if (sourceFinderIsSettled(run)) return '';
+      return `<div class="source-finder-controls">
+        ${run.state === 'waiting' ? '<button class="ant-btn" data-source-finder-allocate type="button">模拟运行</button>'
+          : '<button class="ant-btn" data-source-finder-fail type="button">模拟执行失败</button>'}
+      </div>`;
+    }
+
+    function stopSourceFinderListClock() {
+      clearInterval(sourceFinderListClock);
+      sourceFinderListClock = null;
+    }
+
+    function sourceFinderCreatedAge(run, now = Date.now()) {
+      const seconds = Math.max(0, Math.floor((now - run.createdAt) / 1000));
+      if (seconds === 0) return '刚刚';
+      if (seconds < 60) return `${seconds}秒前`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}分钟前`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}小时前`;
+      return `${Math.floor(seconds / 86400)}天前`;
+    }
+
+    function sourceFinderAgentListHtml(run) {
+      const currentGroup = run.state === 'waiting' ? 'waiting' : run.state === 'running' ? 'running' : 'completed';
+      const groups = [['waiting', '待运行'], ['running', '运行中'], ['completed', '已完成']];
+      const created = new Date(run.createdAt);
+      const createdLabel = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', dateStyle: 'short', timeStyle: 'medium' }).format(created);
+      return `<div class="source-finder-list" data-state="${run.state}" aria-label="当前问答的 Agent">
+        ${groups.map(([key, label]) => `<section class="source-finder-list-group" data-source-finder-group="${key}">
+          <h3>${label} · ${currentGroup === key ? 1 : 0}</h3>
+          ${currentGroup === key ? `<button class="source-finder-list-row" type="button" data-source-finder-detail="${escapeHtml(run.conversationId)}" aria-label="查看AI找源Agent详情">
+            ${vzIcon('robot', true)}
+            <span>AI找源Agent${['failed', 'cancelled'].includes(run.state) ? `<span class="source-finder-list-outcome">${sourceFinderStateLabels[run.state]}</span>` : ''}</span>
+            <time datetime="${created.toISOString()}" title="创建于 ${createdLabel}" aria-label="创建于 ${createdLabel}">${sourceFinderCreatedAge(run)}</time>
+          </button>` : `<p class="source-finder-list-empty">暂无${label}的 Agent</p>`}
+        </section>`).join('')}
+      </div>`;
+    }
+
+    function refreshSourceFinderList(run) {
+      const list = artifactBody.querySelector('.source-finder-list');
+      if (!list || list.dataset.state !== run.state) {
+        const restoreFocus = list?.contains(document.activeElement);
+        artifactBody.innerHTML = sourceFinderAgentListHtml(run);
+        if (restoreFocus) artifactBody.querySelector('[data-source-finder-detail]')?.focus({ preventScroll: true });
+        return;
+      }
+      list.querySelector('time').textContent = sourceFinderCreatedAge(run);
+    }
+
+    function sourceFinderLogHtml() {
+      const run = activeSourceFinderRun();
+      if (!run) return '';
+      if (run.panelView === 'list') return sourceFinderAgentListHtml(run);
+      if (run.state === 'waiting') return `<div class="source-finder-log" data-state="waiting">
+        <p class="source-finder-waiting">${sourceFinderWaitingText}</p>
+        ${sourceFinderControlsHtml(run)}
+      </div>`;
+      if (run.state === 'cancelled' && run.startedAt === null) return '<div class="source-finder-log" data-state="cancelled"><p class="source-finder-waiting">AI找源 Agent任务已取消。</p></div>';
+      const error = run.state === 'failed' ? `<p class="source-finder-error" role="status">执行失败：${escapeHtml(run.reason)}</p>`
+        : run.state === 'cancelled' ? '<p class="source-finder-waiting">AI找源 Agent任务已取消。</p>' : '';
+      return `<div class="source-finder-log" data-state="${run.state}">${error}${sourceFinderRunHtml(`
+        <p class="daily-stage-status" data-source-finder-stage>${sourceFinderSteps[run.step][3]}</p>
+        <details class="daily-action-group" data-source-finder-browser-group${sourceFinderIsSettled(run) ? '' : ' open'}>
+          <summary class="daily-action-head">
+            ${sourceFinderBrowserIcon(sourceFinderIsSettled(run))}
+            <span data-source-finder-browser-label>${sourceFinderBrowserGroupLabel(run)}</span>
+            <span class="daily-chevron" aria-hidden="true"></span>
+          </summary>
+          <ol class="daily-action-list" aria-label="浏览器操作记录" aria-live="polite">${sourceFinderLogEntries(run)}</ol>
+        </details>`, run)}${sourceFinderControlsHtml(run)}</div>`;
+    }
+
+    function openSourceFinderLog(run) {
+      run.panelView = 'detail';
+      run.logViewed = true;
+      tabs.sourceFinderLog.available = tabs.sourceFinderLog.open = true;
+      activeTab = 'sourceFinderLog';
+      setArtifactVisible(true, true);
+      renderArtifact();
+      renderSourceFinderProgress(run);
+    }
+
+    function sourceFinderResultHtml() {
+      const count = key => sourceFinderRecords.filter(record => record[5] === key).length;
+      const total = sourceFinderRecords.length;
+      const found = total - count('missing');
+      const status = (text, missing) => `<span class="source-finder-site-badge${missing ? ' missing' : ''}">${text}</span>`;
+      const rows = sourceFinderRecords.map(([title, day, effectiveDate, publisher, domain, state], index) => `
+        <tr>
+          <td>${String(index + 1).padStart(2, '0')}</td><td>${title}</td>
+          <td class="source-finder-date">2025-06-${day}</td><td class="source-finder-date">${effectiveDate || '—'}</td><td>${publisher}</td>
+          <td>${domain ? `${status('已存在')}<br>${publisher}` : status('为空', true)}</td>
+          <td>${domain ? `${status('已有')} https://${domain}.example/gov/policy/${day}` : status('为空', true)}</td>
+          <td>${domain ? '首页 › 政务公开 › 政策文件' : '—'}</td>
+          <td class="source-finder-row-actions">${state === 'processed' ? '<span class="source-finder-processed">查看处理结果</span>' : `编辑<br><span class="source-finder-delete">删除</span>${domain ? '' : '<br>补充地址'}`}</td>
+          <td class="source-finder-row-actions">日志</td>
+        </tr>`).join('');
+      return `<div class="source-finder-result-toolbar">
+          <div class="source-finder-filters" aria-label="记录状态汇总">
+            <span class="selected">全部 (${total})</span><span>待补充地址 (${count('missing')})</span>
+            <span>站点名称不一致 (0)</span><span>站点名称冲突 (0)</span><span>域名不一致 (0)</span>
+            <span>可批量处理 (${count('batch')})</span><span>已处理 (${count('processed')})</span>
+          </div>
+          <div class="source-finder-tools"><span>${found}/${total}</span><progress value="${found}" max="${total}" aria-label="已找到来源"></progress>
+            <span class="source-finder-tool">批量处理</span><span class="source-finder-tool">更多操作</span>
+          </div>
+        </div>
+        <div class="source-finder-table-wrap" role="region" tabindex="0" aria-label="找源数据结果，可横向滚动">
+          <table class="source-finder-table" aria-label="LR1371 来源记录">
+            <thead><tr>${['SEQ', '标题', '颁布日期', '实施日期', '颁布者', '站点名称', '站点地址', '案例路径', '操作', '日志'].map(label => `<th scope="col">${label}</th>`).join('')}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    function openSourceFinderResult() {
+      const body = document.getElementById('sourceFinderResultBody');
+      if (!body.firstElementChild) body.innerHTML = sourceFinderResultHtml();
+      sourceFinderModule.hidden = false;
+      setApplicationView('source-finder-result');
+      document.getElementById('sourceFinderResultTitle').focus();
+    }
+
     function setApplicationView(view) {
+      const inSourceFinderResult = view === 'source-finder-result';
       layout.classList.toggle('manual-system-mode', view === 'manual-qa');
+      layout.classList.toggle('source-finder-result-mode', inSourceFinderResult);
+      sourceFinderResult.hidden = !inSourceFinderResult;
+      [[chatModuleOpen, view === 'agent'], [sourceFinderModuleOpen, inSourceFinderResult]].forEach(([button, selected]) => {
+        button.closest('.module-card').classList.toggle('active', selected);
+        if (selected) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
       document.querySelectorAll('[data-app-view]').forEach(item => {
-        item.classList.toggle('active', item.dataset.appView === view);
-        if (item.dataset.appView === view) item.setAttribute('aria-current', 'page');
+        const selected = item.dataset.appView === (inSourceFinderResult ? 'agent' : view);
+        item.classList.toggle('active', selected);
+        if (selected) item.setAttribute('aria-current', 'page');
         else item.removeAttribute('aria-current');
       });
       closeOverlays();
@@ -14295,6 +14943,7 @@
       closeAutomationTaskMenus();
       closeAutomationRepeatMenu();
       closeCreationMenus();
+      closeAgentListMenus();
     }
 
     function closeProjectContextMenu() {
@@ -14748,6 +15397,58 @@
       item.addEventListener('click', () => setApplicationView(item.dataset.appView));
     });
 
+    chatModuleOpen.addEventListener('click', () => {
+      const wasShowingResult = !sourceFinderResult.hidden;
+      setApplicationView('agent');
+      if (wasShowingResult) sourceFinderStory.querySelector('[data-source-finder-result]')?.focus();
+    });
+    sourceFinderModuleOpen.addEventListener('click', openSourceFinderResult);
+    window.addEventListener('source-finder-scheduler', event => handleSourceFinderSchedulerEvent(event.detail));
+    artifactTitle.addEventListener('click', event => {
+      if (!event.target.closest('#sourceFinderBack')) return;
+      const run = activeSourceFinderRun();
+      if (!run) return;
+      run.panelView = 'list';
+      renderArtifact();
+      artifactBody.querySelector('[data-source-finder-detail]')?.focus();
+    });
+    artifactBody.addEventListener('click', event => {
+      const run = activeSourceFinderRun();
+      if (!run) return;
+      if (event.target.closest('[data-source-finder-detail]')) {
+        openSourceFinderLog(run);
+        artifactTitle.querySelector('#sourceFinderBack')?.focus();
+      } else if (event.target.closest('[data-source-finder-allocate]')) {
+        handleSourceFinderSchedulerEvent({ conversationId: run.conversationId, action: 'allocated' });
+      } else if (event.target.closest('[data-source-finder-fail]')) {
+        handleSourceFinderSchedulerEvent({ conversationId: run.conversationId, action: 'failed' });
+      }
+    });
+    document.getElementById('sourceFinderModuleClose').addEventListener('click', () => {
+      sourceFinderModule.hidden = true;
+      if (!sourceFinderResult.hidden) chatModuleOpen.click();
+      else chatModuleOpen.focus();
+    });
+    sourceFinderStory.addEventListener('click', async event => {
+      const run = activeSourceFinderRun();
+      if (!run) return;
+      if (event.target.closest('#sourceFinderStatus')) {
+        openSourceFinderLog(run);
+        return;
+      }
+      if (event.target.closest('[data-source-finder-result]')) {
+        event.preventDefault();
+        if (run.state === 'completed') openSourceFinderResult();
+        return;
+      }
+      const copy = event.target.closest('[data-source-finder-copy]');
+      if (!copy) return;
+      const turn = run.turns[Number(copy.dataset.sourceFinderCopy)];
+      if (!turn) return;
+      const copied = await writeTextToClipboard(turn.text);
+      showToast(copied ? '已复制消息' : '复制失败，请选择消息文字后复制');
+    });
+
     manualSystem.addEventListener('click', event => {
       const issueCard = event.target.closest('[data-manual-issue-id]');
       if (issueCard) {
@@ -15162,7 +15863,7 @@
       if (sharedSnapshotMode) return;
       const text = composerInput.textContent.trim();
       if (activeVanishConversationKind) { submitVanishWorkbenchMessage(text); return; }
-      if (!activeCreationConversationId) beginCalendarCreationConversation();
+      if (!activeCreationConversationId) beginSkillCreationConversation();
       if (activeCreationConversationId) { submitCreationMessage(text); return; }
       if (planningQueueMode) {
         if (!text) {
@@ -15201,6 +15902,14 @@
       if (!text) {
         showToast('请输入内容');
         composerInput.focus();
+        return;
+      }
+      if (['empty', 'conversation', 'artifact', 'source-finder'].includes(currentConversationState) && matchesSourceFinderDemo(text)) {
+        startSourceFinderRun(text);
+        return;
+      }
+      if (currentConversationState === 'source-finder') {
+        submitSourceFinderMessage(text);
         return;
       }
       appendComposerMessage();
@@ -15872,6 +16581,8 @@
       setCurrentConversation(row);
       if (state === 'empty') {
         loadEmptyConversation();
+      } else if (state === 'source-finder') {
+        loadSourceFinderConversation(row);
       } else if (state === 'creation') {
         loadCreationConversation(row);
       } else if (state === 'artifact') {
