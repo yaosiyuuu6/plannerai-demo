@@ -6131,6 +6131,108 @@
     .plugin-detail-overlay[data-plugin="vanish"] .plugin-drawer-title { font-size: 16px; color: #262626; }
     .plugin-detail-overlay[data-plugin="vanish"] .plugin-manual-link { font-size: 12px; min-height: 32px; }
     .plugin-detail-overlay[data-plugin="vanish"] .plugin-drawer-close { width: 32px; height: 32px; }
+    /* SeaTable uses the same centered settings dialog, with room for a Base list. */
+    .plugin-detail-overlay[data-plugin="seatable"] { inset: 0; align-items: center; justify-content: center; background: rgba(0,0,0,.22); padding: 24px; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-detail-drawer { width: 760px; max-width: 100%; height: auto; max-height: calc(100dvh - 48px); border: 1px solid #e8e8e8; border-radius: 12px; box-shadow: 0 12px 36px #00000020; animation: none; overflow: hidden; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-drawer-header { min-height: 64px; grid-template-columns: 34px minmax(0,1fr) auto 32px; padding: 12px 24px; gap: 10px; flex: none; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-brand-icon { width: 34px; height: 34px; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-brand-icon img { width: 32px; height: 32px; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-drawer-title { font-size: 16px; color: #262626; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-manual-link { font-size: 12px; min-height: 32px; color: #595959; font-weight: 400; padding-inline: 6px; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-drawer-close { width: 32px; height: 32px; }
+    .plugin-detail-overlay[data-plugin="seatable"] .plugin-drawer-body { padding: 22px 24px 24px; overscroll-behavior: contain; }
+    .st-settings { color: #262626; font-size: 13px; line-height: 1.5; }
+    .st-settings [hidden] { display: none !important; }
+    .st-settings h3, .st-settings h4, .st-settings p { margin: 0; }
+    .st-section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .st-section-title h3 { font-size: 15px; font-weight: 600; }
+    .st-token-block { margin-top: 22px; }
+    .st-token-heading { display: flex; align-items: center; gap: 10px; }
+    .st-token-heading h4 { font-size: 14px; font-weight: 600; }
+    .st-state { display: inline-flex; align-items: center; gap: 5px; color: #8c8c8c; font-size: 12px; font-weight: 400; }
+    .st-state::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .st-state.configured { color: #21804a; }
+    .st-state.pending { color: #595959; }
+    .st-copy { margin-top: 5px !important; color: #737373; font-size: 12px; }
+    .st-account-form { margin-top: 14px; }
+    .st-form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .st-field { display: block; min-width: 0; }
+    .st-field > span { display: block; margin-bottom: 6px; font-size: 12px; color: #595959; }
+    .st-input-shell { position: relative; display: flex; align-items: center; }
+    .st-settings .plugin-input { height: 40px; border-color: #dedede; border-radius: 7px; color: #262626; background: #fff; font-size: 13px; }
+    .st-settings .plugin-input::placeholder { color: #a3a3a3; }
+    .st-settings .plugin-input:focus { border-color: #8c8c8c; outline: 2px solid #2626260d; }
+    .st-settings .plugin-input[aria-invalid="true"] { border-color: #cf4545; }
+    .st-settings .plugin-input:disabled { color: #8c8c8c; background: #fafafa; }
+    .st-input-shell .plugin-input { padding-right: 42px; }
+    .st-eye { position: absolute; inset: 3px 3px 3px auto; display: inline-flex; align-items: center; justify-content: center; width: 34px; border: 0; border-radius: 5px; background: transparent; color: #8c8c8c; padding: 0; cursor: pointer; }
+    .st-eye:hover { background: #f5f5f5; color: #262626; }
+    .st-eye .icon { width: 16px; height: 16px; }
+    .st-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+    .st-safety { display: inline-flex; align-items: center; gap: 5px; color: #8c8c8c; font-size: 12px; }
+    .st-safety .icon { width: 13px; height: 13px; flex: none; }
+    .st-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .st-settings .plugin-button { min-height: 36px; border-color: #dedede; color: #595959; font-weight: 400; font-size: 12px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+    .st-settings .plugin-button:hover { background: #fafafa; border-color: #bfbfbf; color: #262626; }
+    .st-settings .plugin-button.primary { border-color: #202124; background: #202124; color: #fff; }
+    .st-settings .plugin-button.primary:hover { border-color: #353638; background: #353638; color: #fff; }
+    .st-settings button:disabled { opacity: .5; cursor: not-allowed; }
+    .st-settings button:focus-visible, .st-settings a:focus-visible { outline: 2px solid #737373; outline-offset: 3px; }
+    .st-account-configured { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 12px; border: 1px solid #ededed; border-radius: 8px; background: #fafafa; }
+    .st-account-identity { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .st-account-identity > .icon { width: 18px; height: 18px; color: #737373; flex: none; }
+    .st-account-identity strong { display: block; font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+    .st-account-identity small { color: #8c8c8c; font-size: 12px; }
+    .st-quiet { border: 0 !important; background: transparent !important; padding-inline: 7px !important; }
+    .st-quiet:hover { color: #262626 !important; background: #f0f0f0 !important; }
+    .st-api-block { border-top: 1px solid #eeeeee; padding-top: 20px; margin-top: 20px; }
+    .st-api-form { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; }
+    .st-api-form .st-input-shell { flex: 1; min-width: 0; }
+    .st-api-form .plugin-button { min-height: 40px; padding-inline: 17px; }
+    .st-api-form .plugin-button .icon { width: 14px; height: 14px; }
+    .st-inline-status { color: #8c8c8c; font-size: 12px; }
+    .st-inline-status:not(:empty) { margin-top: 8px; }
+    .st-inline-status.error { color: #b42318; }
+    .st-inline-status.success { color: #21804a; }
+    .st-base-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin: 9px 0 0; padding: 0; list-style: none; }
+    .st-base { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 72px; border: 1px solid #ededed; border-radius: 8px; padding: 12px 8px 12px 12px; background: #fff; }
+    .st-base-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 40px; border-radius: 8px; color: #fff; background: #ff8b12; flex: none; }
+    .st-base-icon.teal { background: #12b8be; }
+    .st-base-icon.green { background: #54af59; }
+    .st-base-icon.blue { background: #2ba6e8; }
+    .st-base-icon .icon { width: 23px; height: 23px; stroke-width: 1.65; }
+    .st-base-copy { min-width: 0; flex: 1; }
+    .st-base-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
+    .st-permission { display: inline-flex; align-items: center; margin-top: 4px; padding: 0 6px; border-radius: 4px; color: #595959; background: #f3f3f3; font-size: 11px; line-height: 20px; }
+    .st-permission.write { color: #31785a; background: #eef7f1; }
+    .st-remove { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 32px; border: 0; border-radius: 5px; padding: 0; background: transparent; color: #a3a3a3; cursor: pointer; }
+    .st-remove:hover { color: #b42318; background: #fff3f2; }
+    .st-remove .icon { width: 15px; height: 15px; }
+    .st-empty { grid-column: 1 / -1; padding: 18px; border: 1px dashed #dedede; border-radius: 8px; color: #8c8c8c; text-align: center; font-size: 12px; }
+    .st-skill { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 24px; border-top: 1px solid #e8e8e8; padding-top: 20px; }
+    .st-skill .plugin-switch { padding-block: 10px; cursor: pointer; }
+    .st-settings .plugin-switch input:checked + span { background: #202124; }
+    .st-settings .plugin-switch input:focus-visible + span { outline: 2px solid #737373; outline-offset: 3px; }
+    #messages.seatable-chat-mode > :not(#seatableChatStory) { display: none; }
+    .st-chat-story[hidden] { display: none !important; }
+    .st-chat-story { display: grid; gap: 28px; width: min(100%, var(--conversation-width)); margin: 0 auto; }
+    .st-chat-story .user-message { width: 100%; margin: 0; }
+    .st-chat-assistant { min-width: 0; color: #262626; font-size: 14px; line-height: 1.8; }
+    .st-chat-assistant > p { margin: 0 0 14px; }
+    .st-chat-plugin-card { line-height: normal; }
+    .st-chat-choices { display: flex; gap: 10px; margin-top: 14px; }
+    .st-chat-guide { margin: 0 0 14px; padding-left: 22px; }
+    .st-chat-connection { margin-top: 16px; }
+    .st-chat-connection > p { margin: 0 0 10px; }
+    .st-chat-story .plugin-button.primary { background: #202124; border-color: #202124; color: #fff; font-weight: 500; }
+    .st-chat-story .plugin-button.primary:hover { background: #353638; border-color: #353638; }
+    .st-chat-result { overflow: hidden; margin-top: 14px; border: 1px solid #e8e8e8; border-radius: 10px; }
+    .st-chat-result-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #ededed; font-size: 13px; }
+    .st-chat-result table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .st-chat-result th, .st-chat-result td { padding: 11px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    .st-chat-result th { background: #fafafa; color: #737373; font-size: 12px; font-weight: 400; }
+    .st-chat-result tr:last-child td { border-bottom: 0; }
+    .st-chat-result td:not(:first-child) { white-space: nowrap; }
     .creation-split { position: relative; display: inline-flex; flex: none; align-items: stretch; border-radius: 9px; background: #202124; color: #fff; }
     .creation-main, .creation-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 600; }
     .creation-main { padding: 0 12px 0 14px; border-radius: 9px 0 0 9px; }
@@ -6894,6 +6996,7 @@
             <div class="history-row" role="button" tabindex="0"><span class="history-title">权限检索规则讨论</span><button class="history-more" type="button" aria-label="权限检索规则讨论的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">人物背景设计优化</span><button class="history-more" type="button" aria-label="人物背景设计优化的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
             <div class="history-row" role="button" tabindex="0"><span class="history-title">删除核心分岔代码</span><button class="history-more" type="button" aria-label="删除核心分岔代码的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
+            <div class="history-row" data-history-state="seatable-connect" data-conversation-id="conv-seatable-connection-demo" role="button" tabindex="0"><span class="history-title">连接 SeaTable 查看项目进展</span><button class="history-more" type="button" aria-label="连接 SeaTable 查看项目进展的更多操作" aria-haspopup="menu" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button></div>
           </div>
         </div>
         <div class="panel-resizer agent-resizer" id="agentResizeHandle" data-resizer="agent" role="separator" aria-label="调整历史侧栏和问答主界面宽度" aria-orientation="vertical" tabindex="0"></div>
@@ -7329,6 +7432,7 @@
           <section class="planning-story" id="planningStory" hidden aria-label="规划文档修改建议对话"></section>
           <section class="vz-chat-story" id="vanishChatStory" hidden aria-label="Vanish 会话消息"></section>
           <section class="creation-chat-story" id="creationChatStory" hidden aria-label="对话创建"></section>
+          <section class="st-chat-story" id="seatableChatStory" hidden aria-label="SeaTable 连接对话"></section>
           <section class="source-finder-story" id="sourceFinderStory" hidden aria-label="AI找源演示对话"></section>
         </section>
 
@@ -7587,7 +7691,7 @@
                     <div class="plugin-title">SeaTable</div>
                     <span class="plugin-state" data-plugin-state="seatable">未启用</span>
                   </div>
-                  <p class="plugin-description">使用 Account Token 管理工作区、成员与 Base，也可安装 SeaTable Skill 供 Agent 调用。</p>
+                  <p class="plugin-description">配置账号或 Base Token，连接 SeaTable 表格，并启用 Agent 的表格操作能力。</p>
                 </article>
 
                 <article class="plugin-card" data-plugin-card="atlassian" role="button" tabindex="0" aria-label="打开 Atlassian 插件设置">
@@ -8577,10 +8681,25 @@
     let pluginDrawerReturnFocus = null;
     const pluginState = {
       vanish: { connected: false, capabilities: { mcp: false, im: false } },
-      seatable: { connected: false, capabilities: { api: false, skill: false }, skillInstalled: false },
+      seatable: {
+        connected: true, capabilities: { api: true, skill: true },
+        account: { configured: false, username: '' },
+        apiTokens: [
+          { id: 'project', baseName: '项目进展', permission: 'rw', color: 'teal', fingerprint: null },
+          { id: 'evaluation', baseName: 'AI问答 - 测试集', permission: 'r', color: 'green', fingerprint: null },
+          { id: 'requirements', baseName: 'AI问答需求', permission: 'rw', color: 'orange', fingerprint: null }
+        ],
+        skillEnabled: true
+      },
       atlassian: { connected: false, capabilities: {} },
       foxmail: { connected: false, capabilities: { send: false } }
     };
+    const seatableRequests = {
+      account: { revision: 0, timer: null, pending: false },
+      api: { revision: 0, timer: null, pending: false }
+    };
+    const seatableChatSessions = new Map();
+    let seatableChatAuthTarget = null;
     let historyMenuRow = null;
     let pendingDeleteHistoryRow = null;
     let currentConversationState = 'empty';
@@ -8755,7 +8874,7 @@
     const pendingInputFaviconId = 'pendingInputFavicon';
     const SHARE_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
     historyList.querySelectorAll('.history-row').forEach((row, index) => {
-      row.dataset.historyOrder = String(Date.now() - index * 1000);
+      row.dataset.historyOrder = String(Date.now() + (row.dataset.historyState === 'seatable-connect' ? 1000 : -index * 1000));
       if (!row.dataset.conversationId) row.dataset.conversationId = `conv-demo-${String(index + 1).padStart(3, '0')}`;
       row.insertAdjacentHTML('afterbegin', '<svg class="history-pin-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M6 3h12l-2 6v4l2 2H6l2-2V9Z"/></svg>');
       row.querySelector('.history-more')?.insertAdjacentHTML('beforebegin', '<span class="history-input-badge" hidden>待输入</span>');
@@ -8954,6 +9073,7 @@
     }
 
     function canShareConversation(state, generating, isShared) {
+      if (state === 'seatable-connect') return false;
       return state !== 'empty' && state !== 'source-finder' && !generating && !isShared;
     }
 
@@ -8971,7 +9091,7 @@
         ? '回答生成完成后可分享'
         : currentConversationState === 'empty'
           ? '对话中暂无内容'
-          : currentConversationState === 'source-finder' ? '演示对话仅在当前页面可用'
+          : ['source-finder', 'seatable-connect'].includes(currentConversationState) ? '演示对话仅在当前页面可用'
             : isShared ? '只读快照不可再次分享' : '';
     }
 
@@ -8980,6 +9100,10 @@
       currentConversationId = row?.dataset.conversationId || currentConversationId;
       conversationGenerating = currentConversationState === 'daily-report';
       if (currentConversationState !== 'source-finder') clearSourceFinderView();
+      if (currentConversationState !== 'seatable-connect') {
+        document.getElementById('seatableChatStory').hidden = true;
+        messages.classList.remove('seatable-chat-mode');
+      }
       updateConversationActions();
       syncConversationLocationUi();
     }
@@ -10238,8 +10362,18 @@
     }, true);
     pluginConfigPane.addEventListener('click', event => {
       if (activePluginId === 'vanish') handleVanishAction(event);
+      if (activePluginId === 'seatable') handleSeatableClick(event);
+    });
+    pluginConfigPane.addEventListener('submit', event => {
+      if (activePluginId !== 'seatable') return;
+      event.preventDefault();
+      if (event.target.id === 'stAccountForm') configureSeatableAccount();
+      if (event.target.id === 'stApiForm') configureSeatableApi();
     });
     pluginConfigPane.addEventListener('dblclick', event => {
+      if (activePluginId === 'seatable' && event.target.closest('#stAccountSubmit')) {
+        event.preventDefault(); finishSeatableAccountConfiguration(); return;
+      }
       if (activePluginId !== 'vanish') return;
       const button = event.target.closest('[data-vz-action="plugin-connect"]');
       if (button?.dataset.vzId === VANISH_DEFAULT_AGENT_ID) { event.preventDefault(); finishVanishDefaultPrototypeConnection(); }
@@ -10310,13 +10444,421 @@
     });
 
 
+    function seatableIcon(kind) {
+      const paths = {
+        eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+        shield: '<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+        user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
+        table: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 3v18M15 3v18M2 9h20M2 15h20"/>',
+        trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>'
+      };
+      return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths[kind] || paths.table}</svg>`;
+    }
+
+    function renderSeatableAccount() {
+      const account = pluginState.seatable.account;
+      const editing = !account.configured;
+      const configured = account.configured ? 'configured' : '';
+      return `<div class="st-token-heading"><h4 id="stAccountTitle">Account Token</h4><span class="st-state ${configured}" id="stAccountState" role="status" aria-live="polite">${account.configured ? '已配置' : '未配置'}</span></div>
+        <p class="st-copy">配置Account Token后可直接继承账号下所有Base权限</p>
+        ${editing ? `<form class="st-account-form" id="stAccountForm" novalidate aria-labelledby="stAccountTitle" autocomplete="off">
+          <div class="st-form-grid">
+            <label class="st-field" for="stUsername"><span>用户名</span><input class="plugin-input" id="stUsername" name="seatable-demo-username" type="text" placeholder="输入 SeaTable 用户名或邮箱" value="${escapeHtml(account.username)}" autocomplete="off" autocapitalize="none" spellcheck="false" required aria-describedby="stAccountStatus"></label>
+            <label class="st-field" for="stPassword"><span>密码</span><div class="st-input-shell"><input class="plugin-input" id="stPassword" name="seatable-demo-password" type="password" aria-label="密码" placeholder="输入密码" autocomplete="off" required aria-describedby="stAccountSafety stAccountStatus"><button class="st-eye" type="button" data-st-show="stPassword" aria-label="显示密码" aria-pressed="false">${seatableIcon('eye')}</button></div></label>
+          </div>
+          <div class="st-form-footer"><span class="st-safety" id="stAccountSafety">${seatableIcon('shield')}密码仅用于本次验证，完成后立即清空</span><div class="st-actions"><button class="plugin-button primary" id="stAccountSubmit" type="submit">验证并配置</button></div></div>
+        </form>` : `<div class="st-account-configured"><div class="st-account-identity">${seatableIcon('user')}<div><strong>${escapeHtml(account.username)}</strong><small>Account Token 已配置</small></div></div><div class="st-actions"><button class="plugin-button st-quiet" type="button" data-st-account-remove>移除配置</button></div></div>`}
+        <div class="st-inline-status" id="stAccountStatus" role="status" aria-live="polite"></div>`;
+    }
+
+    function renderSeatableBases() {
+      const entries = pluginState.seatable.apiTokens;
+      return `<ul class="st-base-list" aria-label="已配置 API Token 的 Base">${entries.map(entry => `<li class="st-base" data-st-base="${escapeHtml(entry.id)}"><span class="st-base-icon ${entry.color}">${seatableIcon('table')}</span><div class="st-base-copy"><span class="st-base-name" title="${escapeHtml(entry.baseName)}">${escapeHtml(entry.baseName)}</span><span class="st-permission ${entry.permission === 'rw' ? 'write' : ''}">${entry.permission === 'rw' ? '读写' : '只读'}</span></div><button class="st-remove" type="button" data-st-api-remove="${escapeHtml(entry.id)}" aria-label="移除 ${escapeHtml(entry.baseName)} 的 API Token" title="移除配置">${seatableIcon('trash')}</button></li>`).join('') || '<li class="st-empty">尚未配置 API Token，添加后将在这里显示对应的 Base 与权限。</li>'}</ul>`;
+    }
+
+    function renderSeatableSettings() {
+      return `<div class="st-settings">
+        <section aria-labelledby="stTokenTitle"><div class="st-section-title"><h3 id="stTokenTitle">Token</h3></div>
+          <section class="st-token-block" id="stAccountSection" aria-labelledby="stAccountTitle">${renderSeatableAccount()}</section>
+          <section class="st-api-block" aria-labelledby="stApiTitle"><div class="st-token-heading"><h4 id="stApiTitle">API Token</h4></div><p class="st-copy" id="stApiHelp">每个API Token对应一个表权限。如果你只需要操作单个 base, 我们建议用这个，更加安全。</p>
+            <form class="st-api-form" id="stApiForm" novalidate autocomplete="off" aria-labelledby="stApiTitle"><div class="st-input-shell"><input class="plugin-input" id="stApiToken" name="seatable-demo-api-token" type="password" placeholder="输入 API Token，例如 demo-roadmap-ro" aria-label="API Token" autocomplete="off" spellcheck="false" required aria-describedby="stApiHelp stApiStatus"><button class="st-eye" type="button" data-st-show="stApiToken" aria-label="显示 API Token" aria-pressed="false">${seatableIcon('eye')}</button></div><button class="plugin-button primary" id="stApiSubmit" type="submit">${seatableIcon('plus')}添加</button></form>
+            <div class="st-inline-status" id="stApiStatus" role="status" aria-live="polite"></div><div id="stBases">${renderSeatableBases()}</div>
+          </section>
+        </section>
+        <section class="st-skill" aria-labelledby="stSkillTitle"><div><div class="st-section-title"><h3 id="stSkillTitle">SeaTable Skill</h3></div><p class="st-copy" id="stSkillHelp">让 Agent 使用 SeaTable 的表格操作方法，访问数据时仍需有效 Token。</p></div><label class="plugin-switch"><input type="checkbox" id="stSkillToggle" data-st-skill ${pluginState.seatable.skillEnabled ? 'checked' : ''} aria-label="启用 SeaTable Skill" aria-describedby="stSkillHelp" role="switch"><span aria-hidden="true"></span></label></section>
+      </div>`;
+    }
+
+    function syncSeatableCapabilities() {
+      const state = pluginState.seatable;
+      state.connected = state.account.configured || state.apiTokens.length > 0;
+      state.capabilities.api = state.connected;
+      state.capabilities.skill = state.skillEnabled;
+      updatePluginCards();
+    }
+
+    function setSeatableStatus(kind, message = '', type = '') {
+      const status = document.getElementById(kind === 'account' ? 'stAccountStatus' : 'stApiStatus');
+      if (!status) return;
+      status.className = `st-inline-status${type ? ' ' + type : ''}`;
+      status.textContent = message;
+    }
+
+    function cancelSeatableRequest(kind) {
+      const request = seatableRequests[kind];
+      clearTimeout(request.timer);
+      clearTimeout(request.clickTimer);
+      request.timer = null;
+      request.clickTimer = null;
+      request.pending = false;
+      request.revision += 1;
+    }
+
+    function resetSeatableDrafts() {
+      ['account', 'api'].forEach(cancelSeatableRequest);
+      ['stPassword', 'stApiToken'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) { input.value = ''; input.type = 'password'; }
+      });
+    }
+
+    function refreshSeatableAccount(focusId) {
+      document.getElementById('stAccountSection').innerHTML = renderSeatableAccount();
+      if (focusId) document.getElementById(focusId)?.focus({ preventScroll: true });
+    }
+
+    function setSeatableBusy(kind, busy) {
+      seatableRequests[kind].pending = busy;
+      const form = document.getElementById(kind === 'account' ? 'stAccountForm' : 'stApiForm');
+      form?.setAttribute('aria-busy', String(busy));
+      form?.querySelectorAll('input, button').forEach(control => { control.disabled = busy; });
+      const submit = document.getElementById(kind === 'account' ? 'stAccountSubmit' : 'stApiSubmit');
+      if (submit) submit.innerHTML = busy ? '验证中…' : kind === 'account' ? '验证并配置' : `${seatableIcon('plus')}添加`;
+      if (kind === 'account') {
+        const badge = document.getElementById('stAccountState');
+        badge.textContent = busy ? '验证中' : pluginState.seatable.account.configured ? '已配置' : '未配置';
+        badge.className = `st-state ${busy ? 'pending' : pluginState.seatable.account.configured ? 'configured' : ''}`;
+      }
+    }
+
+    function finishSeatableAccountConfiguration(username) {
+      const input = document.getElementById('stUsername');
+      if (username === undefined && !input) return;
+      const resolvedUsername = username || input?.value.trim() || pluginState.seatable.account.username || 'demo.user';
+      cancelSeatableRequest('account');
+      const password = document.getElementById('stPassword');
+      if (password) { password.value = ''; password.type = 'password'; }
+      pluginState.seatable.account = { configured: true, username: resolvedUsername };
+      refreshSeatableAccount(); syncSeatableCapabilities();
+      document.querySelector('[data-st-account-remove]')?.focus({ preventScroll: true });
+      showToast('Account Token 已配置');
+      if (seatableChatAuthTarget) completeSeatableChatAuthorization('account');
+    }
+
+    function configureSeatableAccount() {
+      if (seatableRequests.account.pending) return;
+      const usernameInput = document.getElementById('stUsername');
+      const passwordInput = document.getElementById('stPassword');
+      const username = usernameInput.value.trim();
+      usernameInput.setAttribute('aria-invalid', String(!username));
+      passwordInput.setAttribute('aria-invalid', String(!passwordInput.value));
+      if (!username || !passwordInput.value) {
+        setSeatableStatus('account', !username ? '请填写用户名。' : '请填写密码。', 'error');
+        (!username ? usernameInput : passwordInput).focus();
+        return;
+      }
+      // Only this outcome flag enters the timer. Passwords never enter page state.
+      const rejected = username.toLowerCase() === 'invalid' || passwordInput.value === 'invalid';
+      passwordInput.value = ''; passwordInput.type = 'password';
+      const eye = document.querySelector('[data-st-show="stPassword"]');
+      eye.setAttribute('aria-pressed', 'false'); eye.setAttribute('aria-label', '显示密码');
+      cancelSeatableRequest('account');
+      const revision = seatableRequests.account.revision;
+      setSeatableBusy('account', true); setSeatableStatus('account');
+      seatableRequests.account.timer = setTimeout(() => {
+        if (revision !== seatableRequests.account.revision) return;
+        seatableRequests.account.timer = null;
+        setSeatableBusy('account', false);
+        if (rejected) {
+          setSeatableStatus('account', `验证失败，请检查用户名和密码。${pluginState.seatable.account.configured ? '原配置仍然有效。' : ''}`, 'error');
+          passwordInput.focus();
+          return;
+        }
+        finishSeatableAccountConfiguration(username);
+      }, 650);
+    }
+
+    function seatableMockBase(value, fingerprint) {
+      const fixtures = [
+        { id: 'project', baseName: '项目进展', permission: 'rw', color: 'teal' },
+        { id: 'evaluation', baseName: 'AI问答 - 测试集', permission: 'r', color: 'green' },
+        { id: 'requirements', baseName: 'AI问答需求', permission: 'rw', color: 'orange' },
+        { id: 'roadmap', baseName: '产研方向', permission: 'r', color: 'blue' }
+      ];
+      const hint = value.toLowerCase();
+      const index = /project/.test(hint) ? 0 : /eval|test/.test(hint) ? 1 : /require|demand/.test(hint) ? 2 : /roadmap/.test(hint) ? 3 : parseInt(fingerprint.slice(0, 2), 16) % fixtures.length;
+      const entry = { ...fixtures[index], fingerprint };
+      if (/(?:^|[-_])(?:ro|readonly|read-only)$/.test(hint)) entry.permission = 'r';
+      if (/(?:^|[-_])rw$/.test(hint)) entry.permission = 'rw';
+      return entry;
+    }
+
+    function applySeatableApiEntry(entry) {
+      const entries = pluginState.seatable.apiTokens;
+      if (entries.some(item => item.fingerprint && item.fingerprint === entry.fingerprint)) return '该 Token 已配置，无需重复添加。';
+      const index = entries.findIndex(item => item.id === entry.id);
+      if (index >= 0) entries[index] = entry;
+      else entries.push(entry);
+      return index >= 0 ? '配置已更新。' : 'API Token 已添加。';
+    }
+
+    async function configureSeatableApi() {
+      if (seatableRequests.api.pending) return;
+      const input = document.getElementById('stApiToken');
+      let value = input.value.trim();
+      input.setAttribute('aria-invalid', String(!value));
+      if (!value) { setSeatableStatus('api', '请输入 API Token。', 'error'); input.focus(); return; }
+      cancelSeatableRequest('api');
+      const revision = seatableRequests.api.revision;
+      setSeatableBusy('api', true); setSeatableStatus('api');
+      const rejected = /^(invalid|expired)(?:[-_]|$)/i.test(value);
+      const bytes = new TextEncoder().encode(value);
+      const fixture = seatableMockBase(value, '00');
+      const hasHint = /project|eval|test|require|demand|roadmap/i.test(value);
+      input.value = ''; input.type = 'password'; value = '';
+      const eye = document.querySelector('[data-st-show="stApiToken"]');
+      eye.setAttribute('aria-pressed', 'false'); eye.setAttribute('aria-label', '显示 API Token');
+      try {
+        const digest = await crypto.subtle.digest('SHA-256', bytes);
+        if (revision !== seatableRequests.api.revision) return;
+        const fingerprint = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+        const entry = hasHint ? { ...fixture, fingerprint } : seatableMockBase('', fingerprint);
+        seatableRequests.api.timer = setTimeout(() => {
+          if (revision !== seatableRequests.api.revision) return;
+          seatableRequests.api.timer = null; setSeatableBusy('api', false);
+          if (rejected) { setSeatableStatus('api', 'Token 无效或已失效，请重新输入。', 'error'); input.focus(); return; }
+          const message = applySeatableApiEntry(entry);
+          document.getElementById('stBases').innerHTML = renderSeatableBases();
+          setSeatableStatus('api', message, 'success'); syncSeatableCapabilities(); input.focus();
+          if (seatableChatAuthTarget) completeSeatableChatAuthorization('api', entry.id);
+        }, 650);
+      } catch {
+        if (revision !== seatableRequests.api.revision) return;
+        setSeatableBusy('api', false); setSeatableStatus('api', '暂时无法验证，请重试。', 'error');
+      } finally { bytes.fill(0); }
+    }
+
+    function handleSeatableClick(event) {
+      if (event.target.closest('#stAccountSubmit') && event.detail > 0) {
+        event.preventDefault();
+        cancelSeatableRequest('account');
+        if (event.detail >= 2) finishSeatableAccountConfiguration();
+        else seatableRequests.account.clickTimer = setTimeout(() => {
+          seatableRequests.account.clickTimer = null;
+          configureSeatableAccount();
+        }, 300);
+        return;
+      }
+      const show = event.target.closest('[data-st-show]');
+      if (show) {
+        const input = document.getElementById(show.dataset.stShow);
+        const visible = input.type === 'password';
+        input.type = visible ? 'text' : 'password';
+        show.setAttribute('aria-pressed', String(visible));
+        show.setAttribute('aria-label', `${visible ? '隐藏' : '显示'}${input.id === 'stPassword' ? '密码' : ' API Token'}`);
+        return;
+      }
+      if (event.target.closest('[data-st-account-remove]')) {
+        cancelSeatableRequest('account');
+        pluginState.seatable.account = { configured: false, username: '' };
+        refreshSeatableAccount('stUsername'); syncSeatableCapabilities();
+        showToast('账号配置已移除'); return;
+      }
+      const remove = event.target.closest('[data-st-api-remove]');
+      if (remove) {
+        pluginState.seatable.apiTokens = pluginState.seatable.apiTokens.filter(entry => entry.id !== remove.dataset.stApiRemove);
+        document.getElementById('stBases').innerHTML = renderSeatableBases();
+        setSeatableStatus('api'); syncSeatableCapabilities(); document.getElementById('stApiToken').focus();
+        showToast('API Token 配置已移除');
+      }
+    }
+
+    function matchesSeatableChat(text) {
+      return /(?:seatable|setable|sea\s+table)/i.test(text) && /连接|授权|配置|查看|读取|查询|项目进展/.test(text);
+    }
+
+    function createSeatableChatSession(conversationId, request) {
+      return { conversationId, request, turns: [], connectionMode: '', apiId: '', guideTurnIndex: -1, phase: 'choosing', notice: '', p0Only: false, revision: 0 };
+    }
+
+    function seatableChatResultRows(p0Only = false) {
+      const rows = [
+        { task: '完善 Agent 工具调用', priority: 'P0', status: '进行中', owner: '张三' },
+        { task: '评测集回归与问题修复', priority: 'P0', status: '待验收', owner: '李四' },
+        { task: '优化任务执行记录展示', priority: 'P1', status: '待排期', owner: '王五' }
+      ];
+      return p0Only ? rows.filter(row => row.priority === 'P0') : rows;
+    }
+
+    function seatableChatConnection(session) {
+      if (session.connectionMode === 'account' && pluginState.seatable.account.configured) {
+        return { baseName: '项目进展', label: `账号 ${pluginState.seatable.account.username} 已连接，已继承账号下所有 Base 权限。` };
+      }
+      if (session.connectionMode === 'api' && session.apiId) {
+        const entry = pluginState.seatable.apiTokens.find(item => item.id === session.apiId);
+        if (entry) return { baseName: entry.baseName, label: `已连接「${entry.baseName}」，权限：${entry.permission === 'rw' ? '读写' : '只读'}。仅可访问此 API Token 对应的 Base。` };
+      }
+      return null;
+    }
+
+    function chooseSeatableChatConnection(mode, text) {
+      const session = seatableChatSessions.get(currentConversationId);
+      if (!session || currentConversationState !== 'seatable-connect' || session.phase === 'reading' || !['account', 'api'].includes(mode)) return;
+      session.revision += 1;
+      session.connectionMode = mode; session.apiId = ''; session.notice = '';
+      session.turns.push({ role: 'user', text: text || (mode === 'account' ? '连接整个账号。' : '只连接单个 Base 就可以。') });
+      session.guideTurnIndex = session.turns.length;
+      session.turns.push({ role: 'guide', mode });
+      session.phase = seatableChatConnection(session) ? 'connected' : 'waiting';
+      renderSeatableChat(session);
+    }
+
+    function renderSeatableChatCard() {
+      // Reuse the plugin card's content, styles and actual two-column dimensions.
+      const source = document.querySelector('#settingsPanelMcps [data-plugin-card="seatable"]');
+      const card = source.cloneNode(true);
+      card.removeAttribute('data-plugin-card');
+      card.setAttribute('data-st-chat-connect', '');
+      card.classList.add('st-chat-plugin-card');
+      const padding = getComputedStyle(document.querySelector('.settings-content'));
+      const panelWidth = Math.min(920, document.getElementById('workspace').clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight));
+      card.style.width = `${(panelWidth - 12) / 2}px`;
+      return card.outerHTML;
+    }
+
+    function renderSeatableChatTurn(turn, session, index) {
+      if (turn.role === 'user') return `<div class="user-message"><div class="bubble user">${escapeHtml(turn.text)}</div></div>`;
+      if (turn.role === 'guide') {
+        const active = index === session.guideTurnIndex;
+        const connection = active && seatableChatConnection(session);
+        const reading = session.phase === 'reading';
+        const guide = turn.mode === 'api'
+          ? '<p>可以，用 API Token 连接单个 Base 即可，更加安全。请按下面的步骤操作：</p><ol class="st-chat-guide"><li>在 SeaTable 中打开你要连接的 Base，找到 API Token 管理入口。</li><li>创建或复制该 Base 的 API Token，按需选择只读或读写权限。</li><li>点击下方 SeaTable 卡片，在弹窗的「API Token」中粘贴并添加。</li></ol>'
+          : '<p>可以，配置 Account Token 后即可继承账号下所有 Base 权限。点击下方 SeaTable 卡片，在弹窗的「Account Token」中填写用户名和密码并验证。</p>';
+        return `<article class="st-chat-assistant">${guide}${active ? `${renderSeatableChatCard()}<div class="st-chat-connection">${connection ? `<p role="status">${escapeHtml(connection.label)}</p><button class="plugin-button primary" type="button" data-st-chat-continue ${reading ? 'disabled' : ''}>${reading ? '正在读取…' : `继续查看${escapeHtml(connection.baseName)}`}</button>` : ''}${session.notice ? `<p role="status">${escapeHtml(session.notice)}</p>` : ''}</div>` : ''}</article>`;
+      }
+      const baseName = escapeHtml(turn.baseName || '项目进展');
+      return `<article class="st-chat-assistant"><p>已整理「${baseName}」${turn.p0Only ? '中的 P0 任务' : '的任务概览'}，共 ${turn.rows.length} 条。</p><div class="st-chat-result"><div class="st-chat-result-head"><strong>${baseName}</strong></div><table aria-label="${baseName}任务概览"><thead><tr><th>任务</th><th>优先级</th><th>进度</th><th>负责人</th></tr></thead><tbody>${turn.rows.map(row => `<tr><td>${escapeHtml(row.task)}</td><td>${escapeHtml(row.priority)}</td><td>${escapeHtml(row.status)}</td><td>${escapeHtml(row.owner)}</td></tr>`).join('')}</tbody></table></div></article>`;
+    }
+
+    function renderSeatableChat(session) {
+      if (!session || currentConversationState !== 'seatable-connect' || currentConversationId !== session.conversationId) return;
+      const story = document.getElementById('seatableChatStory');
+      story.innerHTML = `<div class="user-message"><div class="bubble user">${escapeHtml(session.request)}</div></div>
+        <article class="st-chat-assistant"><p>你希望连接整个 SeaTable 账号，还是只连接单个 Base？</p><p>连接整个账号可继承账号下所有 Base 权限；如果只需要操作单个 Base，建议使用 API Token，更加安全。</p>
+          ${session.phase === 'choosing' ? '<div class="st-chat-choices" aria-label="选择 SeaTable 连接方式"><button class="plugin-button" type="button" data-st-chat-mode="account">连接整个账号</button><button class="plugin-button" type="button" data-st-chat-mode="api">连接单个 Base</button></div>' : ''}
+        </article>
+        ${session.turns.map((turn, index) => renderSeatableChatTurn(turn, session, index)).join('')}
+        ${session.phase === 'reading' ? '<div class="st-chat-assistant" role="status">正在读取 Base 中的任务…</div>' : ''}`;
+      requestAnimationFrame(() => {
+        if (currentConversationId === session.conversationId && currentConversationState === 'seatable-connect') messages.scrollTop = messages.scrollHeight;
+      });
+    }
+
+    function loadSeatableChatConversation(row) {
+      let session = seatableChatSessions.get(row.dataset.conversationId);
+      if (!session) {
+        session = createSeatableChatSession(row.dataset.conversationId, '帮我连接 SeaTable，查看项目进展。');
+        seatableChatSessions.set(row.dataset.conversationId, session);
+      }
+      resetConversationModes(clearManualQaStory, clearPlanningStory, resetManualQaDraft);
+      clearDailyReportStory(); clearFinancialExtractionStory(); clearSourceFinderView();
+      setTaskMode(true, true); setArtifactVisible(false);
+      tabs.report.open = false; tabs.table.open = false;
+      planMode = false; updatePlanUi(); composerInput.textContent = '';
+      conversationTitle.textContent = row.querySelector('.history-title').textContent;
+      const story = document.getElementById('seatableChatStory');
+      story.hidden = false; messages.classList.add('seatable-chat-mode');
+      closeOverlays(); renderSeatableChat(session);
+    }
+
+    function startSeatableChat(text) {
+      if (activeConversationRow()?.dataset.historyState !== 'empty') createEmptyConversation(currentConversationProjectId());
+      const row = activeConversationRow();
+      row.dataset.historyState = 'seatable-connect';
+      row.querySelector('.history-title').textContent = '连接 SeaTable 查看项目进展';
+      row.querySelector('.history-more')?.setAttribute('aria-label', '连接 SeaTable 查看项目进展的更多操作');
+      const session = createSeatableChatSession(row.dataset.conversationId, text);
+      seatableChatSessions.set(row.dataset.conversationId, session);
+      renderProjectSidebar(); setCurrentConversation(row); loadSeatableChatConversation(row);
+    }
+
+    function openSeatableChatAuthorization() {
+      const session = seatableChatSessions.get(currentConversationId);
+      if (!session || currentConversationState !== 'seatable-connect' || !session.connectionMode || session.phase === 'reading') return;
+      seatableChatAuthTarget = session.conversationId;
+      openPluginDetail('seatable');
+      requestAnimationFrame(() => {
+        if (seatableChatAuthTarget !== session.conversationId) return;
+        const input = document.getElementById(session.connectionMode === 'api' ? 'stApiToken' : 'stUsername');
+        input?.focus({ preventScroll: true });
+        input?.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    function completeSeatableChatAuthorization(kind = 'account', apiId = '') {
+      const target = seatableChatAuthTarget;
+      const session = seatableChatSessions.get(target);
+      if (!session || session.connectionMode !== kind) return;
+      if (kind === 'api') session.apiId = apiId;
+      if (!seatableChatConnection(session)) return;
+      seatableChatAuthTarget = null;
+      closePluginDetail();
+      session.phase = 'connected'; session.notice = '';
+      renderSeatableChat(session);
+      if (currentConversationId === target && currentConversationState === 'seatable-connect') {
+        document.querySelector('[data-st-chat-continue]')?.focus({ preventScroll: true });
+      }
+    }
+
+    function continueSeatableChat(text = '继续查看项目进展') {
+      const session = seatableChatSessions.get(currentConversationId);
+      if (!session || currentConversationState !== 'seatable-connect' || session.phase === 'reading') return;
+      const apiChoice = /单个|单表|一个\s*(?:表|base)|api\s*token/i.test(text);
+      const accountChoice = /整个|全部|所有|完整|完全|账户|账号|account\s*token|连接账号|连接账户/i.test(text);
+      if ((session.phase === 'choosing' || /连接|改用|换成|切换/.test(text)) && (apiChoice || accountChoice)) {
+        chooseSeatableChatConnection(apiChoice ? 'api' : 'account', text); return;
+      }
+      if (!session.connectionMode) {
+        session.turns.push({ role: 'user', text });
+        renderSeatableChat(session); return;
+      }
+      const connection = seatableChatConnection(session);
+      session.turns.push({ role: 'user', text });
+      if (!connection) {
+        session.phase = 'waiting'; session.notice = '请先点击 SeaTable 卡片完成所选连接，再继续查看 Base。';
+        renderSeatableChat(session); return;
+      }
+      session.phase = 'reading'; session.notice = ''; session.p0Only = /p0/i.test(text);
+      const revision = ++session.revision;
+      const mode = session.connectionMode, apiId = session.apiId;
+      renderSeatableChat(session);
+      setTimeout(() => {
+        if (revision !== session.revision) return;
+        const current = seatableChatConnection(session);
+        if (current && mode === session.connectionMode && apiId === session.apiId && current.baseName === connection.baseName) {
+          session.phase = 'complete';
+          session.turns.push({ role: 'assistant', baseName: connection.baseName, p0Only: session.p0Only, rows: seatableChatResultRows(session.p0Only) });
+        }
+        else { session.phase = 'waiting'; session.notice = '连接配置已移除，请重新连接后继续。'; }
+        renderSeatableChat(session);
+      }, 650);
+    }
+
     function renderPluginConfig(pluginId) {
       if (pluginId === 'vanish') return renderVanishMcp();
-      if (pluginId === 'seatable') {
-        const apiDetail = `<label class="plugin-field"><span>SeaTable 服务地址</span><input class="plugin-input" id="seatableServerInput" type="url" value="https://cloud.seatable.cn" spellcheck="false"></label><label class="plugin-field"><span>Account Token</span><input class="plugin-input" id="seatableTokenInput" type="password" placeholder="粘贴 Account Token" autocomplete="off"><div class="plugin-field-help">Account Token 用于工作区、成员与 Base 等全局操作。</div></label><div class="plugin-inline-status${pluginState.seatable.connected ? ' success' : ''}" id="seatablePluginStatus" role="status" aria-live="polite">${pluginState.seatable.connected ? '已保存 · Token ••••••••' : ''}</div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-seatable-save>验证并保存</button></div>`;
-        const skillDetail = `<p class="plugin-field-help">安装后，Agent 可使用 SeaTable 表格操作方法。</p><div class="plugin-form-actions"><button class="plugin-button${pluginState.seatable.skillInstalled ? '' : ' primary'}" type="button" data-seatable-install>${pluginState.seatable.skillInstalled ? '卸载 Skill' : '安装 Skill'}</button></div>`;
-        return `${pluginAbilityCard('seatable', 'api', 'Web API', '使用 Account Token 进行全局操作。', apiDetail)}${pluginAbilityCard('seatable', 'skill', 'SeaTable Skill', '安装面向 Agent 的 SeaTable 操作能力。', skillDetail)}`;
-      }
+      if (pluginId === 'seatable') return renderSeatableSettings();
       if (pluginId === 'foxmail') {
         const sendDetail = `<label class="plugin-field"><span>发件邮箱</span><input class="plugin-input" id="foxmailSenderInput" type="email" value="planner@example.com" autocomplete="email"></label><label class="plugin-field"><span>SMTP 服务器</span><input class="plugin-input" id="foxmailSmtpInput" type="text" value="smtp.example.com" spellcheck="false"></label><label class="plugin-field"><span>授权码</span><input class="plugin-input" id="foxmailAuthInput" type="password" placeholder="输入邮箱授权码" autocomplete="off"><div class="plugin-field-help">使用邮箱服务商生成的授权码，不读取收件箱或历史邮件。</div></label><div class="plugin-inline-status" id="foxmailPluginStatus" role="status" aria-live="polite"></div><div class="plugin-form-actions"><button class="plugin-button primary" type="button" data-foxmail-save>保存发件配置</button></div>`;
         return pluginAbilityCard('foxmail', 'send', '发送邮件', '仅发送用户确认过的邮件。', sendDetail);
@@ -10327,13 +10869,14 @@
     function openPluginDetail(pluginId) {
       const plugin = pluginCatalog[pluginId];
       if (!plugin) return;
+      if (activePluginId === 'seatable') resetSeatableDrafts();
       activePluginId = pluginId;
       if (pluginId === 'vanish') vanishMcpConfigExpanded = !pluginState.vanish.capabilities.mcp;
       document.querySelector('.plugin-drawer-body').append(pluginConfigPane);
       pluginDetailOverlay.dataset.plugin = pluginId;
       pluginDrawerReturnFocus = document.activeElement;
       pluginDetailTitle.textContent = plugin.name;
-      pluginDetailClose.setAttribute('aria-label', pluginId === 'vanish' ? '关闭 Vanish 弹窗' : '关闭插件详情');
+      pluginDetailClose.setAttribute('aria-label', ['vanish', 'seatable'].includes(pluginId) ? `关闭 ${plugin.name} 弹窗` : '关闭插件详情');
       pluginDetailIcon.className = `plugin-brand-icon ${pluginId}`;
       pluginDetailIcon.innerHTML = pluginBrandIconMarkup(pluginId);
       pluginManualLink.href = plugin.manualUrl;
@@ -10342,16 +10885,32 @@
       pluginDetailOverlay.classList.add('open');
       pluginDetailOverlay.setAttribute('aria-hidden', 'false');
       if (pluginId === 'vanish') refreshVanishImProfile();
-      requestAnimationFrame(() => (pluginId === 'vanish' ? document.getElementById('vanishMcpConfigSummary') : pluginDetailClose)?.focus({ preventScroll: true }));
+      requestAnimationFrame(() => {
+        if (activePluginId !== pluginId || !pluginDetailOverlay.classList.contains('open')) return;
+        (pluginId === 'vanish' ? document.getElementById('vanishMcpConfigSummary') : pluginId === 'seatable' ? document.getElementById('stUsername') || document.getElementById('stApiToken') : pluginDetailClose)?.focus({ preventScroll: true });
+      });
     }
 
     function closePluginDetail() {
       clearTimeout(vanishAgentClickTimer); vanishAgentClickTimer = null;
       if (activePluginId === 'vanish') vanishMcpDraft = document.getElementById('vanishPluginConfig')?.value ?? vanishMcpDraft;
+      if (activePluginId === 'seatable') { resetSeatableDrafts(); pluginConfigPane.innerHTML = ''; }
       pluginDetailOverlay.classList.remove('open');
       pluginDetailOverlay.setAttribute('aria-hidden', 'true');
       if (pluginDrawerReturnFocus?.isConnected) pluginDrawerReturnFocus.focus();
       pluginDrawerReturnFocus = null;
+      if (seatableChatAuthTarget) {
+        const target = seatableChatAuthTarget;
+        seatableChatAuthTarget = null;
+        const session = seatableChatSessions.get(target);
+        if (session) {
+          session.notice = '尚未完成连接，你可以随时继续。';
+          if (currentConversationId === target && currentConversationState === 'seatable-connect') {
+            renderSeatableChat(session);
+            document.querySelector('[data-st-chat-connect]')?.focus({ preventScroll: true });
+          }
+        }
+      }
     }
 
     function updatePluginCards() {
@@ -15501,10 +16060,26 @@
       openPluginDetail(card.dataset.pluginCard);
     });
     pluginDetailClose.addEventListener('click', closePluginDetail);
+    document.getElementById('seatableChatStory').addEventListener('click', event => {
+      const mode = event.target.closest('[data-st-chat-mode]');
+      if (mode) { chooseSeatableChatConnection(mode.dataset.stChatMode); return; }
+      if (event.target.closest('[data-st-chat-connect]')) openSeatableChatAuthorization();
+      if (event.target.closest('[data-st-chat-continue]')) continueSeatableChat();
+    });
+    document.getElementById('seatableChatStory').addEventListener('keydown', event => {
+      if (!event.target.closest('[data-st-chat-connect]') || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault(); openSeatableChatAuthorization();
+    });
     pluginDetailOverlay.addEventListener('click', event => {
       if (event.target === pluginDetailOverlay) closePluginDetail();
     });
     pluginDetailOverlay.addEventListener('change', event => {
+      if (activePluginId === 'seatable' && event.target.matches('[data-st-skill]')) {
+        pluginState.seatable.skillEnabled = event.target.checked;
+        syncSeatableCapabilities();
+        showToast(event.target.checked ? 'SeaTable Skill 已启用' : 'SeaTable Skill 已关闭');
+        return;
+      }
       const toggle = event.target.closest('[data-plugin-capability]');
       if (!toggle) return;
       const pluginId = toggle.dataset.pluginId;
@@ -15519,32 +16094,6 @@
       showToast(`${title}已${toggle.checked ? '打开' : '关闭'}`);
     });
     pluginDetailOverlay.addEventListener('click', event => {
-      if (event.target.closest('[data-seatable-save]')) {
-        const server = document.getElementById('seatableServerInput')?.value.trim() || '';
-        const token = document.getElementById('seatableTokenInput')?.value.trim() || '';
-        if (!/^https?:\/\//i.test(server) || token.length < 8) {
-          setPluginInlineStatus('seatablePluginStatus', '请填写有效的服务地址与 Account Token。', 'error');
-          return;
-        }
-        pluginState.seatable.connected = true;
-        pluginState.seatable.capabilities.api = true;
-        setPluginInlineStatus('seatablePluginStatus', `已保存 · ${server} · Token ••••${token.slice(-4)}`, 'success');
-        updatePluginCards();
-        showToast('SeaTable Web API 配置已保存');
-        return;
-      }
-      if (event.target.closest('[data-seatable-install]')) {
-        pluginState.seatable.skillInstalled = !pluginState.seatable.skillInstalled;
-        pluginState.seatable.capabilities.skill = pluginState.seatable.skillInstalled;
-        const installButton = event.target.closest('[data-seatable-install]');
-        installButton.textContent = pluginState.seatable.skillInstalled ? '卸载 Skill' : '安装 Skill';
-        installButton.classList.toggle('primary', !pluginState.seatable.skillInstalled);
-        const skillToggle = pluginConfigPane.querySelector('[data-plugin-capability="skill"]');
-        if (skillToggle) skillToggle.checked = pluginState.seatable.skillInstalled;
-        updatePluginCards();
-        showToast(pluginState.seatable.skillInstalled ? 'SeaTable Skill 已安装并启用' : 'SeaTable Skill 已卸载');
-        return;
-      }
       if (event.target.closest('[data-foxmail-save]')) {
         const email = document.getElementById('foxmailSenderInput')?.value.trim() || '';
         const server = document.getElementById('foxmailSmtpInput')?.value.trim() || '';
@@ -15863,6 +16412,13 @@
       if (sharedSnapshotMode) return;
       const text = composerInput.textContent.trim();
       if (activeVanishConversationKind) { submitVanishWorkbenchMessage(text); return; }
+      if (currentConversationState === 'seatable-connect') {
+        if (!text) { showToast('请输入内容'); composerInput.focus(); return; }
+        composerInput.textContent = ''; continueSeatableChat(text); return;
+      }
+      if (!activeCreationConversationId && !planningQueueMode && !planningLaunchMode && matchesSeatableChat(text)) {
+        startSeatableChat(text); return;
+      }
       if (!activeCreationConversationId) beginSkillCreationConversation();
       if (activeCreationConversationId) { submitCreationMessage(text); return; }
       if (planningQueueMode) {
@@ -16581,6 +17137,8 @@
       setCurrentConversation(row);
       if (state === 'empty') {
         loadEmptyConversation();
+      } else if (state === 'seatable-connect') {
+        loadSeatableChatConversation(row);
       } else if (state === 'source-finder') {
         loadSourceFinderConversation(row);
       } else if (state === 'creation') {
@@ -17814,7 +18372,9 @@
     if (!initializeSharedSnapshot() && !initializePlanningLaunch()) openHistoryRow(initialConversationRow);
     const vanishPreviewParams = new URLSearchParams(window.location.search);
     const requestedVanishChat = vanishPreviewParams.get('vanishChat');
-    if (!sharedSnapshotMode && ['agent', 'automation'].includes(vanishPreviewParams.get('create'))) {
+    if (!sharedSnapshotMode && vanishPreviewParams.get('seatableChat') === 'connect') {
+      openHistoryRow(historyList.querySelector('[data-conversation-id="conv-seatable-connection-demo"]'));
+    } else if (!sharedSnapshotMode && ['agent', 'automation'].includes(vanishPreviewParams.get('create'))) {
       startCreationChat(vanishPreviewParams.get('create'));
     } else if (!sharedSnapshotMode && vanishPreviewParams.get('view') === 'automations') {
       openAutomationManager();
@@ -17829,6 +18389,8 @@
       } else { openSettings(); setSettingsTab('plugins'); openPluginDetail('vanish'); }
     } else if (!sharedSnapshotMode && vanishPreviewParams.get('plugin') === 'vanish') {
       openSettings(); setSettingsTab('plugins'); openPluginDetail('vanish');
+    } else if (!sharedSnapshotMode && vanishPreviewParams.get('plugin') === 'seatable') {
+      openSettings(); setSettingsTab('plugins'); openPluginDetail('seatable');
     }
   </script>
 </body>
